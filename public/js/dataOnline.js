@@ -465,15 +465,15 @@ function CreateDataTable() {
           buttons: [
             {
               extend: "excelHtml5",
-              title: `Bang_Chi_Tiet_Tu_${startDateTime}_Den_${endDateTime}`,
+              title: `Data_Detail_From_${startDateTime}_To_${endDateTime}`,
             },
             {
               extend: "csvHtml5",
-              title: `Bang_Chi_Tiet_Tu_${startDateTime}_Den_${endDateTime}`,
+              title: `Data_Detail_From_${startDateTime}_To_${endDateTime}`,
             },
             {
               extend: "pdfHtml5",
-              title: `Bang_Chi_Tiet_Tu_${startDateTime}_Den_${endDateTime}`,
+              title: `Data_Detail_From_${startDateTime}_To_${endDateTime}`,
             },
           ],
         });

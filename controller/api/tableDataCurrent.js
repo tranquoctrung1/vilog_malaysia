@@ -69,6 +69,7 @@ module.exports.GetTableDataCurrent = async function (req, res) {
         obj.ListChannel = [];
         obj.isError = false;
         obj.isDelay = false;
+        obj.TypeMeter = site.TypeMeter;
 
         let timeDelay = site.TimeDelay;
 
@@ -93,13 +94,17 @@ module.exports.GetTableDataCurrent = async function (req, res) {
             }
 
             if (channel.LastValue !== null) {
-                if (channel.LastValue < channel.BaseMin) {
-                    obj2.isError = true;
-                    obj.isError = true;
+                if (channel.BaseMin !== null) {
+                    if (channel.LastValue < channel.BaseMin) {
+                        obj2.isError = true;
+                        obj.isError = true;
+                    }
                 }
-                if (channel.LastValue > channel.BaseMax) {
-                    obj2.isError = true;
-                    obj.isError = true;
+                if (channel.BaseMax !== null) {
+                    if (channel.LastValue > channel.BaseMax) {
+                        obj2.isError = true;
+                        obj.isError = true;
+                    }
                 }
             }
 
@@ -110,7 +115,7 @@ module.exports.GetTableDataCurrent = async function (req, res) {
                         obj.isError = true;
                     }
                 }
-            } else if (site.TypeMeter === 'kronhe') {
+            } else if (site.TypeMeter === 'Kronhe') {
                 if (channel.OtherChannel === true) {
                     if (channel.LastValue >= 1) {
                         obj2.isError = true;

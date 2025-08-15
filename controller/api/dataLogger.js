@@ -94,6 +94,7 @@ module.exports.GetDataLoggerWithTime = async function (req, res) {
     obj.MaxFlow = 0;
     obj.MinNet = 0;
     obj.MaxNet = 0;
+    obj.Consumption = 0;
 
     if (desc == 1) {
         obj.DataLogger = await DataLogger.find({
@@ -139,6 +140,7 @@ module.exports.GetDataLoggerWithTime = async function (req, res) {
         if (temp.length > 0) {
             obj.MaxNet = temp[0].Value;
             obj.MinNet = temp[temp.length - 1].Value;
+            obj.Consumption = obj.MaxNet - obj.MinNet;
         }
     }
 

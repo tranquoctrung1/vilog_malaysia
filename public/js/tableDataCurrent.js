@@ -24,7 +24,6 @@ function GetData() {
     axios
         .get(url)
         .then((res) => {
-            console.log(res.data);
             totalData = res.data;
             totalPage = Math.ceil(res.data.length / 12);
 
@@ -59,6 +58,8 @@ function createTable(data, startPage) {
                 }
             }
 
+            console.log(item);
+
             content += `<div class="col-md-6 col-lg-6 col-xl-4">
                 <div class="card card-${colorCard} text-dark bg-light mb-3">
                     <div class="card-header card-header-${colorCard}">
@@ -74,7 +75,7 @@ function createTable(data, startPage) {
                                 item.Location,
                             )}</p>
                         </div>
-                        ${createListChannel(item.ListChannel)}
+                        ${createListChannel(item.ListChannel, item.TypeMeter)}
                     </div>
                 </div>
             </div>`;
@@ -120,7 +121,7 @@ function createTableForSearch(data) {
                             )}</p>
                         </div>
                         
-                        ${createListChannel(item.ListChannel)}
+                        ${createListChannel(item.ListChannel, item.TypeMeter)}
                     </div>
                 </div>
             </div>`;
@@ -137,7 +138,7 @@ function createTableForSearch(data) {
     return content;
 }
 
-function createListChannel(data) {
+function createListChannel(data, typeMeter) {
     let content = '';
     if (data != null) {
         for (let item of data) {
@@ -150,6 +151,35 @@ function createListChannel(data) {
                 }
             }
 
+            let value = item.Value;
+            if (typeMeter === 'SU') {
+                if (item.ChannelName[0] === '1') {
+                    if (value === 0) {
+                        value = 'No';
+                    } else {
+                        value = 'Yes';
+                    }
+                }
+            } else if (typeMeter === 'Kronhe') {
+                if (item.ChannelName[0] === '6' || item.OtherChannel === true) {
+                    if (value <= 0) {
+                        value = 'No error';
+                    } else if (value === 1) {
+                        value = ' Flow measurement ';
+                    } else if (value === 2) {
+                        value = ' < 10% battery ';
+                    } else if (value === 4) {
+                        value = ' EEPROM error ';
+                    } else if (value === 8) {
+                        value = ' Communication error ';
+                    } else if (value === 16) {
+                        value = ' Empty pipe';
+                    } else if (value === 32) {
+                        value = 'Mains power failure ';
+                    }
+                }
+            }
+
             content += ` <div class="content-card row channel">
                         <div class="bolder col-5 value-${colorText}">${ConvertDataIntoTable(
                 item.ChannelName,
@@ -158,7 +188,7 @@ function createListChannel(data) {
                 convertDateFromApi(item.TimeStamp),
             )}</div>
                         <div class="bolder value col-3 value-${colorText}">${ConvertDataIntoTable(
-                item.Value,
+                value,
             )} <span>${ConvertDataIntoTable(item.Unit)}</span> </div>
                     </div>`;
         }

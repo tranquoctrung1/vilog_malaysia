@@ -19,6 +19,7 @@ let modalMinBatteryLogger = document.getElementById('modalMinBatteryLogger');
 let modalMaxBatteryLogger = document.getElementById('modalMaxBatteryLogger');
 let modalMinBatteryMeter = document.getElementById('modalMinBatteryMeter');
 let modalMaxBatteryMeter = document.getElementById('modalMaxBatteryMeter');
+let modalConsumption = document.getElementById('modalConsumption');
 
 let chart;
 
@@ -95,6 +96,7 @@ function fillDataChannel(data) {
     modalMaxFlow.innerHTML = `${data.MaxFlow} m3/h`;
     modalMinNet.innerHTML = `${data.MinNet} m3`;
     modalMaxNet.innerHTML = `${data.MaxNet} m3`;
+    modalConsumption.innerHTML = `${data.Consumption} m3`;
     if (data.MaxBatteryLogger !== undefined) {
         modalMaxBatteryLogger.style.display = 'block';
         modalMaxBatteryLogger.innerHTML = `Max Battery Logger: ${data.MaxBatteryLogger} V`;
