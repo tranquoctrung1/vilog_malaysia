@@ -1,0 +1,39 @@
+.listree-submenu-heading {
+  cursor: pointer;
+}
+ul.listree {
+  list-style: none;
+}
+ul.listree-submenu-items {
+  list-style: none;
+  border-left: 1px dashed black;
+  white-space: nowrap;
+  margin-right: 4px;
+  padding-left: 20px;
+}
+div.listree-submenu-heading.collapsed:before {
+  content: "+";
+  margin-right: 4px;
+}
+div.listree-submenu-heading.expanded:before {
+  content: "-";
+  margin-right: 4px;
+}
+.scrollable-menu {
+  height: auto;
+  max-width: 800px;
+  overflow-y: hidden;
+}
+
+.listree-submenu-items li a {
+  color: white !important;
+}
+
+.listree-submenu-items li a:hover {
+  color: #b3b0b0 !important;
+  transition: 0.5s all ease-in-out;
+  -webkit-transition: 0.5s all ease-in-out;
+  -moz-transition: 0.5s all ease-in-out;
+  -ms-transition: 0.5s all ease-in-out;
+  -o-transition: 0.5s all ease-in-out;
+}

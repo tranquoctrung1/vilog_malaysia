@@ -1,0 +1,37 @@
+.form-select {
+  width: 25%;
+  height: 27px;
+}
+
+.row.quantity-time .box-value {
+  padding: 10px;
+  margin: 5px;
+  text-align: center;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 20px;
+  background: #dfe6e914;
+}
+
+.row.quantity-time .box-value .titles {
+  color: #74b9ff;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.row.quantity-time .box-value .value {
+  color: #0984e3;
+  font-size: 1rem;
+}
+.row.quantity-time .box-value .value .fa {
+  margin-right: 5px;
+}
+
+#chartDay,
+#chartMonth,
+#chartYear {
+  width: 100%;
+  height: 400px;
+}

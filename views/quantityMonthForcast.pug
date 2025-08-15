@@ -1,0 +1,33 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/quantityMonthForcast.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Dự Báo Sản Lượng Tháng
+        .row.info
+            .col-sm-4
+                span.ml-2.mr-3 Chọn vị trí
+                select.form-select.form-select-sm#selectSite(aria-label='.form-select-sm example')
+            .col-sm-4
+                span.ml-2.mr-3 Năm Bắt Đầu 
+                input#startDate(type='number' name='startDate' value='' )
+            .col-sm-12.button
+                button.btn.btn-primary.btn-sm#viewQuantityMonthForcast Xem
+        .row.result
+            .col-12
+                .loading
+                    img#loading.hide(src='/images/loading.svg')
+                h5.text-center#title-chart
+                #chart
+            .col-12 
+                h5.text-center#title-chart-circle 
+                #chartCircle 
+            .col-12
+                #tablePlaceHolder
+
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/util.js") 
+    script(src="/js/quantityMonthForcast.js") 

@@ -1,0 +1,27 @@
+.form-select {
+    width: 226.8px;
+    height: 27px;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button button {
+    padding: 5px 40px;
+}
+
+.modal-dialog {
+    background: white;
+}
+
+#chart {
+    width: 100%;
+    height: 400px;
+}
+
+#dataTable {
+    overflow: scroll;
+}

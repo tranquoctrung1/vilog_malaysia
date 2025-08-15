@@ -1,0 +1,32 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/dataDayLogger.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Daily Data Vilog
+        .row.info
+            .col-sm-4
+                select#selectSite(aria-label='.form-select-sm example' multiple)
+                //- .form-select.form-select-sm
+            .col-sm-4 
+                span.ml-2.mr-3 Start date 
+                input#startDate(type='date' name='startDate' value='' min='1970-01-01T00:00' max='')
+            .col-sm-4 
+                span.ml-2.mr-3 End date
+                input#endDate(type='date' name='endDate' value='' min='1970-01-01T00:00' max='')
+            .col-sm-12.button  
+                button.btn.btn-primary.btn-sm#viewDataDayLogger View
+        .row.result
+            .col 
+                #tablePlaceHolder
+                    .loading
+                        img#loading.hide(src='/images/loading.svg')
+
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js") 
+    script(src="/js/datadayLogger.js") 
+    script(src="/js/util.js") 

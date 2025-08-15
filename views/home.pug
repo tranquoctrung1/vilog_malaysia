@@ -1,0 +1,107 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/leaflet/leaflet.1.6.0.css")
+    link(rel="stylesheet", href="/css/leaflet/context-menu.min.css")
+    link(rel="stylesheet", href="/assets/css/lib/listtree/listree.min.css")
+    link(rel="stylesheet", href="/css/map.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content 
+    .container-fluid.map
+        .row
+            .col.p-0
+                .map#map
+                .icon-setting
+                    .box-icon#config.config
+                        i.fa.fa-cog.fa-spin.fa-2x.fa-fw.text-danger
+                    //- .box-icon#settingChannel.setting-channel
+                    //-     i.fa.fa-cog.fa-spin.fa-2x.fa-fw.text-success
+                    .box-icon#filter.filter
+                        i.fa.fa-filter.fa-2x.fa-fw.text-success
+                #panel.panel.d-none
+                    #treeViewSite
+                        .box-expan
+                            h5.text-center Search site
+                            .row 
+                                .col-9
+                                    .input-group.input-group-sm.mb-3
+                                        input.form-control(type='text' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm' id="searchSite")
+                                .col-3
+                                    img(src="/images/expan-icon.png", alt="expan", srcset="" id="expan")
+
+                        .box-listtree#listSite.mt-5
+                        .box-view-mutiple-channel 
+                            button.btn.btn-info.btn-sm#viewMutipleChannel(type="button") View
+
+                    #filterSite
+                        h5.text-center Fillter site
+                        #filterSiteSub
+            #chart.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='chartLabel' aria-hidden='true')
+                .modal-dialog.modal-lg(role='document')
+                    .modal-content
+                        .modal-header
+                            h5#chartLabel.modal-title Data history
+                            span.close-button(data-dismiss='modal') x
+                        .modal-body
+                            .row
+                                .col-lg-5
+                                    span.ml-2.mr-3 Start date
+                                    input#startDate(type='datetime-local' name='startDate' value='' min='1970-01-01T00:00' max='')
+                                .col-lg-5 
+                                    span.ml-2.mr-3 End date
+                                    input#endDate(type='datetime-local' name='endDate' value='' min='1970-01-01T00:00' max='')
+                                .col-lg-2.col-button-view
+                                    button.btn.btn-primary#viewChart(onclick="viewChart()") View
+                                .col-sm-12.col-button-view
+                                    button.btn.btn-info#viewOnChart(onclick="viewOnChart()") Graph
+                                    button.btn.btn-info.ml-2#viewTable(onclick="viewTable()") Table
+                            .row 
+                                .col-12 
+                                    #chartDataLogger(ondrop="drop(event)" ondragover="allowDrop(event)")
+                                    #talbeChart.d-none
+                                .col-12
+                                    div.text-flow Min Forward Flow:
+                                        span.ml-2#modalMinFlow
+                                    div.text-flow  Max Forward Flow:
+                                        span.ml-2#modalMaxFlow
+                                    div.text-flow  Min Net:
+                                        span.ml-2#modalMinNet
+                                    div.text-flow  Max Net:
+                                        span.ml-2#modalMaxNet
+                                    #modalMinBatteryLogger.text-battery
+                                    #modalMaxBatteryLogger.text-battery
+                                    #modalMinBatteryMeter.text-battery
+                                    #modalMaxBatteryMeter.text-battery
+    .container-fluid
+        .row.text-center
+            .col-sm-3 
+                h6.text-normal Total points: 
+                    span#totalSite.text-success
+            .col-sm-3 
+                h6.text-normal Total data points collected: 
+                    span#totalSiteHasValue.text-success 
+            .col-sm-3 
+                h6.text-normal Total active data points: 
+                    span#totalSiteActing.text-success 
+            .col-sm-3 
+                h6.text-normal Total delay data points: 
+                    span#totalSiteDelay.text-warning 
+            .col-sm-3 
+                h6.text-normal Total missing data points: 
+                    span#totalSiteNoValue.text-danger 
+            .col-sm-3 
+                h6.text-normal Total alarm data points: 
+                    span#totalSiteAlarm.text-danger 
+
+
+block linkcriptbody
+
+    script(src='/js/leaflet/leaflet.1.6.0.js')
+    script(src='/js/leaflet/context-menu.js')
+    script(src='/axios/axios.min.js')
+    script(src="/assets/js/lib/listtree/listree.umd.min.js") 
+    script(src='/js/hostname.js')
+    script(src='/js/map.js')
+    script(src='/js/chartForMap.js')
+    script(src='/js/settingForMap.js')
+    script(src='/js/util.js')
+    

@@ -1,0 +1,136 @@
+.info__col {
+    display: flex;
+    justify-content: space-between;
+}
+
+.info__col .input-group {
+    width: 40%;
+}
+
+.card-title {
+    border: none !important;
+    padding: 10px !important;
+}
+.card-header,
+.content-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header {
+    background-color: #0984e3;
+
+    color: #f7f1f1;
+}
+
+.card-header-delay {
+    background-color: #f1c40f;
+
+    color: #f7f1f1;
+}
+
+.card-header-error {
+    background-color: #e74c3c;
+
+    color: #f7f1f1;
+}
+
+.loading,
+#loadMore {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none !important;
+    font-size: 2rem !important;
+    font-weight: bold !important;
+}
+
+#loadMore {
+    padding: 10px 0;
+}
+.name {
+    padding: 10px;
+}
+#loadMoreButton.hide {
+    display: none;
+}
+#loadMoreButton.show {
+    display: block;
+}
+#loading.hide {
+    display: none;
+}
+.title-data-logger {
+    text-transform: uppercase;
+    font-size: 2.5rem;
+    padding-top: 1rem;
+    text-align: center;
+    font-weight: 600;
+    position: relative;
+    margin-bottom: 15px;
+}
+.title-data-logger::after {
+    position: absolute;
+    display: block;
+    content: '';
+    width: 100%;
+    height: 2px;
+    border-radius: 5px;
+    bottom: -10px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #b2bec3;
+}
+.card-normal {
+    border-top: 3px solid #0984e3 !important;
+    height: 100%;
+    font-size: 0.9rem;
+}
+
+.card-delay {
+    border-top: 3px solid #f1c40f !important;
+    height: 100%;
+    font-size: 0.9rem;
+}
+
+.card-error {
+    border-top: 3px solid #e74c3c !important;
+    height: 100%;
+    font-size: 0.9rem;
+}
+
+.content-card.location {
+    padding: 0 5px;
+}
+
+.content-card .bolder {
+    font-weight: 500;
+    color: #8d9599;
+}
+.content-card .bolder.value-normal {
+    color: #0984e3;
+}
+
+.content-card .bolder.value-delay {
+    color: #f1c40f;
+}
+
+.content-card .bolder.value-error {
+    color: #e74c3c;
+}
+
+.channel:nth-child(even) {
+    background: whitesmoke;
+}
+
+@media only screen and (max-width: 426px) {
+    .input-group {
+        width: 100% !important;
+        margin-left: 10px !important;
+    }
+}
+
+.btn-reload button {
+    height: 42px;
+}

@@ -1,0 +1,30 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/dataManual.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Manual data entry
+        .row.info
+            .col-sm-4
+                span.ml-2.mr-3 Choose site
+                select.form-select.form-select-sm#selectSite(aria-label='.form-select-sm example')
+            .col-sm-4 
+                span.ml-2.mr-3 Timestamp
+                input#startDate(type='datetime-local' name='startDate' value='' min='1970-01-01T00:00' max='')
+            .col-sm-4
+                span.ml-2.mr-3 Value
+                input#value(type='number' name='value' value='' )
+            .col-sm-12.button  
+                button.btn.btn-primary.btn-sm#InsertDataManual Add
+        .row.result
+            .col 
+                #tablePlaceHolder
+                    .loading
+                        img#loading.hide(src='/images/loading.svg')
+
+block linkcriptbody
+    script(src="/js/hostname.js")
+    script(src="/js/dataManual.js") 
+    script(src="/js/util.js") 

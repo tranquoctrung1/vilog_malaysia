@@ -1,0 +1,51 @@
+.form-select {
+    width: 157.8px;
+    height: 27px;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button button {
+    padding: 5px 40px;
+}
+
+.ts-control {
+    border: 1px solid #938c8c !important;
+    border-radius: 5px !important;
+    -webkit-border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    -ms-border-radius: 5px !important;
+    -o-border-radius: 5px !important;
+}
+/* Adjust height and padding */
+.ts-wrapper.form-control {
+    min-height: 38px; /* Match Bootstrap input height */
+    padding: 0;
+}
+
+/* Make the tags match Bootstrap badges */
+.ts-wrapper.multi .ts-control .item {
+    background-color: #0d6efd; /* Bootstrap primary color */
+    color: white;
+    border-radius: 0.25rem;
+    padding: 0.2rem 0.5rem;
+    margin: 0.15rem;
+}
+
+/* Placeholder text color */
+.ts-wrapper .ts-control::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.ts-dropdown {
+    background-color: white !important;
+}
+
+#tablePlaceHolder {
+    overflow: scroll;
+}

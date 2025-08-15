@@ -1,0 +1,20 @@
+.sidebar.sidebar-hide-to-small.sidebar-shrink.sidebar-gestures#sidebar
+  .nano
+    .nano-content
+      ul
+        .logo
+          a(href='/')
+            span #{companyName}
+        li !{content}
+        li
+          a(href='javascript: void(0)')
+            i.ti-user
+            span#userName #{username}
+        li#hideAlarm
+          a(href='javascript: void(0)')
+            i.ti-bell.position-relative
+              span.position-absolute.start-100.translate-middle.badge.rounded-pill.bg-danger#amountAlarm 
+        li
+          a(href='/logout')
+            i.ti-close
+            |  Logout

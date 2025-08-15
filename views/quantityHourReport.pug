@@ -1,0 +1,30 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/quantityHourReport.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Báo Cáo Sản Lượng Theo Giờ
+        .row.info
+            .col-sm-4
+                span.ml-2.mr-3 Chọn vị trí
+                select.form-select.form-select-sm#selectSite(aria-label='.form-select-sm example')
+            .col-sm-4
+                span.ml-2.mr-3 Giờ Bắt Đầu 
+                input#startDate(type='datetime-local' name='startDate' value='' min='1970-01-01T00:00' max='')
+            .col-sm-4
+                span.ml-2.mr-3 Giờ Kết Thúc
+                input#endDate(type='datetime-local' name='endDate' value='' min='1970-01-01T00:00' max='')
+            .col-sm-12.button
+                button.btn.btn-primary.btn-sm#viewQuantityHourReport Xem
+        .row.result
+            .col 
+                #tablePlaceHolder
+                    .loading
+                        img#loading.hide(src='/images/loading.svg')
+
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/quantityhourReport.js")
+    script(src="/js/util.js") 

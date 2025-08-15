@@ -1,0 +1,30 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/quantityYearReport.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Báo Cáo Sản Lượng Theo Năm
+        .row.info
+            .col-sm-4
+                span.ml-2.mr-3 Chọn vị trí
+                select.form-select.form-select-sm#selectSite(aria-label='.form-select-sm example')
+            .col-sm-4 
+                span.ml-2.mr-3 Năm Bắt Đầu 
+                input#startDate(type='number' name='startDate' value='' )
+            .col-sm-4 
+                span.ml-2.mr-3 Năm Kết Thúc
+                input#endDate(type='number' name='endDate' value='' )
+            .col-sm-12.button  
+                button.btn.btn-primary.btn-sm#viewQuantityYearReport Xem
+        .row.result
+            .col 
+                #tablePlaceHolder
+                    .loading
+                        img#loading.hide(src='/images/loading.svg')
+
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/quantityyearReport.js")
+    script(src="/js/util.js") 

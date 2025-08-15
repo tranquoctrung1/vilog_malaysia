@@ -1,0 +1,163 @@
+header.header
+  .container-fluid
+    .row
+      .col-lg-12.p-0
+        .float-left
+          .hamburger.sidebar-toggle
+            span.line
+            span.line
+            span.line
+        .float-right
+          //- .dropdown.dib
+          //-   .header-icon(data-toggle='dropdown')
+          //-     i.ti-bell
+          //-     .drop-down.dropdown-menu.dropdown-menu-right
+          //-       .dropdown-content-heading
+          //-         span.text-left Recent Notifications
+          //-       .dropdown-content-body
+          //-         ul
+          //-           li
+          //-             a(href='#')
+          //-               img.pull-left.m-r-10.avatar-img(src='assets/images/avatar/3.jpg' alt='')
+          //-               .notification-content
+          //-                 small.notification-timestamp.pull-right
+          //-                   | 02:34
+          //-                   | PM
+          //-                 .notification-heading Mr. John
+          //-                 .notification-text 5 members joined today 
+          //-           li
+          //-             a(href='#')
+          //-               img.pull-left.m-r-10.avatar-img(src='assets/images/avatar/3.jpg' alt='')
+          //-               .notification-content
+          //-                 small.notification-timestamp.pull-right
+          //-                   | 02:34
+          //-                   | PM
+          //-                 .notification-heading Mariam
+          //-                 .notification-text likes a photo of you
+          //-           li
+          //-             a(href='#')
+          //-               img.pull-left.m-r-10.avatar-img(src='assets/images/avatar/3.jpg' alt='')
+          //-               .notification-content
+          //-                 small.notification-timestamp.pull-right
+          //-                   | 02:34
+          //-                   | PM
+          //-                 .notification-heading Tasnim
+          //-                 .notification-text
+          //-                   | Hi Teddy, Just wanted to let you
+          //-                   | ...
+          //-           li
+          //-             a(href='#')
+          //-               img.pull-left.m-r-10.avatar-img(src='assets/images/avatar/3.jpg' alt='')
+          //-               .notification-content
+          //-                 small.notification-timestamp.pull-right
+          //-                   | 02:34
+          //-                   | PM
+          //-                 .notification-heading Mr. John
+          //-                 .notification-text
+          //-                   | Hi Teddy, Just wanted to let you
+          //-                   | ...
+          //-           li.text-center
+          //-             a.more-link(href='#') See All
+          //- .dropdown.dib
+          //-   .header-icon(data-toggle='dropdown')
+          //-     i.ti-email
+          //-     .drop-down.dropdown-menu.dropdown-menu-right
+          //-       .dropdown-content-heading
+          //-         span.text-left 2 New Messages
+          //-         a(href='email.html')
+          //-           i.ti-pencil-alt.pull-right
+          //-       .dropdown-content-body
+          //-         ul
+          //-           li.notification-unread
+          //-             a(href='#')
+          //-               img.pull-left.m-r-10.avatar-img(src='assets/images/avatar/1.jpg' alt='')
+          //-               .notification-content
+          //-                 small.notification-timestamp.pull-right
+          //-                   | 02:34
+          //-                   | PM
+          //-                 .notification-heading Michael Qin
+          //-                 .notification-text
+          //-                   | Hi Teddy, Just wanted to let you
+          //-                   | ...
+          //-           li.notification-unread
+          //-             a(href='#')
+          //-               img.pull-left.m-r-10.avatar-img(src='assets/images/avatar/2.jpg' alt='')
+          //-               .notification-content
+          //-                 small.notification-timestamp.pull-right
+          //-                   | 02:34
+          //-                   | PM
+          //-                 .notification-heading Mr. John
+          //-                 .notification-text
+          //-                   | Hi Teddy, Just wanted to let you
+          //-                   | ...
+          //-           li
+          //-             a(href='#')
+          //-               img.pull-left.m-r-10.avatar-img(src='assets/images/avatar/3.jpg' alt='')
+          //-               .notification-content
+          //-                 small.notification-timestamp.pull-right
+          //-                   | 02:34
+          //-                   | PM
+          //-                 .notification-heading Michael Qin
+          //-                 .notification-text
+          //-                   | Hi Teddy, Just wanted to let you
+          //-                   | ...
+          //-           li
+          //-             a(href='#')
+          //-               img.pull-left.m-r-10.avatar-img(src='assets/images/avatar/2.jpg' alt='')
+          //-               .notification-content
+          //-                 small.notification-timestamp.pull-right
+          //-                   | 02:34
+          //-                   | PM
+          //-                 .notification-heading Mr. John
+          //-                 .notification-text
+          //-                   | Hi Teddy, Just wanted to let you
+          //-                   | ...
+          //-           li.text-center
+          //-             a.more-link(href='#') See All
+          //- .dropdown.dib
+          //-   .header-icon
+              //- .ti-bell.btn.btn-primary.position-relative#hideAlarm
+              //-   span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger#amountAlarm 
+          .box-alarm#boxAlarm.d-none
+            table.table.table-striped.table-hover#tableAlarm
+
+
+          //- .dropdown.dib
+          //-   .header-icon
+          //-     span.user-avatar#userName
+          //-       | #{username}
+          //- .dropdown.dib
+          //-   .header-icon 
+          //-     a(href="/logout")
+          //-       i.ti-power-off
+          //- .dropdown.dib
+          //-   .header-icon 
+          //-     a(href="#")
+          //-       i.ti-pencil-alt.pull-right
+              //- .drop-down.dropdown-profile.dropdown-menu.dropdown-menu-right
+              //-   .dropdown-content-heading
+              //-     span.text-left Upgrade Now
+              //-     p.trial-day 30 Days Trail
+                //- .dropdown-content-body
+                //-   ul
+                //-     li
+                //-       a(href='#')
+                //-         i.ti-user
+                //-         span Profile
+                //-     li
+                //-       a(href='#')
+                //-         i.ti-email
+                //-         span Inbox
+                //-     li
+                //-       a(href='#')
+                //-         i.ti-settings
+                //-         span Setting
+                //-     li
+                //-       a(href='#')
+                //-         i.ti-lock
+                //-         span Lock Screen
+                //-     li
+                //-       a(href='/logout')
+                //-         i.ti-power-off
+                //-         span Logout
+                 

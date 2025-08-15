@@ -1,0 +1,35 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/dashboardVilog.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Vlog Activity Summary Table
+        .row.result
+            .col-12 
+                .row.chart-type-error
+                    h6.text-center.d-center Pie chart of Vlog status distribution
+                    #chartTypeError
+            .col-12
+                .row.table-data.d-center
+                    h6.text-center.d-center Vilog Data Table
+                    #tableData
+            .col-12
+                .row.chart-V_Acc
+                    h6.text-center.d-center Solar voltage bar chart by measurement point
+                    #chartVAcc
+            .col-12
+                .row.chart-V_Acc
+                    h6.text-center.d-center Logger voltage bar chart by measurement point
+                    #chartVLogger
+            
+            .col-12
+                .row.chart-V_Acc
+                    h6.text-center.d-center Metter voltage bar chart by measurement point
+                    #chartVMetter
+            
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/dashboardVilog.js") 
+    script(src="/js/util.js") 

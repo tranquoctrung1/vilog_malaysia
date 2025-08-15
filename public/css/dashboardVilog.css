@@ -1,0 +1,57 @@
+.table-header 
+{
+    background-color: #3498db;
+}
+
+.font-white {
+    color: #fff
+}
+
+#tableData {
+    /* overflow: scroll; */
+    width: 97%;
+}
+#chartTypeError, #chartVAcc, #chartVLogger, #chartVMetter
+{
+    width: 100%;
+}
+
+#chartTypeError {
+    height: 400px;
+}
+
+#chartVAcc, #chartVLogger, #chartVMetter
+{
+    height: 1400px;
+}
+
+
+.d-center
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.chart-type-error, .chart-V_acc{
+    padding: 20px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+
+    box-shadow: 0 0 5px 0 rgb(0 0 0 / 20%);
+    margin-bottom: 10px;
+}
+
+.table-data {
+    border-radius: 10px;
+    box-shadow: 0 0 5px 0 rgb(0 0 0 / 20%);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}

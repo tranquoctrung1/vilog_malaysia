@@ -1,0 +1,45 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/dashboardTotal.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Data Overview
+        
+        .row.result
+            .col-12 
+                .row
+                    .col-12
+                        h5.text-center#titleChartDay
+                    .col-sm-9
+                        #chartDayCircle 
+                    .col-sm-3
+                        #tableDataDay
+                    //- .col-sm-5 
+                    //-     #chartBarDay
+            .col-12
+                .row
+                    .col-12
+                        h5.text-center#titleChartMonth
+                    .col-sm-9
+                        #chartMonthCircle 
+                    .col-sm-3
+                        #tableDataMonth
+                    //- .col-sm-4 
+                    //-     #chartBarMonth
+            .col-12 
+                .row
+                    .col-12
+                        h5.text-center#titleChartYear
+                    .col-sm-9
+                        #chartYearCircle 
+                    .col-sm-3
+                        #tableDataYear
+                    //- .col-sm-4 
+                    //-     #chartBarYear
+
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/dashboardTotal.js")
+    script(src="/js/util.js") 

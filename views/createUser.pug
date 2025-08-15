@@ -1,0 +1,107 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/createUser.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Create User
+        .row.info
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbUserName.input-group-text Username
+                    input.form-control#userName2.form-select( type="text" aria-label='lbUserName' aria-describedby='lbUserName' list="listUser")
+                    datalist#listUser 
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbPassword.input-group-text Password
+                    input.form-control#password.form-select( type="password" aria-label='lbPassword' aria-describedby='lbPassword' )
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbEmail.input-group-text Email
+                    input.form-control#email.form-select( type="email" aria-label='lbEmail' aria-describedby='lbEmail' )
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbRole.input-group-text Role
+                    input.form-control#role.form-select( type="text" aria-label='lbRole' aria-describedby='lbRole' list="listRole")
+                    datalist#listRole
+            .col-sm-6 
+                .input-group.mb-3
+                    button#lbStaffId.btn.btn-outline-primary(type='button')  Employee Name
+                    input.form-control#staffId.form-select( type="text" aria-label='lbStaffId' aria-describedby='lbStaffId' list="listStaffId")
+                    datalist#listStaffId
+            .col-sm-6 
+                .input-group.mb-3
+                    button#lbConsumerId.btn.btn-outline-primary(type='button') Consumer Name
+                    input.form-control#consumerId.form-select( type="text" aria-label='lbConsumerId' aria-describedby='lbConsumerId' list="listConsumerId")
+                    datalist#listConsumerId
+            .col-sm-6.d-none
+                .input-group.mb-3
+                    span#lbId.input-group-text id
+                    input.form-control#id.form-select( type="text" aria-label='lbId' aria-describedby='lbId' )
+            .col-12.button
+                .box-button 
+                    button.btn.btn-success#btnInsert(type="button") Add
+                    button.btn.btn-info#btnUpdate(type="button") Update
+                    button.btn.btn-danger#btnDelete(type="button") Delete
+            #Model.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='ModelLabel' aria-hidden='true')
+                .modal-dialog.modal-lg(role='document')
+                    .modal-content
+                        .modal-header
+                            h5#ModelLabel.modal-title Add Infomation
+                            span.close-button(data-dismiss='modal') x
+                        .modal-body
+                            .row#rowStaff 
+                                .col-sm-6 
+                                    .input-group.mb-3
+                                        span#lbModalFullNameStaff.input-group-text Full name employee
+                                        input.form-control#modalFullNameStaff.form-select( type="text" aria-label='lbModalFullNameStaff' aria-describedby='lbModalFullNameStaff' list="listModalFullNameStaff" onchange="modalFullNameStaffChanged(this)")
+                                        datalist#listModalFullNameStaff
+                                .col-sm-6 
+                                    .input-group.mb-3
+                                        span#lbModalTelephoneStaff.input-group-text Phone
+                                        input.form-control#modalTelephoneStaff.form-select( type="text" aria-label='lbModalTelephoneStaff' aria-describedby='lbModalTelephoneStaff')
+                                .col-sm-12
+                                    .input-group.mb-3
+                                        span#lbModalAddressStaff.input-group-text Address 
+                                        input.form-control#modalAddressStaff.form-select( type="text" aria-label='lbModalAddressStaff' aria-describedby='lbModalAddressStaff')
+                                .col-sm-12.d-none
+                                    .input-group.mb-3
+                                        span#lbIdStaff.input-group-text Id
+                                        input.form-control#modalIdStaff.form-select( type="text" aria-label='lbIdStaff' aria-describedby='lbIdStaff' )
+                                .col-12.button
+                                    .box-button 
+                                        button.btn.btn-success#btnModalStaffInsert(type="button" onclick="insertStaff(this)") Add
+                                        button.btn.btn-info#btnModalStaffUpdate(type="button" onclick="updateStaff(this)") Update
+                                        button.btn.btn-danger#btnModalStaffDelete(type="button" onclick="deleteStaff(this)") Delete
+                            .row#rowConsumer
+                                .col-sm-6 
+                                    .input-group.mb-3
+                                        span#lbModalFullNameConsumer.input-group-text Full name consumer 
+                                        input.form-control#modalFullNameConsumer.form-select( type="text" aria-label='lbModalFullNameConsumer' aria-describedby='lbModalFullNameConsumer' list="listModalFullNameConsumer" onchange="modalFullNameConsumerChanged(this)")
+                                        datalist#listModalFullNameConsumer
+                                .col-sm-6 
+                                    .input-group.mb-3
+                                        span#lbModalTelephoneConsumer.input-group-text Phone
+                                        input.form-control#modalTelephoneConsumer.form-select( type="text" aria-label='lbModalTelephoneConsumer' aria-describedby='lbModalTelephoneConsumer')
+                                .col-sm-12
+                                    .input-group.mb-3
+                                        span#lbModalAddressConsumer.input-group-text Address 
+                                        input.form-control#modalAddressConsumer.form-select( type="text" aria-label='lbModalAddressConsumer' aria-describedby='lbModalAddressConsumer')
+                                .col-sm-12.d-none
+                                    .input-group.mb-3
+                                        span#lbIdConsumer.input-group-text Id
+                                        input.form-control#modalIdConsumer.form-select( type="text" aria-label='lbIdConsumer' aria-describedby='lbIdConsumer' )
+                                .col-12.button
+                                    .box-button 
+                                        button.btn.btn-success#btnModalConsumerInsert(type="button" onclick="insertConsumer(this)") Add
+                                        button.btn.btn-info#btnModalConsumerUpdate(type="button" onclick="updateConsumer(this)") Update
+                                        button.btn.btn-danger#btnModalConsumerDelete(type="button" onclick="deleteConsumer(this)") Delete
+                        .modal-footer
+                            button.btn.btn-secondary(type='button' ) Close
+block linkcriptbody
+    script(src="/js/hostname.js")
+    script(src="/js/staff.js")
+    script(src="/js/consumer.js")
+    script(src="/js/createUser.js")
+    script(src="/js/util.js") 

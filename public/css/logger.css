@@ -1,0 +1,22 @@
+.check-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#chooseSerialNumber {
+  width: 85%;
+}
+
+.button,
+.choose-serial-number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button .box-button button {
+  margin: 0 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+}

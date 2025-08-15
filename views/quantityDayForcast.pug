@@ -1,0 +1,33 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/quantityDayForcast.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Dự Báo Sản Lượng Ngày
+        .row.info
+            .col-sm-4
+                span.ml-2.mr-3 Chọn vị trí
+                select.form-select.form-select-sm#selectSite(aria-label='.form-select-sm example')
+            .col-sm-4
+                span.ml-2.mr-3 Tháng Bắt Đầu 
+                input#startDate(type='month' name='startDate' value='' min='1970-01-01T00:00' max='' pattern="[0-9]{4}-[0-9]{2}")
+            .col-sm-12.button
+                button.btn.btn-primary.btn-sm#viewQuantityDayForcast Xem
+        .row.result
+            .col-12
+                .loading
+                    img#loading.hide(src='/images/loading.svg')
+                h5.text-center#title-chart
+                #chart
+            .col-12 
+                h5.text-center#title-chart-circle 
+                #chartCircle 
+            .col-12
+                #tablePlaceHolder
+
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/util.js") 
+    script(src="/js/quantityDayForcast.js") 

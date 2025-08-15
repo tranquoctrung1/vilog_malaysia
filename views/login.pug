@@ -1,0 +1,59 @@
+doctype html
+html.h-100
+  head
+    link(rel='apple-touch-icon' sizes='57x57' href='/favicon/apple-icon-57x57.png')
+    link(rel='apple-touch-icon' sizes='60x60' href='/favicon/apple-icon-60x60.png')
+    link(rel='apple-touch-icon' sizes='72x72' href='/favicon/apple-icon-72x72.png')
+    link(rel='apple-touch-icon' sizes='76x76' href='/favicon/apple-icon-76x76.png')
+    link(rel='apple-touch-icon' sizes='114x114' href='/favicon/apple-icon-114x114.png')
+    link(rel='apple-touch-icon' sizes='120x120' href='/favicon/apple-icon-120x120.png')
+    link(rel='apple-touch-icon' sizes='144x144' href='/favicon/apple-icon-144x144.png')
+    link(rel='apple-touch-icon' sizes='152x152' href='/favicon/apple-icon-152x152.png')
+    link(rel='apple-touch-icon' sizes='180x180' href='/favicon/apple-icon-180x180.png')
+    link(rel='icon' type='image/png' sizes='192x192' href='/favicon/android-icon-192x192.png')
+    link(rel='icon' type='image/png' sizes='32x32' href='/favicon/favicon-32x32.png')
+    link(rel='icon' type='image/png' sizes='96x96' href='/favicon/favicon-96x96.png')
+    link(rel='icon' type='image/png' sizes='16x16' href='/favicon/favicon-16x16.png')
+    link(rel='manifest' href='/favicon/manifest.json')
+    meta(name='msapplication-TileColor' content='#ffffff')
+    meta(name='msapplication-TileImage' content='/favicon/ms-icon-144x144.png')
+    meta(name='theme-color' content='#ffffff')
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    title #{title}
+    // Styles
+    link(href='/assets/css/lib/font-awesome.min.css' rel='stylesheet')
+    link(href='/assets/css/lib/themify-icons.css' rel='stylesheet')
+    link(href='/assets/css/lib/bootstrap.min.css' rel='stylesheet')
+    link(href='/assets/css/lib/helper.css' rel='stylesheet')
+    link(href='/assets/css/style.css' rel='stylesheet')
+    link(rel="stylesheet" href="/css/login.css")
+  body.h-100
+    .unix-login.h-100
+      .container-fluid.h-100
+        .row.justify-content-center.h-100
+          .col-lg-6.justify-content-center.mt-auto.mb-auto
+              .login-form
+                h4 #{title}
+                .box-image
+                  img(src="/images/logo.png" alt="logo lawaco")
+                small.form-text.text-danger(id="errorLogin") #{errorLogin}
+                form(action='/login' name='login-form' method="post" onsubmit='return(validate());')
+                  .form-group
+                    label Username
+                    input.form-control(type='text' placeholder='Username' name='username' id='username')
+                    small.form-text.text-danger(id='errorUsername')
+                  .form-group
+                    label Password
+                    input.form-control(type='password' placeholder='Password' name='password' id='password')
+                    small.form-text.text-danger(id='errorPassword')
+                  .checkbox
+                    label
+                      input(type='checkbox')
+                      |  Remember Me
+                    label.pull-right
+                      a(href='#') Forgotten Password?
+                  button.btn.btn-primary.btn-flat.m-b-30.m-t-30(type='submit') Sign in
+    script(src='/js/validateFormLogin.js')
+                

@@ -1,0 +1,74 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/configVilog.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Config Vilog
+        .row.info
+            .col-12
+                .row 
+                    .col-sm-6
+                        .input-group.mb-3
+                            span#lbSite.input-group-text Device Id
+                            input.form-control#site.form-select( type="text" aria-label='lbSite' aria-describedby='lbSite' list="listSite")
+                            datalist#listSite
+                    .col-sm-6
+                        .input-group.mb-3
+                            span#lbAction.input-group-text Config 
+                            select.form-control#action.form-select( type="text" aria-label='lbAction' aria-describedby='lbAction' onChange="onActionChanged(this)")
+                                option(value='' checked)
+                                option(value='tdc') Set time send data
+                                option(value='ser') Ip server address
+                                option(value='bau') Set baud modbus speed
+                                option(value='bit') Set data bit modbus
+                                option(value='par') Check parity modbus
+                                option(value='stop') Set stop bit modbus 
+                                option(value='client') Set client modbus
+                                option(value='pub') Set MQTT public topic
+                                option(value='sub') Set MQTT subcribe topic 
+                    .col-sm-6#col-tdc.d-none.function
+                        .input-group.mb-3
+                            span#lbTimeSend.input-group-text Time send data
+                            input.form-control#tdc(type='number' placeholder='Time send data' aria-label='lbTimeSend' aria-describedby='lbTimeSend')
+                    .col-sm-6#col-ser.d-none.function
+                        .input-group.mb-3
+                            span#lbServerAddress.input-group-text Ip server
+                            input.form-control#ser(type='text' placeholder='127.0.0.1,1883' aria-label='lbServerAddress' aria-describedby='lbServerAddress')
+                    .col-sm-6#col-bau.d-none.function
+                        .input-group.mb-3
+                            span#lbBau.input-group-text Baud modbus speed
+                            input.form-control#bau(type='number' placeholder='Baud modbus speed' aria-label='lbBau' aria-describedby='lbBau')
+                    .col-sm-6#col-bit.d-none.function
+                        .input-group.mb-3
+                            span#lbDataBit.input-group-text Data bit modbus
+                            input.form-control#bit(type='text' placeholder='Data bit modbus' aria-label='lbDataBit' aria-describedby='lbDataBit')
+                    .col-sm-6#col-par.d-none.function
+                        .input-group.mb-3
+                            span#lbParity.input-group-text Parity modbus
+                            input.form-control#par(type='text' placeholder='Parity modbus' aria-label='lbParity' aria-describedby='lbParity')
+                    .col-sm-6#col-stop.d-none.function
+                        .input-group.mb-3
+                            span#lbStopBit.input-group-text Stop bit modbus
+                            input.form-control#stop(type='text' placeholder='Stop bit modbus' aria-label='lbStopBit' aria-describedby='lbStopBit')
+                    .col-sm-6#col-client.d-none.function
+                        .input-group.mb-3
+                            span#lbClient.input-group-text Client modbus
+                            input.form-control#client(type='text' placeholder='Client modbus' aria-label='lbClient' aria-describedby='lbClient')
+                    .col-sm-6#col-pub.d-none.function
+                        .input-group.mb-3
+                            span#lbPublic.input-group-text MQTT public topic
+                            input.form-control#pub(type='text' placeholder='MQTT public topic' aria-label='lbPublic' aria-describedby='lbPublic')
+                    .col-sm-6#col-sub.d-none.function
+                        .input-group.mb-3
+                            span#lbSubcribe.input-group-text MQTT subcribe topic
+                            input.form-control#sub(type='text' placeholder='MQTT subcribe topic' aria-label='lbSubcribe' aria-describedby='lbSubcribe')
+                    .col-12.text-center
+                        button.btn.btn-primary(onclick="updateModbusClicked()") Update
+
+block linkcriptbody
+    script(src="/js/hostname.js")
+    script(src="/js/util.js") 
+    script(src="/js/configVilogTab.js")
+    script(src="/js/configVilog.js")

@@ -1,0 +1,29 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/dataHourLogger.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Hourly data 
+        .row.info
+            .col-sm-4
+                span.ml-2.mr-3 Choose site
+                select.form-select.form-select-sm#selectSite(aria-label='.form-select-sm example')
+            .col-sm-4 
+                span.ml-2.mr-3 Start hour
+                input#startDate(type='datetime-local' name='startDate' value='' min='1970-01-01T00:00' max='')
+            .col-sm-4 
+                span.ml-2.mr-3 End hour
+                input#endDate(type='datetime-local' name='endDate' value='' min='1970-01-01T00:00' max='')
+            .col-sm-12.button  
+                button.btn.btn-primary.btn-sm#viewDataHourLogger View
+        .row.result
+            .col 
+                #tablePlaceHolder
+                    .loading
+                        img#loading.hide(src='/images/loading.svg')
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/datahourLogger.js") 
+    script(src="/js/util.js") 

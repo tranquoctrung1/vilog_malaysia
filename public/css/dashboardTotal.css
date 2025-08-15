@@ -1,0 +1,42 @@
+#chartDayCircle,
+#chartMonthCircle,
+#chartYearCircle {
+  height: 350px;
+}
+
+#tableDataDay,
+#tableDataMonth,
+#tableDataYear {
+  height: 350px;
+  overflow-y: scroll;
+}
+
+/* width */
+#tableDataDay::-webkit-scrollbar,
+#tableDataMonth::-webkit-scrollbar,
+#tableDataYear::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+#tableDataDay::-webkit-scrollbar-track,
+#tableDataMonth::-webkit-scrollbar-track,
+#tableDataYear::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+/* Handle */
+#tableDataDay::-webkit-scrollbar-thumb,
+#tableDataMonth::-webkit-scrollbar-thumb,
+#tableDataYear::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}

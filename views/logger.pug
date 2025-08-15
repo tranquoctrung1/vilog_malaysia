@@ -1,0 +1,63 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/logger.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Thiết Bị Logger
+        .row.info
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbSerialNumber.input-group-text Số serial
+                    input.form-control#serialNumber.form-select( type="text" aria-label='lbSerialNumber' aria-describedby='lbSerialNumber' list="listSerial")
+                    datalist#listSerial 
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbPushStock.input-group-text Ngày nhập kho
+                    input.form-control#datePushStock(type='date'  aria-label='lbPushStock' aria-describedby='lbPushStock')
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbProducer.input-group-text Nhà sản xuất
+                    input.form-control#producer(type='text' placeholder='Nhà sản xuất' aria-label='lbProducer' aria-describedby='lbProducer')
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbBranch.input-group-text Hiệu
+                    input.form-control#branch(type='text' placeholder='Hiệu' aria-label='lbBranch' aria-describedby='lbBranch')
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbModel.input-group-text Model
+                    input.form-control#model(type='text' placeholder='Model' aria-label='lbModel' aria-describedby='lbModel')
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbStatus.input-group-text Tình Trạng
+                    input.form-control#status(type='text' placeholder='Tình Trạng' aria-label='lbStatus' aria-describedby='lbStatus')
+            .col-sm-6
+                .row 
+                    .col-sm-10.pl-0
+                        .input-group.mb-3
+                            input#urlUploadFile.form-control(type='file')
+                            label.input-group-text(for='urlUploadFile') Upload Tài Liệu Logger
+                    .col-sm-2.check-box
+                        .form-check
+                            input#isInstall.form-check-input(type='checkbox' value='')
+                            label.form-check-label(for='isInstall')
+                                | Đã Lắp Đặt
+            .col-sm-6 
+                .input-group.mb-3
+                    span#lbNote.input-group-text Ghi chú
+                    input.form-control#note(type='text' placeholder='Ghi chú' aria-label='lbNote' aria-describedby='lbNote')
+            .col-sm-6.d-none
+                .input-group.mb-3
+                    span#lbId.input-group-text id
+                    input.form-control#id(type='text' placeholder='id' aria-label='lbId' aria-describedby='lbId')
+
+            .col-12.button
+                .box-button 
+                    button.btn.btn-success#btnInsert(type="button") Thêm
+                    button.btn.btn-info#btnUpdate(type="button") Sửa
+                    button.btn.btn-danger#btnDelete(type="button") Xóa
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/logger.js") 
+    script(src="/js/util.js") 

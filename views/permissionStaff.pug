@@ -1,0 +1,37 @@
+extends ./partial/layout.pug
+block linkcss  
+    link(rel="stylesheet", href="/css/permissionStaff.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Staff access data points
+        .row.info
+            .col-sm-12
+                .input-group.mb-3
+                    span#lbUserName.input-group-text Username
+                    input.form-control#userName2.form-select( type="text" aria-label='lbUserName' aria-describedby='lbUserName' list="listUser")
+                    datalist#listUser 
+            .col-sm-12.d-none
+                .input-group.mb-3
+                    span#lbIdUser.input-group-text Id
+                    input.form-control#idUser.form-select( type="text" aria-label='lbIdUser' aria-describedby='lbIdUser' )
+            .col-sm-12 
+                .row
+                    .col-sm-6
+                        h6.title-site-drag.text-center List points
+                        .box-drag
+                            ul#siteDrag
+                    .col-sm-6 
+                        h6.title-site-drop.text-center List accessed points
+                        .box-drop
+                            ul#siteDrop
+            .col-12.button.mt-3
+                .box-button 
+                    button.btn.btn-success#btnUpdate(type="button") Update
+
+block linkcriptbody
+    script(src="/assets/js/lib/sortable.min.js")
+    script(src="/js/hostname.js")
+    script(src="/js/permissionStaff.js") 
+    script(src="/js/util.js") 

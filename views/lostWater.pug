@@ -1,0 +1,27 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/alarmLostWater.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Báo Cáo Rò Rỉ Thất Thoát
+        .row.info
+            .col-12.info__col
+                .btn-reload 
+                    button.btn.btn-primary#reload Tải lại
+                .input-group.input-group-sm.mb-3
+                    span#inputGroup-sizing-sm.input-group-text Tìm kiếm
+                    input.form-control#searchInfo(type='text' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm')
+
+        .row.result.pl-1.pr-1
+            .loading
+                img#loading.show(src='/images/loading.svg')
+            .col-12.p-0
+                .row#data
+                #loadMore 
+                    button.btn.btn-sm.btn-primary#loadMoreButton(onclick="onLoadmoreClick(); return false;") Xem Thêm
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/util.js") 
+    script(src="/js/alarmLostWater.js") 

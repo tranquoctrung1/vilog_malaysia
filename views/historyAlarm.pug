@@ -1,0 +1,27 @@
+extends ./partial/layout.pug
+block linkcss
+	link(rel="stylesheet", href="/css/historyAlarm.css")
+	link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+	.container-fluid
+		.row.title-pressure
+			h3 History alarm
+		.row.info
+			.col-sm-6
+				span.ml-2.mr-3 Start hour 
+				input#startDate(type='datetime-local' name='startDate' value='' min='1970-01-01T00:00' max='')
+			.col-sm-6
+				span.ml-2.mr-3 End hour 
+				input#endDate(type='datetime-local' name='startDate' value='' min='1970-01-01T00:00' max='')
+			.col-sm-12.button.text-center
+				button.btn.btn-primary.btn-md#viewHistoryAlarm View
+		.row.result
+			.loading
+				img#loading.show(src='/images/loading.svg')
+			.col-12 
+				#tablePlaceHolder
+
+block linkcriptbody
+	script(src="/js/hostname.js") 
+	script(src="/js/historyAlarm.js")
+	script(src="/js/util.js") 

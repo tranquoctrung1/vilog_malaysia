@@ -1,0 +1,16 @@
+.font-white {
+    color: white;
+    font-weight: 500;
+}
+
+.delay {
+    background-color: #f1c40f;
+}
+
+.error {
+    background-color: #e74c3c;
+}
+
+#tablePlaceHolder {
+    overflow: scroll;
+}

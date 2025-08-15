@@ -1,0 +1,18 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/viewConsumer.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Xem Khách Hàng
+        .row.result
+            .col 
+                #tablePlaceHolder
+                    .loading
+                        img#loading.hide(src='/images/loading.svg')
+
+block linkcriptbody
+    script(src="/js/hostname.js")
+    script(src="/js/viewConsumer.js")
+    script(src="/js/util.js") 

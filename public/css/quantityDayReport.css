@@ -1,0 +1,14 @@
+.form-select {
+  width: 157.8px;
+  height: 27px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button button {
+  padding: 5px 40px;
+}

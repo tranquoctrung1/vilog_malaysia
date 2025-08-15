@@ -1,0 +1,49 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/dataOnline.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Data Online
+        .row.info
+            .col-sm-4
+                span.ml-2.mr-3 Choose site
+                select.form-select.form-select-sm#selectSite(aria-label='.form-select-sm example')
+            .col-sm-4
+                span.ml-2.mr-3 Start day 
+                input#startDate(type='date' name='startDate' value='' min='1970-01-01T00:00' max='')
+            .col-sm-4
+                span.ml-2.mr-3 End day
+                input#endDate(type='date' name='endDate' value='' min='1970-01-01T00:00' max='')
+            .col-sm-12.button  
+                button.btn.btn-info.btn-sm.mr-4#filterChannel Fillter Channels
+                button.btn.btn-primary.btn-sm#viewDataOnline View
+        .row.result
+            .col 
+                #tablePlaceHolder
+                    .loading
+                        img#loading.hide(src='/images/loading.svg')
+            .col-12
+                .row#channel_cards 
+            .col-12 
+                #chart  
+            .col-12
+                #dataTable
+
+            
+        #Model.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='ModelLabel' aria-hidden='true')
+            .modal-dialog.modal-lg(role='document')
+                .modal-content
+                    .modal-header
+                        h5#ModelLabel.modal-title List channels
+                        span(data-dismiss='modal') x
+                    .modal-body#bodyModal
+                        
+                    //- .modal-footer
+                        //- button.btn.btn-secondary(type='button' data-dismiss='modal') Đóng
+
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/dataOnline.js") 
+    script(src="/js/util.js") 

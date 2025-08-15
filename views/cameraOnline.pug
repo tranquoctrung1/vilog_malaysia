@@ -1,0 +1,48 @@
+extends ./partial/layoutNonePreload.pug
+block linkcss
+    link(rel="stylesheet", href="/css/cameraOnline.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 Camera Online
+        .row.info
+            .col-sm-6
+                span.ml-2.mr-3 Choose Station
+                select.form-select.form-select-sm#selectStation(aria-label='.form-select-sm example')
+        .row.result
+            .col-sm-6
+                #camera1.box-camera
+                    canvas#canvas1(style='width: 100%')
+                    .box-action
+                        button#play1(type='button')
+                            i.fa.fa-play-circle(aria-hidden='true')
+                        button#pause1(type='button')
+                            i.fa.fa-pause-circle-o(aria-hidden='true')
+                        button#zoomIn1(type='button')
+                            i.fa.fa-search-plus(aria-hidden='true')
+                        button#zoomOut1(type='button')
+                            i.fa.fa-search-minus(aria-hidden='true')
+            .col-sm-6
+                #camera2.box-camera
+                    canvas#canvas2(style='width: 100%')
+                    .box-action
+                        button#play2(type='button')
+                            i.fa.fa-play-circle(aria-hidden='true')
+                        button#pause2(type='button')
+                            i.fa.fa-pause-circle-o(aria-hidden='true')
+                        button#zoomIn2(type='button')
+                            i.fa.fa-search-plus(aria-hidden='true')
+                        button#zoomOut2(type='button')
+                            i.fa.fa-search-minus(aria-hidden='true')
+            .col-sm-12 
+                h6.text-center 
+                    a#linkCamera(href="http://113.161.151.44:81/doc/page/preview.asp", target="_blank", rel="noopener noreferrer") Xem Lịch Sử Camera Tại Đây
+
+                
+
+block linkcriptbody
+    script(src="/js/hostname.js")
+    script(src="/assets/js/lib/jsmpeg.min.js")
+    script(src="/js/cameraOnline.js")
+    script(src="/js/util.js") 

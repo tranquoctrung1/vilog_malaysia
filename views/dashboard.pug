@@ -1,0 +1,96 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/dashboard.css")
+    link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+    .container-fluid
+        .row.title-pressure
+            h3 DashBoard
+        .row.info
+            .col-12
+                span.ml-2.mr-3 Choose site
+                select.form-select.form-select-sm#selectSite(aria-label='.form-select-sm example')
+        .row.result
+            .col-md-4 
+                .row.quantity-time 
+                    .col-sm-6.p-2
+                        .box-value 
+                            .titles Today 
+                            .value 
+                                i.fa.fa-tint
+                                span#valueToDay 0
+                                span  m
+                                    sup 3
+                    .col-sm-6.p-2 
+                        .box-value 
+                            .titles Yesterday 
+                            .value 
+                                i.fa.fa-tint
+                                span#valuePrevDay 0
+                                span  m
+                                    sup 3
+                .row.chart
+                    .col-12 
+                        h6.text-center.text-muted#titleChartDay 
+                        #chartDay
+                .row.table-result 
+                    .col-12 
+                        #tableDay
+                
+            .col-md-4
+                .row.quantity-time 
+                    .col-sm-6.p-2 
+                        .box-value 
+                            .titles This month 
+                            .value 
+                                i.fa.fa-tint
+                                span#valueThisMonth 0
+                                span  m
+                                    sup 3
+                    .col-sm-6.p-2 
+                        .box-value 
+                            .titles Last month
+                            .value 
+                                i.fa.fa-tint
+                                span#valuePrevMonth 0
+                                span  m
+                                    sup 3
+                .row.chart
+                    .col-12
+                        h6.text-center.text-muted#titleChartMonth
+                        #chartMonth
+                .row.table-result 
+                    .col-12 
+                        #tableMonth
+                
+            .col-md-4
+                .row.quantity-time 
+                    .col-sm-6.p-2 
+                        .box-value 
+                            .titles This Year
+                            .value 
+                                i.fa.fa-tint
+                                span#valueThisYear 0
+                                span  m
+                                    sup 3
+                    .col-sm-6.p-2 
+                        .box-value 
+                            .titles Last Year 
+                            .value 
+                                i.fa.fa-tint
+                                span#valuePrevYear 0
+                                span  m
+                                    sup 3
+                .row.chart
+                    .col-12 
+                        h6.text-center.text-muted#titleChartYear
+                        #chartYear
+                .row.table-result 
+                    .col-12 
+                        #tableYear
+                
+            
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/js/dashboard.js") 
+    script(src="/js/util.js") 
