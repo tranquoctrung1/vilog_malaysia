@@ -67,6 +67,7 @@ module.exports.GetDataDashBoardVilog = async function (req, res) {
                 let channels = await ChannelModel.find({
                     LoggerId: item.LoggerId,
                 });
+
                 if (channels.length > 0) {
                     let channelResult = await GetChannelByLoggerId(
                         item,
@@ -160,6 +161,12 @@ async function GetChannelByLoggerId(site, channels) {
     for (let channel of channels) {
         let isError = false;
         let status = 0;
+        if (isError == false) {
+            if (channel.LastValue === null && channel.TimeStamp === null) {
+                status = 2;
+                isError = true;
+            }
+        }
         if (isError == false) {
             if (channel.TimeStamp != null) {
                 let diff = Math.round(

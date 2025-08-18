@@ -110,7 +110,7 @@ function CreateDataTable(data) {
                     }
                 }
             } else {
-                contentError = `NO DATA`;
+                contentError = ``;
                 background = '#95a5a6';
             }
 
@@ -147,7 +147,9 @@ function CreateDataTable(data) {
                     ? item.BatteryLogger
                     : 'NO DATA'
             }</td>
-            <td class="font-white">${item.StatusLogger}</td>
+            <td class="font-white">${
+                item.StatusLogger !== null ? item.StatusLogger : ''
+            }</td>
 			<td class="font-white">${contentError}</td>
 		</tr>`;
         }
@@ -245,6 +247,7 @@ function countErrorSite(data) {
                         obj.Normal += 1;
                         break;
                 }
+            } else {
             }
         }
 
