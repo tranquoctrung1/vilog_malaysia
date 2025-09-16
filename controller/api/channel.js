@@ -360,7 +360,7 @@ module.exports.InsertChannelConfig = async function (req, res) {
     data.FromHour = data.FromHour !== 'null' ? data.FromHour : null;
     data.ToHour = data.ToHour !== 'null' ? data.ToHour : null;
 
-    let check = await ChannelModel.find({ ChannelId: channelid });
+    let check = await ChannelModel.find({ ChannelId: data.ChannelId });
 
     if (check.length == 0) {
         let result = await ChannelModel.insertMany([data]);
@@ -378,7 +378,7 @@ module.exports.InsertChannelConfig = async function (req, res) {
             const DataLogger = mongoose.model(
                 'DataLogger',
                 DataLoggerSchema,
-                't_Data_Logger_' + channelid,
+                't_Data_Logger_' + data.ChannelId,
             );
 
             await DataLogger.createCollection();
@@ -395,7 +395,7 @@ module.exports.InsertChannelConfig = async function (req, res) {
             const DataLogger2 = mongoose.model(
                 'DataLogger2',
                 DataLoggerSchema2,
-                't_Index_Logger_' + channelid,
+                't_Index_Logger_' + data.ChannelId,
             );
 
             await DataLogger2.createCollection();

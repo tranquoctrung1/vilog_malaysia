@@ -113,6 +113,8 @@ module.exports.InsertSite = async function (req, res) {
 
 module.exports.UpdateSite = async function (req, res) {
     const data = req.body;
+    data.PipeSize = data.PipeSize !== 'null' ? data.PipeSize : 0;
+    data.MNF = data.MNF !== 'null' ? data.MNF : 0;
 
     let result = await SiteModel.updateOne(
         { _id: data.id },
