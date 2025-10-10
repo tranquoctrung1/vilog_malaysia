@@ -23,8 +23,11 @@ const app = express();
 
 // connect mongodb
 mongoose.connect(process.env.CONNECTION_STRING, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    maxPoolSize: 50, // 🔹 increase connection pool size (default: 100 for driver, 5 for older versions)
+    minPoolSize: 10, // optional: maintain at least 10 open connections
+    connectTimeoutMS: 10000, // optional: connection timeout
+    socketTimeoutMS: 45000, // optional: socket timeout
+    serverSelectionTimeoutMS: 10000, // optional: how long to wait for a server to respond
 });
 
 // call router

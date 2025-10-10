@@ -171,17 +171,68 @@ function viewChart() {
 
 // func draw chart
 function drawChart(channelId, location, channelname, units, data) {
-    if (chart != null && chart != undefined) {
-        chart.dispose();
-    }
+    // if (chart != null && chart != undefined) {
+    //     chart.dispose();
+    // }
+    // console.log(data);
 
-    // Themes begin
-    am4core.useTheme(am4themes_animated);
-    am4core.addLicense('ch-custom-attribution');
-    // Themes end
+    // // Themes begin
+    // am4core.useTheme(am4themes_animated);
+    // am4core.addLicense('ch-custom-attribution');
+    // // Themes end
 
-    chart = am4core.create('chartDataLogger', am4charts.XYChart);
-    chart.paddingRight = 20;
+    // chart = am4core.create('chartDataLogger', am4charts.XYChart);
+    // chart.paddingRight = 20;
+
+    // var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    // dateAxis.renderer.grid.template.location = 0;
+    // dateAxis.minZoomCount = 5;
+
+    // // this makes the data to be grouped (in the future)
+    // // dateAxis.groupData = true;
+    // // dateAxis.groupCount = 500;
+
+    // var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+    // var series = chart.series.push(new am4charts.LineSeries());
+    // series.dataFields.dateX = 'TimeStamp';
+    // series.dataFields.valueY = `${channelId}`;
+    // series.tooltipText = `{valueY} ${units}`;
+    // series.tooltip.pointerOrientation = 'vertical';
+    // series.tooltip.background.fillOpacity = 0.5;
+    // series.name = `${channelname}`;
+    // if (units == 'm') {
+    //     series.stroke = am4core.color('#ff0000');
+    // } else if (units == 'm3/h') {
+    //     series.stroke = am4core.color('#3498db');
+    // } else {
+    //     series.stroke = am4core.color('#2ecc71');
+    // }
+    // series.legendSettings.valueText = '{valueY.close}';
+    // series.legendSettings.itemValueText = '{valueY}';
+
+    // //// Make bullets grow on hover
+    // // var bullet = series.bullets.push(new am4charts.CircleBullet());
+    // // bullet.circle.strokeWidth = 1;
+    // // bullet.circle.radius = 2;
+    // // bullet.circle.fill = am4core.color("#fff");
+
+    // // var bullethover = bullet.states.create("hover");
+    // // bullethover.properties.scale = 1.3;
+
+    // chart.cursor = new am4charts.XYCursor();
+    // chart.cursor.xAxis = dateAxis;
+
+    // var scrollbarX = new am4core.Scrollbar();
+    // scrollbarX.marginBottom = 20;
+    // chart.scrollbarX = scrollbarX;
+
+    // chart.legend = new am4charts.Legend();
+    // chart.legend.position = 'bottom';
+    // chart.legend.scrollable = true;
+    // chart.legend.labels.template.text = '[bold {color}]{name}[/]';
+
+    // chart.exporting.menu = new am4core.ExportMenu();
 
     let dataForChart = [];
 
@@ -201,57 +252,41 @@ function drawChart(channelId, location, channelname, units, data) {
         }
     }
 
-    chart.data = dataForChart;
+    const trace = {
+        x: data.map((d) => new Date(d.TimeStamp)),
+        y: data.map((d) => d.Value),
+        mode: 'lines+markers',
+        type: 'scatter',
+        line: { shape: 'spline', width: 2 },
+        marker: { size: 5 },
+        name: `${location} | ${channelname}`,
+        hovertemplate: `%{customdata}: %{y}<extra></extra> ${units}`, // 👈 custom tooltip
+        customdata: data.map((d) => convertDateToString(new Date(d.TimeStamp))), // 👈 formatted timestamp
+    };
 
-    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-    dateAxis.renderer.grid.template.location = 0;
-    dateAxis.minZoomCount = 5;
+    const layout = {
+        title: `${channelId}_${channelname}`,
+        xaxis: { title: 'Time', type: 'date' },
+        yaxis: { title: 'Value' },
+        showlegend: true,
+        legend: {
+            orientation: 'h', // 👈 horizontal legend
+            yanchor: 'top',
+            y: -0.2, // 👈 move below the chart
+            xanchor: 'center',
+            x: 0.5,
+        },
+    };
 
-    // this makes the data to be grouped (in the future)
-    // dateAxis.groupData = true;
-    // dateAxis.groupCount = 500;
+    const config = {
+        displayModeBar: true, // 👈 always show toolbar
+        displaylogo: false, // hide Plotly logo
+        responsive: true, // auto resize on window change
+        scrollZoom: true, // allow mouse wheel zoom
+        modeBarButtonsToRemove: [], // keep all buttons
+    };
 
-    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-
-    var series = chart.series.push(new am4charts.LineSeries());
-    series.dataFields.dateX = 'TimeStamp';
-    series.dataFields.valueY = `${channelId}`;
-    series.tooltipText = `{valueY} ${units}`;
-    series.tooltip.pointerOrientation = 'vertical';
-    series.tooltip.background.fillOpacity = 0.5;
-    series.name = `${channelname}`;
-    if (units == 'm') {
-        series.stroke = am4core.color('#ff0000');
-    } else if (units == 'm3/h') {
-        series.stroke = am4core.color('#3498db');
-    } else {
-        series.stroke = am4core.color('#2ecc71');
-    }
-    series.legendSettings.valueText = '{valueY.close}';
-    series.legendSettings.itemValueText = '{valueY}';
-
-    //// Make bullets grow on hover
-    // var bullet = series.bullets.push(new am4charts.CircleBullet());
-    // bullet.circle.strokeWidth = 1;
-    // bullet.circle.radius = 2;
-    // bullet.circle.fill = am4core.color("#fff");
-
-    // var bullethover = bullet.states.create("hover");
-    // bullethover.properties.scale = 1.3;
-
-    chart.cursor = new am4charts.XYCursor();
-    chart.cursor.xAxis = dateAxis;
-
-    var scrollbarX = new am4core.Scrollbar();
-    scrollbarX.marginBottom = 20;
-    chart.scrollbarX = scrollbarX;
-
-    chart.legend = new am4charts.Legend();
-    chart.legend.position = 'bottom';
-    chart.legend.scrollable = true;
-    chart.legend.labels.template.text = '[bold {color}]{name}[/]';
-
-    chart.exporting.menu = new am4core.ExportMenu();
+    Plotly.newPlot('chartDataLogger', [trace], layout, config);
 
     createTableSingle(dataForChart, channelname, channelId);
 }
@@ -340,132 +375,185 @@ btnViewMutipleChannel.addEventListener('click', async function () {
 });
 
 function drawChartMultiple(data) {
-    if (chart != null && chart != undefined) {
-        chart.dispose();
+    // if (chart != null && chart != undefined) {
+    //     chart.dispose();
+    // }
+    // if (data.length > 1) {
+    //     am4core.useTheme(am4themes_animated);
+    //     // Themes end
+    //     // Create chart instance
+    //     chart = am4core.create('chartDataLogger', am4charts.XYChart);
+    //     am4core.addLicense('ch-custom-attribution');
+
+    //     // Create axes
+    //     var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    //     var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+    //     for (var i = 0; i < data.length; i++) {
+    //         if (data[i].length > 1) {
+    //             createSeries(data[i], data[i][data[i].length - 1]);
+    //         }
+    //     }
+
+    //     // Create series
+    //     function createSeries(s, name) {
+    //         var series = chart.series.push(new am4charts.LineSeries());
+    //         series.dataFields.valueY = 'Value';
+    //         series.dataFields.dateX = 'TimeStamp';
+    //         series.name = `${name.location} | ${name.channelname}`;
+    //         series.tooltipText = '{valueY}';
+    //         series.tooltip.pointerOrientation = 'vertical';
+    //         series.tooltip.background.fillOpacity = 0.5;
+    //         series.legendSettings.valueText = '{valueY.close}';
+    //         series.legendSettings.itemValueText = '{valueY}';
+
+    //         var segment = series.segments.template;
+    //         segment.interactionsEnabled = true;
+
+    //         var hoverState = segment.states.create('hover');
+    //         hoverState.properties.strokeWidth = 3;
+
+    //         var dimmed = segment.states.create('dimmed');
+    //         dimmed.properties.stroke = am4core.color('#dadada');
+
+    //         segment.events.on('over', function (event) {
+    //             processOver(event.target.parent.parent.parent);
+    //         });
+
+    //         segment.events.on('out', function (event) {
+    //             processOut(event.target.parent.parent.parent);
+    //         });
+    //         for (let i = 0; i < s.length - 1; i++) {
+    //             s[i].TimeStamp = convertDateFromApi(s[i].TimeStamp);
+    //         }
+    //         series.data = s;
+    //         return series;
+    //     }
+
+    //     chart.legend = new am4charts.Legend();
+    //     chart.legend.position = 'bottom';
+    //     chart.legend.scrollable = true;
+    //     chart.legend.labels.template.text = '[bold {color}]{name}[/]';
+
+    //     chart.cursor = new am4charts.XYCursor();
+    //     chart.cursor.xAxis = dateAxis;
+
+    //     var scrollbarX = new am4core.Scrollbar();
+    //     scrollbarX.marginBottom = 20;
+    //     chart.scrollbarX = scrollbarX;
+
+    //     // setTimeout(function() {
+    //     //   chart.legend.markers.getIndex(0).opacity = 0.3;
+    //     // }, 3000)
+    //     chart.legend.markers.template.states.create(
+    //         'dimmed',
+    //     ).properties.opacity = 0.3;
+    //     chart.legend.labels.template.states.create(
+    //         'dimmed',
+    //     ).properties.opacity = 0.3;
+
+    //     chart.legend.itemContainers.template.events.on(
+    //         'over',
+    //         function (event) {
+    //             processOver(event.target.dataItem.dataContext);
+    //         },
+    //     );
+
+    //     chart.legend.itemContainers.template.events.on('out', function (event) {
+    //         processOut(event.target.dataItem.dataContext);
+    //     });
+
+    //     function processOver(hoveredSeries) {
+    //         hoveredSeries.toFront();
+
+    //         hoveredSeries.segments.each(function (segment) {
+    //             segment.setState('hover');
+    //         });
+
+    //         hoveredSeries.legendDataItem.marker.setState('default');
+    //         hoveredSeries.legendDataItem.label.setState('default');
+
+    //         chart.series.each(function (series) {
+    //             if (series != hoveredSeries) {
+    //                 series.segments.each(function (segment) {
+    //                     segment.setState('dimmed');
+    //                 });
+    //                 series.bulletsContainer.setState('dimmed');
+    //                 series.legendDataItem.marker.setState('dimmed');
+    //                 series.legendDataItem.label.setState('dimmed');
+    //             }
+    //         });
+    //     }
+
+    //     function processOut() {
+    //         chart.series.each(function (series) {
+    //             series.segments.each(function (segment) {
+    //                 segment.setState('default');
+    //             });
+    //             series.bulletsContainer.setState('default');
+    //             series.legendDataItem.marker.setState('default');
+    //             series.legendDataItem.label.setState('default');
+    //         });
+    //     }
+
+    //     // document.getElementById("button").addEventListener("click", function () {
+    //     //   processOver(chart.series.getIndex(3));
+    //     // });
+    // }
+    const dataForChart = [...data];
+
+    const dataNameChart = [];
+    for (let i = 0; i < dataForChart.length; i++) {
+        dataNameChart.push(dataForChart[i][dataForChart[i].length - 1]);
     }
 
-    if (data.length > 1) {
-        am4core.useTheme(am4themes_animated);
-        // Themes end
-        // Create chart instance
-        chart = am4core.create('chartDataLogger', am4charts.XYChart);
-        am4core.addLicense('ch-custom-attribution');
+    let count = 0;
 
-        // Create axes
-        var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].length > 1) {
-                createSeries(data[i], data[i][data[i].length - 1]);
-            }
-        }
-
-        // Create series
-        function createSeries(s, name) {
-            var series = chart.series.push(new am4charts.LineSeries());
-            series.dataFields.valueY = 'Value';
-            series.dataFields.dateX = 'TimeStamp';
-            series.name = `${name.location} | ${name.channelname}`;
-            series.tooltipText = '{valueY}';
-            series.tooltip.pointerOrientation = 'vertical';
-            series.tooltip.background.fillOpacity = 0.5;
-            series.legendSettings.valueText = '{valueY.close}';
-            series.legendSettings.itemValueText = '{valueY}';
-
-            var segment = series.segments.template;
-            segment.interactionsEnabled = true;
-
-            var hoverState = segment.states.create('hover');
-            hoverState.properties.strokeWidth = 3;
-
-            var dimmed = segment.states.create('dimmed');
-            dimmed.properties.stroke = am4core.color('#dadada');
-
-            segment.events.on('over', function (event) {
-                processOver(event.target.parent.parent.parent);
-            });
-
-            segment.events.on('out', function (event) {
-                processOut(event.target.parent.parent.parent);
-            });
-            for (let i = 0; i < s.length - 1; i++) {
-                s[i].TimeStamp = convertDateFromApi(s[i].TimeStamp);
-            }
-            series.data = s;
-            return series;
-        }
-
-        chart.legend = new am4charts.Legend();
-        chart.legend.position = 'bottom';
-        chart.legend.scrollable = true;
-        chart.legend.labels.template.text = '[bold {color}]{name}[/]';
-
-        chart.cursor = new am4charts.XYCursor();
-        chart.cursor.xAxis = dateAxis;
-
-        var scrollbarX = new am4core.Scrollbar();
-        scrollbarX.marginBottom = 20;
-        chart.scrollbarX = scrollbarX;
-
-        // setTimeout(function() {
-        //   chart.legend.markers.getIndex(0).opacity = 0.3;
-        // }, 3000)
-        chart.legend.markers.template.states.create(
-            'dimmed',
-        ).properties.opacity = 0.3;
-        chart.legend.labels.template.states.create(
-            'dimmed',
-        ).properties.opacity = 0.3;
-
-        chart.legend.itemContainers.template.events.on(
-            'over',
-            function (event) {
-                processOver(event.target.dataItem.dataContext);
-            },
-        );
-
-        chart.legend.itemContainers.template.events.on('out', function (event) {
-            processOut(event.target.dataItem.dataContext);
+    if (dataForChart.length > 0) {
+        const traces = dataForChart.map((group) => {
+            return {
+                x: group.map((d) => new Date(d.TimeStamp)),
+                y: group.map((d) => d.Value),
+                mode: 'lines+markers',
+                type: 'scatter',
+                name: `${dataNameChart[count].location} | ${dataNameChart[count].channelname}`,
+                line: { shape: 'spline', width: 2 },
+                marker: { size: 6 },
+                hovertemplate: `%{customdata}: %{y}<extra></extra>`,
+                customdata: group.map((d) =>
+                    convertDateToString(new Date(d.TimeStamp)),
+                ),
+            };
         });
 
-        function processOver(hoveredSeries) {
-            hoveredSeries.toFront();
+        // ✅ Layout configuration
+        const layout = {
+            title: 'Data Chart Mutiple Channel',
+            xaxis: { title: 'Time', type: 'date' },
+            yaxis: { title: 'Value' },
+            showlegend: true,
+            legend: {
+                orientation: 'h',
+                yanchor: 'top',
+                y: -0.25,
+                xanchor: 'center',
+                x: 0.5,
+            },
+        };
 
-            hoveredSeries.segments.each(function (segment) {
-                segment.setState('hover');
-            });
+        // ✅ Plot configuration
+        const config = {
+            displayModeBar: true,
+            displaylogo: false,
+            responsive: true,
+            scrollZoom: true,
+        };
 
-            hoveredSeries.legendDataItem.marker.setState('default');
-            hoveredSeries.legendDataItem.label.setState('default');
-
-            chart.series.each(function (series) {
-                if (series != hoveredSeries) {
-                    series.segments.each(function (segment) {
-                        segment.setState('dimmed');
-                    });
-                    series.bulletsContainer.setState('dimmed');
-                    series.legendDataItem.marker.setState('dimmed');
-                    series.legendDataItem.label.setState('dimmed');
-                }
-            });
-        }
-
-        function processOut() {
-            chart.series.each(function (series) {
-                series.segments.each(function (segment) {
-                    segment.setState('default');
-                });
-                series.bulletsContainer.setState('default');
-                series.legendDataItem.marker.setState('default');
-                series.legendDataItem.label.setState('default');
-            });
-        }
-
-        // document.getElementById("button").addEventListener("click", function () {
-        //   processOver(chart.series.getIndex(3));
-        // });
+        // ✅ Draw chart
+        Plotly.newPlot('chartDataLogger', traces, layout, config);
     }
+
+    console.log(data);
 
     createTableMultiple(data);
 }
@@ -524,15 +612,15 @@ function createTableSingle(data, channelName, channelid) {
         buttons: [
             {
                 extend: 'excelHtml5',
-                title: `Du_Lieu_Lich_Su`,
+                title: `Data_Historical`,
             },
             {
                 extend: 'csvHtml5',
-                title: `Du_Lieu_Lich_Su`,
+                title: `Data_Historical`,
             },
             {
                 extend: 'pdfHtml5',
-                title: `Du_Lieu_Lich_Su`,
+                title: `Data_Historical`,
             },
         ],
     });
@@ -568,16 +656,14 @@ function convertData(data) {
             listData.push(obj);
         }
 
-        console.log(listData);
-
         for (let item of listData) {
             for (let i = 0; i < data.length; i++) {
                 if (i != index && data[i].length > 1) {
                     try {
                         let value = data[i].find((e) => {
                             return (
-                                e.TimeStamp.getTime() ==
-                                item.TimeStamp.getTime()
+                                new Date(e.TimeStamp).getTime() ==
+                                new Date(item.TimeStamp).getTime()
                             );
                         });
                         if (value == null || value == undefined) {
@@ -602,6 +688,8 @@ function convertData(data) {
 function createTableMultiple(data) {
     let convertDataTable = convertData(data);
 
+    console.log(convertDataTable);
+
     if (CheckExistsData(convertDataTable)) {
         let header = '';
         header += `<tr>`;
@@ -621,7 +709,9 @@ function createTableMultiple(data) {
             body += `<tr>`;
             for (let pro in item) {
                 if (pro == 'TimeStamp') {
-                    body += `<td>${convertDateToString(item[pro])}</td>`;
+                    body += `<td>${convertDateToString(
+                        new Date(item[pro]),
+                    )}</td>`;
                 } else {
                     body += `<td>${ConvertDataIntoTable(item[pro])}</td>`;
                 }

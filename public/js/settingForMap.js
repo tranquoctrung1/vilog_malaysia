@@ -160,39 +160,39 @@ function createListtree(data) {
     listree();
 }
 
-let expan = document.getElementById('expan');
+// let expan = document.getElementById('expan');
 
-expan.addEventListener('click', function (e) {
-    let expanNode = document.getElementsByClassName('listree-submenu-heading');
-    let submenu = document.getElementsByClassName('listree-submenu-items');
+// expan.addEventListener('click', function (e) {
+//     let expanNode = document.getElementsByClassName('listree-submenu-heading');
+//     let submenu = document.getElementsByClassName('listree-submenu-items');
 
-    if (!e.target.classList.contains('expanded')) {
-        for (element of expanNode) {
-            element.classList.add('expanded');
-            element.classList.remove('collapsed');
-        }
+//     if (!e.target.classList.contains('expanded')) {
+//         for (element of expanNode) {
+//             element.classList.add('expanded');
+//             element.classList.remove('collapsed');
+//         }
 
-        for (el of submenu) {
-            el.style.display = 'block';
-        }
+//         for (el of submenu) {
+//             el.style.display = 'block';
+//         }
 
-        e.target.src = '/images/collap-icon.png';
+//         e.target.src = '/images/collap-icon.png';
 
-        e.target.classList.add('expanded');
-    } else {
-        for (element of expanNode) {
-            element.classList.remove('expanded');
-            element.classList.add('collapsed');
-        }
+//         e.target.classList.add('expanded');
+//     } else {
+//         for (element of expanNode) {
+//             element.classList.remove('expanded');
+//             element.classList.add('collapsed');
+//         }
 
-        for (el of submenu) {
-            el.style.display = 'none';
-        }
-        e.target.src = '/images/expan-icon.png';
+//         for (el of submenu) {
+//             el.style.display = 'none';
+//         }
+//         e.target.src = '/images/expan-icon.png';
 
-        e.target.classList.remove('expanded');
-    }
-});
+//         e.target.classList.remove('expanded');
+//     }
+// });
 
 let searchSite = document.getElementById('searchSite');
 
@@ -213,24 +213,38 @@ function debounce(func, wait, immediate) {
 }
 
 function resetExpanede() {
-    let e = document.getElementById('expan');
+    //let e = document.getElementById('expan');
     let expanNode = document.getElementsByClassName('listree-submenu-heading');
     let submenu = document.getElementsByClassName('listree-submenu-items');
 
-    if (!e.classList.contains('expanded')) {
-        for (element of expanNode) {
+    for (const element of expanNode) {
+        if (element.dataset.site === undefined) {
+            element.classList.remove('collapsed');
             element.classList.add('expanded');
-            element.classList.remove('colapsed');
+        } else {
+            element.classList.remove('expanded');
+            element.classList.add('collapsed');
         }
-
-        for (el of submenu) {
-            el.style.display = 'block';
-        }
-
-        e.src = '/images/collap-icon.png';
-
-        e.classList.add('expanded');
     }
+
+    for (const el of submenu) {
+        el.style.display = 'block';
+    }
+
+    // if (!e.classList.contains('expanded')) {
+    //     for (element of expanNode) {
+    //         element.classList.add('expanded');
+    //         element.classList.remove('colapsed');
+    //     }
+
+    //     for (el of submenu) {
+    //         el.style.display = 'block';
+    //     }
+
+    //     e.src = '/images/collap-icon.png';
+
+    //     e.classList.add('expanded');
+    // }
 }
 
 searchSite.addEventListener(
@@ -258,8 +272,8 @@ searchSite.addEventListener(
                 }
             }
         }
-        resetExpanede();
         createListtree(dataFilter);
+        //resetExpanede();
         //expan.click();
     }, 1000),
 );

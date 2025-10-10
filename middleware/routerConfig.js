@@ -20,7 +20,7 @@ module.exports.RouterConfig = async function (req, res) {
             <li><a href="/"><i class="ti-map"></i> Map</a></li>`;
             } else if (item.Parent == 'Dashboard Vilog') {
                 content += `
-            <li><a href="/dashboardVilog"><i class="ti-home"></i>Dashboard Vilog</a></li>`;
+            <li><a href="/dashboardVilog"><i class="ti-dashboard"></i>Dashboard Vilog</a></li>`;
             } else if (item.Parent == 'HistoryAlarm') {
                 content += `
         <li><a href="/historyAlarm"><i class="ti-bell"></i> History Alarm</a></li>`;

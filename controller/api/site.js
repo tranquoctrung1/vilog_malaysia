@@ -112,34 +112,40 @@ module.exports.InsertSite = async function (req, res) {
 };
 
 module.exports.UpdateSite = async function (req, res) {
-    const data = req.body;
-    data.PipeSize = data.PipeSize !== 'null' ? data.PipeSize : 0;
-    data.MNF = data.MNF !== 'null' ? data.MNF : 0;
+    try {
+        const data = req.body;
+        data.PipeSize = data.PipeSize !== 'null' ? data.PipeSize : 0;
+        data.MNF = data.MNF !== 'null' ? data.MNF : 0;
+        data.TimeDelay =
+            data.TimeDelay !== 'null' ? parseFloat(data.TimeDelay) : 60;
 
-    let result = await SiteModel.updateOne(
-        { _id: data.id },
-        {
-            SiteId: data.SiteId,
-            Location: data.Location,
-            Latitude: data.Latitude,
-            Longitude: data.Longitude,
-            DisplayGroup: data.DisplayGroup,
-            LoggerId: data.LoggerId,
-            StartDay: data.StartDay,
-            StartHour: data.StartHour,
-            Status: data.Status,
-            PipeSize: data.PipeSize,
-            InterVal: data.InterVal,
-            Available: data.Available,
-            TimeDelay: data.TimeDelay,
-            Note: data.Note,
-            IsPrimayer: data.IsPrimayer,
-            MNF: data.MNF,
-            TypeMeter: data.TypeMeter,
-        },
-    );
+        let result = await SiteModel.updateOne(
+            { _id: data.id },
+            {
+                SiteId: data.SiteId,
+                Location: data.Location,
+                Latitude: data.Latitude,
+                Longitude: data.Longitude,
+                DisplayGroup: data.DisplayGroup,
+                LoggerId: data.LoggerId,
+                StartDay: data.StartDay,
+                StartHour: data.StartHour,
+                Status: data.Status,
+                PipeSize: data.PipeSize,
+                InterVal: data.InterVal,
+                Available: data.Available,
+                TimeDelay: data.TimeDelay,
+                Note: data.Note,
+                IsPrimayer: data.IsPrimayer,
+                MNF: data.MNF,
+                TypeMeter: data.TypeMeter,
+            },
+        );
 
-    res.json(result.nModified);
+        res.json(result.modifiedCount);
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 module.exports.DeleteSite = async function (req, res) {

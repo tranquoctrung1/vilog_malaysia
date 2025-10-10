@@ -10,6 +10,17 @@ block content
         .row
             .col.p-0
                 .map#map
+                .legend#legend
+                    div 
+                        div.p-2
+                            img(src="/images/green.png", alt="icon blue") 	
+                            span.ml-2 Normal
+                        div.p-2
+                            img(src="/images/yellow.png", alt="icon yellow") 	
+                            span.ml-2 Disconnected	
+                        div.p-2
+                            img(src="/images/red.png", alt="icon red") 	
+                            span.ml-2 Alarm
                 .icon-setting
                     .box-icon#config.config
                         i.fa.fa-cog.fa-spin.fa-2x.fa-fw.text-danger
@@ -20,13 +31,14 @@ block content
                 #panel.panel.d-none
                     #treeViewSite
                         .box-expan
-                            h5.text-center Search site
                             .row 
-                                .col-9
-                                    .input-group.input-group-sm.mb-3
-                                        input.form-control(type='text' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm' id="searchSite")
-                                .col-3
-                                    img(src="/images/expan-icon.png", alt="expan", srcset="" id="expan")
+                                .col-12 
+                                    h5.text-center Filter Group
+                                .col-12
+                                    .input-group.input-group-sm
+                                        input.form-control(type='text' placeholder="Search site" aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm' id="searchSite")
+                                //- .col-3
+                                //-     img(src="/images/expan-icon.png", alt="expan", srcset="" id="expan")
 
                         .box-listtree#listSite.mt-5
                         .box-view-mutiple-channel 
@@ -76,22 +88,16 @@ block content
     .container-fluid
         .row.text-center
             .col-sm-3 
-                h6.text-normal Total points: 
+                div.text-normal Total sites: 
                     span#totalSite.text-success
             .col-sm-3 
-                h6.text-normal Total data points collected: 
+                div.text-normal Total data present sites: 
                     span#totalSiteHasValue.text-success 
             .col-sm-3 
-                h6.text-normal Total active data points: 
-                    span#totalSiteActing.text-success 
-            .col-sm-3 
-                h6.text-normal Total delay data points: 
+                div.text-normal Total disconnected sites:
                     span#totalSiteDelay.text-warning 
             .col-sm-3 
-                h6.text-normal Total missing data points: 
-                    span#totalSiteNoValue.text-danger 
-            .col-sm-3 
-                h6.text-normal Total alarm data points: 
+                div.text-normal Total alarm sites:
                     span#totalSiteAlarm.text-danger 
 
 
@@ -101,6 +107,7 @@ block linkcriptbody
     script(src='/js/leaflet/context-menu.js')
     script(src='/axios/axios.min.js')
     script(src="/assets/js/lib/listtree/listree.umd.min.js") 
+    script(src='/js/plotly.min.js')
     script(src='/js/hostname.js')
     script(src='/js/map.js')
     script(src='/js/chartForMap.js')

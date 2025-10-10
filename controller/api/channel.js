@@ -441,7 +441,7 @@ module.exports.UpdateChannelConfig = async function (req, res) {
         },
     );
 
-    res.json(result.nModified);
+    res.json(result.modifiedCount);
 };
 
 module.exports.DeleteChannelConfig = async function (req, res) {

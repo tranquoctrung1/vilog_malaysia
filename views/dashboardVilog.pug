@@ -1,21 +1,124 @@
 extends ./partial/layout.pug
 block linkcss
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css")
+    link(href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" rel="stylesheet")
+    link(href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.bootstrap5.min.css" rel="stylesheet")
     link(rel="stylesheet", href="/css/dashboardVilog.css")
     link(rel="stylesheet", href="/css/pageCommon.css")
 block content
     .container-fluid
-        .row.title-pressure
-            h3 Vlog Activity Summary Table
-        .row.result
-            .col-12 
-                .row.chart-type-error
-                    h6.text-center.d-center Pie chart of Vlog status distribution
-                    #chartTypeError
-            .col-12
-                .row.table-data.d-center
-                    h6.text-center.d-center Vilog Data Table
-                    #tableData
+        .container-fluid.py-4
+            h2.mb-4.text-primary Vlog Site Activity Summary
+            .row.mb-5
+                .col-md-3.mb-3
+                    .card.card-kpi.p-3.text-center(data-filter="Total")
+                        i.fas.fa-sitemap.text-dark.kpi-icon.mb-2
+                        .kpi-title TOTAL SITES
+                        .kpi-value.text-dark#kpi-total 0
+                .col-md-3.mb-3
+                    .card.card-kpi.p-3.text-center.bg-info-subtle(data-filter="DataPresent")
+                        i.fas.fa-database.text-info.kpi-icon.mb-2
+                        .kpi-title DATA PRESENT
+                        .kpi-value.text-info#kpi-data-present 0
+
+                .col-md-3.mb-3
+                    .card.card-kpi.p-3.text-center.bg-warning-subtle(data-filter="Disconnected")
+                        i.fas.fa-plug-circle-xmark.text-warning.kpi-icon.mb-2
+                        .kpi-title DISCONNECTED
+                        .kpi-value.text-warning#kpi-disconnected 0
+                .col-md-3.mb-3
+                    .card.card-kpi.p-3.text-center.bg-danger-subtle(data-filter="Alarm")
+                        i.fas.fa-triangle-exclamation.text-danger.kpi-icon.mb-2
+                        .kpi-title ALARM SITES
+                        .kpi-value.text-danger#kpi-alarm 0
+
+            .card.card-kpi.p-4
+                h5.card-title.text-primary.mb-3
+                    | Vlog Data Table
+                    span.instruction-label.badge.bg-secondary-subtle.text-secondary.ms-2(title="Click on the KPI cards above to filter")
+                        i.fas.fa-mouse-pointer.me-1
+                        |  Click KPI Cards to Filter
+
+                .table-responsive
+                    table#vlogTable.table.table-striped.table-hover.w-100
+                        thead.table-light
+                            tr
+                                th SiteId
+                                th Sitename
+                                th Status
+                                th.w-150 Signal (dB)
+                                th Forward Flow (m3/h)
+                                th Reverse Flow (m3/h)
+                                th Battery Logger (V)
+                                th Alarm
+                        tbody#vlogTableBody
+                            //- tr(data-status="Disconnected" data-alarm="Yes" data-flow="0")
+                            //-     td VINA
+                            //-     td PUB
+                            //-     td Disconnected
+                            //-     td(data-signal="15") 15
+                            //-     td 0
+                            //-     td N/A
+                            //-     td 3.488V
+                            //-     td Yes
+                            //- tr(data-status="Connected" data-alarm="No" data-flow="120")
+                            //-     td BBB-01
+                            //-     td 3303
+                            //-     td Connected
+                            //-     td(data-signal="45") 45
+                            //-     td 120
+                            //-     td 5
+                            //-     td 4.100V
+                            //-     td No
+                            //- tr(data-status="Disconnected" data-alarm="Yes" data-flow="0")
+                            //-     td CCC-02
+                            //-     td 3303
+                            //-     td Disconnected
+                            //-     td(data-signal="25") 25
+                            //-     td 0
+                            //-     td N/A
+                            //-     td 2.848V
+                            //-     td Yes
+                            //- tr(data-status="Connected" data-alarm="No" data-flow="99")
+                            //-     td DDD-03
+                            //-     td RIV-2
+                            //-     td Connected
+                            //-     td(data-signal="35") 35
+                            //-     td 99
+                            //-     td 10
+                            //-     td 4.050V
+                            //-     td No
+                            //- tr(data-status="Connected" data-alarm="No" data-flow="50")
+                            //-     td EEE-04
+                            //-     td RIV-2
+                            //-     td Connected
+                            //-     td(data-signal="19") 19
+                            //-     td 50
+                            //-     td 2
+                            //-     td 3.950V
+                            //-     td No
+                            //- tr(data-status="Disconnected" data-alarm="Yes" data-flow="0")
+                            //-     td FFF-05
+                            //-     td HEAD-Q
+                            //-     td Disconnected
+                            //-     td(data-signal="10") 10
+                            //-     td 0
+                            //-     td N/A
+                            //-     td 3.200V
+                            //-     td Yes
 block linkcriptbody
     script(src="/js/hostname.js") 
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js")
+    script(src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js")
+    script(src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.bootstrap5.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js")
     script(src="/js/dashboardVilog.js") 
     script(src="/js/util.js") 

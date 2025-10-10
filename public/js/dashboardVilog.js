@@ -1,325 +1,367 @@
-let tableData = document.getElementById('tableData');
-let chartTypeError = document.getElementById('chartTypeError');
-let chartVAcc = document.getElementById('chartVAcc');
-let chartVLogger = document.getElementById('chartVLogger');
-let chartVMetter = document.getElementById('chartVMetter');
-
-let intervalGetData = 1000 * 60 * 2;
-
 let userName = document.getElementById('userName').innerHTML;
 if (userName == null || userName == undefined || userName.trim() == '') {
     userName = 'admin';
 }
 
-let role = 'admin';
+const urlGetStatusSite = `${hostname}/GetStatusSite/${userName}`;
 
-let urlGetDataDashBoardVilog = `${hostname}/GetDashBoardVilog/${userName}`;
-let urlGetDataDashBoardVilogForChart = `${hostname}/GetData3AVGDashBoardVilogVACC/${userName}`;
-let urlGetUserByUserName = `${hostname}/GetUserByUserName/${userName}`;
+const vlogTableBody = document.getElementById('vlogTableBody');
 
-function getData() {
-    let url = urlGetDataDashBoardVilog;
+let totalSites = 0;
+let disconnectedSites = 0;
+let dataPresent = 0;
+let alarmSites = 0;
+let sites = [];
+let siteDelay = [];
+let siteHasValue = [];
+let siteAlarm = [];
 
+function getStatusSite() {
     axios
-        .get(url)
+        .get(urlGetStatusSite)
         .then((res) => {
-            if (res.data.length > 0) {
-                setTimeout(() => {
-                    CreateDataTable(res.data);
-                }, 100);
-                setTimeout(() => {
-                    let data = countErrorSite(res.data);
-                    drawPieChart(data);
-                }, 100);
+            if (res?.data) {
+                totalSite = res.data.totalSite;
+                disconnectedSites = res.data.totalSiteDelay;
+                dataPresent = res.data.totalSiteHasValue;
+                alarmSites = res.data.totalSiteAlarm;
+
+                siteDelay = res.data.siteDelay;
+                siteHasValue = res.data.siteHasValue;
+                siteAlarm = res.data.siteAlarm;
+                sites = res.data.sites;
+
+                $('#kpi-total').text(totalSites);
+                $('#kpi-disconnected').text(disconnectedSites);
+                $('#kpi-data-present').text(dataPresent);
+                $('#kpi-alarm').text(alarmSites);
+
+                renderVilogTable(res.data);
+
+                drawTable();
             }
         })
         .catch((err) => {
-            console.log(err.message);
+            console.error(err);
         });
 }
 
-function getUser() {
-    let url = urlGetUserByUserName;
+function findValueChannel(data, siteid) {
+    const obj = {
+        signal: null,
+        flow: null,
+        reverse: null,
+        battery: null,
+    };
 
-    axios
-        .get(url)
-        .then((res) => {
-            if (res.data.length > 0) {
-                if (
-                    res.data[0].Role != null &&
-                    res.data[0].Role != undefined &&
-                    res.data[0].Role.trim() != ''
-                ) {
-                    role = res.data[0].Role;
-                }
-            }
+    const find = data.find((s) => s.SiteId === siteid);
+    if (find !== undefined) {
+        const flowChannel = find.ListChannel.find(
+            (c) => c.ForwardFlow === true,
+        );
+        const reverseChannel = find.ListChannel.find(
+            (c) => c.ReverseFlow === true,
+        );
 
-            if (role == 'consumer' || role == 'staff') {
-                chartVAcc.style.height = '600px';
-                chartVLogger.style.height = '600px';
-                chartVMetter.style.height = '600px';
-            }
-        })
-        .catch((err) => console.log(err.message));
-}
+        let batteryChannel = null;
+        let signalChannel = null;
 
-function CreateDataTable(data) {
-    tableData.innerHTML = '';
-
-    if (data.length > 0) {
-        let header = '';
-        let body = '';
-
-        header += `<tr>
-        <th class="font-white">SiteId</th>
-		<th class="font-white">Location</th>
-		<th class="font-white">Forward Flow</th>
-		<th class="font-white">Reverse Flow</th>
-		<th class="font-white">Forward Index</th>
-		<th class="font-white">Reverse Index</th>
-		<th class="font-white">Net Total</th>
-        <th class="font-white">Battery Logger</th>
-        <th class="font-white">Status</th>
-		<th class="font-white">Alarm</th>
-	   </tr>`;
-
-        for (let item of data) {
-            let contentError = '';
-            let background = '';
-            let isError = false;
-            if (item.Status.length > 0) {
-                const status = Math.min(...item.Status.map((x) => x.Status));
-
-                if (isError == false) {
-                    switch (status) {
-                        case 2:
-                            contentError = `Disconnected`;
-                            background = '#f1c40f';
-                            isError = true;
-                            break;
-                        case 4:
-                            contentError = `Low alarm data`;
-                            background = '#e74c3c';
-                            isError = true;
-                            break;
-                        default:
-                            contentError = `Normal . `;
-                            background = '#2ecc71';
-                            isError = true;
-                            break;
-                    }
-                }
-            } else {
-                contentError = ``;
-                background = '#95a5a6';
-            }
-
-            body += `<tr style="background-color: ${background}">
-            <td class="font-white">${item.SiteId}</td>
-			<td class="font-white">${item.Location}</td>
-			<td class="font-white">${
-                item.ForwardFlow !== null && item.ForwardFlow !== undefined
-                    ? item.ForwardFlow
-                    : 'NO DATA'
-            }</td>
-			<td class="font-white">${
-                item.ReverseFlow !== null && item.ReverseFlow !== undefined
-                    ? item.ReverseFlow
-                    : 'NO DATA'
-            }</td>
-			<td class="font-white">${
-                item.IndexForward !== null && item.IndexForward !== undefined
-                    ? item.IndexForward
-                    : 'NO DATA'
-            }</td>
-			<td class="font-white">${
-                item.IndexReverse !== null && item.IndexReverse !== undefined
-                    ? item.IndexReverse
-                    : 'NO DATA'
-            }</td>
-			<td class="font-white">${
-                item.IndexTotal !== null && item.IndexTotal !== undefined
-                    ? item.IndexTotal
-                    : 'NO DATA'
-            }</td>
-            <td class="font-white">${
-                item.BatteryLogger !== null && item.BatteryLogger !== undefined
-                    ? item.BatteryLogger
-                    : 'NO DATA'
-            }</td>
-            <td class="font-white">${
-                item.StatusLogger !== null ? item.StatusLogger : ''
-            }</td>
-			<td class="font-white">${contentError}</td>
-		</tr>`;
+        if (find.TypeMeter === 'SU') {
+            batteryChannel = find.ListChannel.find(
+                (c) => c.ChannelId === `${find.LoggerId}_110`,
+            );
+            signalChannel = find.ListChannel.find(
+                (c) => c.ChannelId === `${find.LoggerId}_109`,
+            );
+        } else if (find.TypeMeter === 'Kronhe') {
+            batteryChannel = find.ListChannel.find(
+                (c) => c.ChannelId === `${find.LoggerId}_06`,
+            );
+            signalChannel = find.ListChannel.find(
+                (c) => c.ChannelId === `${find.LoggerId}_07`,
+            );
         }
 
-        tableData.innerHTML = `<table class="table table-bordered dataTable no-footer" id="dataTable2" cellspacing="0" style="width: 100%;overflow-y:auto" role="grid" aria-describedby="dataTable_info"> 
-		<thead class="table-header"> ${header} 
-		</thead> 
-		<tbody>  ${body} 
-		</tbody> 
-		<tfoot>${header}</tfoot>
-		</table > `;
+        if (flowChannel !== undefined && flowChannel !== null) {
+            obj.flow = flowChannel.LastValue;
+        }
+        if (reverseChannel !== undefined && reverseChannel !== null) {
+            obj.reverse = reverseChannel.LastValue;
+        }
+        if (batteryChannel !== undefined && batteryChannel !== null) {
+            obj.battery = batteryChannel.LastValue;
+        }
+        if (signalChannel !== undefined && signalChannel !== null) {
+            obj.signal = signalChannel.LastValue;
+        }
+        return obj;
+    }
+}
 
-        $('#dataTable2').DataTable({
-            pageLength: 20,
-            order: [[0, 'desc']],
-            initComplete: function () {
-                this.api()
-                    .columns([0, 9])
-                    .every(function () {
-                        var column = this;
-                        var select = $(
-                            '<select><option value=""></option></select>',
-                        )
-                            .appendTo($(column.footer()).empty())
-                            .on('change', function () {
-                                var val = $.fn.dataTable.util.escapeRegex(
-                                    $(this).val(),
-                                );
-                                column
-                                    .search(
-                                        val ? '^' + val + '$' : '',
-                                        true,
-                                        false,
-                                    )
-                                    .draw();
-                            });
-                        column
-                            .data()
-                            .unique()
-                            .sort()
-                            .each(function (d, j) {
-                                select.append(
-                                    '<option value="' +
-                                        d +
-                                        '">' +
-                                        d +
-                                        '</option>',
-                                );
-                            });
-                    });
+function renderVilogTable(data) {
+    let content = ``;
+
+    for (const item of data.siteAlarm) {
+        const valueChannel = findValueChannel(data.sites, item.SiteId);
+
+        content += ` <tr data-status="DataPresent" data-alarm="Yes" data-flow="${ConvertDataIntoTable(
+            valueChannel.flow,
+        )}">
+                        <td>${item.SiteId}</td>
+                        <td>${item.Location}</td>
+                        <td>DataPresent</td>
+                        <td data-signal="${ConvertDataIntoTable(
+                            valueChannel.signal,
+                        )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
+                        <td>Yes</td>
+                    </tr>`;
+    }
+
+    for (const item of data.siteDelay) {
+        const valueChannel = findValueChannel(data.sites, item.SiteId);
+
+        content += ` <tr data-status="Disconnected" data-alarm="No" data-flow="${ConvertDataIntoTable(
+            valueChannel.flow,
+        )}">
+                        <td>${item.SiteId}</td>
+                        <td>${item.Location}</td>
+                        <td>Disconnected</td>
+                        <td data-signal="${ConvertDataIntoTable(
+                            valueChannel.signal,
+                        )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
+                        <td>Yes</td>
+                    </tr>`;
+    }
+
+    for (const item of siteHasValue) {
+        const valueChannel = findValueChannel(data.sites, item.SiteId);
+
+        content += ` <tr data-status="DataPresent" data-alarm="No" data-flow="${ConvertDataIntoTable(
+            valueChannel.flow,
+        )}">
+                        <td>${item.SiteId}</td>
+                        <td>${item.Location}</td>
+                        <td>DataPresent</td>
+                        <td data-signal="${ConvertDataIntoTable(
+                            valueChannel.signal,
+                        )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
+                        <td>No</td>
+                    </tr>`;
+    }
+
+    vlogTableBody.innerHTML = content;
+}
+
+function drawTable() {
+    // GLOBAL FILTER STATE
+    var currentStatusFilter = 'Total';
+
+    // 1. Function to generate Signal Progress Bar
+    function getSignalProgressBar(signalValue) {
+        signalValue = parseInt(signalValue);
+        var MAX_SIGNAL = 50;
+
+        if (isNaN(signalValue) || signalValue <= 0) {
+            return '<div class="signal-text">N/A</div>';
+        }
+
+        var percentage = Math.min(100, (signalValue / MAX_SIGNAL) * 100);
+
+        var bgClass;
+        if (percentage < 40) {
+            bgClass = 'bg-danger';
+        } else if (percentage < 60) {
+            bgClass = 'bg-warning';
+        } else {
+            bgClass = 'bg-success';
+        }
+
+        return (
+            '' +
+            '<div class="d-flex align-items-center">' +
+            '<div class="progress" style="width: 80px; height: 10px; margin-right: 10px;">' +
+            '<div class="progress-bar ' +
+            bgClass +
+            '" role="progressbar" style="width: ' +
+            percentage +
+            '%;" aria-valuenow="' +
+            signalValue +
+            '" aria-valuemin="0" aria-valuemax="' +
+            MAX_SIGNAL +
+            '"></div>' +
+            '</div>' +
+            '<div class="signal-text">' +
+            signalValue +
+            ' dB</div>' +
+            '</div>'
+        );
+    }
+
+    $('#vlogTable tbody tr').each(function () {
+        var $row = $(this);
+        var status = $row.data('status');
+        var flow = $row.data('flow');
+        var signalCell = $row.find('td:eq(3)');
+        var signalText = signalCell.attr('data-signal');
+        var signal = parseInt(signalText);
+        var alarm = $row.find('td:eq(7)').text();
+
+        totalSites++;
+
+        // Status Tagging (Cột 2)
+        if (status === 'DataPresent') {
+            $row.find('td:eq(2)').html(
+                '<span class="status-tag tag-success">DataPresent</span>',
+            );
+            //dataPresent++;
+        } else {
+            $row.find('td:eq(2)').html(
+                '<span class="status-tag tag-warning">Disconnected</span>',
+            );
+            //disconnectedSites++;
+        }
+        // Alarm Tagging (Cột 7)
+        if (alarm === 'Yes') {
+            $row.find('td:eq(7)').html(
+                '<span class="status-tag tag-danger">ALARM</span>',
+            );
+            //alarmSites++;
+        } else {
+            $row.find('td:eq(7)').html(
+                '<span class="status-tag tag-success">NORMAL</span>',
+            );
+        }
+
+        // Insert signal progress bar
+        signalCell.html(getSignalProgressBar(signal));
+    });
+
+    // 3. Custom DataTables filter
+    $.fn.dataTable.ext.search.push(function (
+        settings,
+        searchData,
+        index,
+        rowData,
+        counter,
+    ) {
+        var $row = $('#vlogTable').DataTable().row(index).node();
+        var rowStatus = $($row).data('status');
+        var rowFlow = $($row).data('flow');
+        var rowAlarm = $($row).data('alarm');
+
+        if (currentStatusFilter === 'Total') {
+            return true;
+        } else if (currentStatusFilter === 'DataPresent') {
+            return rowStatus === 'DataPresent';
+        } else if (currentStatusFilter === 'Disconnected') {
+            return rowStatus === 'Disconnected';
+        } else if (currentStatusFilter === 'Alarm') {
+            return rowAlarm === 'Yes';
+        }
+
+        return false;
+    });
+
+    // 4. Initialize DataTable
+    var table = $('#vlogTable').DataTable({
+        language: {
+            search: 'Search:',
+            lengthMenu: 'Show _MENU_ entries',
+            info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+            paginate: { previous: 'Previous', next: 'Next' },
+        },
+        dom: 'lBrtip',
+        pageLength: 50,
+        buttons: [
+            {
+                extend: 'excel',
+                text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                className: 'btn btn-sm buttons-excel',
             },
-            dom: 'Bfrtip',
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    title: `Data_Overview_Vilog`,
-                },
-                {
-                    extend: 'csvHtml5',
-                    title: `Data_Overview_Vilog`,
-                },
-                {
-                    extend: 'pdfHtml5',
-                    title: `Data_Overview_Vilog`,
-                },
-            ],
+            {
+                extend: 'csv',
+                text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                className: 'btn btn-sm buttons-csv',
+            },
+            {
+                extend: 'pdf',
+                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                className: 'btn btn-sm buttons-pdf',
+            },
+        ],
+        columnDefs: [
+            { orderable: true, targets: [0, 1, 4, 6] },
+            { type: 'num', targets: 3 },
+        ],
+    });
+
+    // 6. Filtering based on KPI Cards
+    $('.card-kpi').on('click', function () {
+        var filterType = $(this).data('filter');
+
+        $('.card-kpi').removeClass('active-filter');
+        $(this).addClass('active-filter');
+
+        // update global filter and redraw table
+        currentStatusFilter = filterType;
+
+        // clear global search and column searches then redraw (applies custom filter)
+        table.search('').columns().search('').draw();
+    });
+
+    // Highlight Total card by default
+    $('#kpi-total').closest('.card-kpi').addClass('active-filter');
+
+    // Optional: Update KPI counts to reflect visible rows after filter applied
+    // This recalculates counts on every draw and updates KPI numbers accordingly.
+    table.on('draw', function () {
+        var rows = table.rows({ filter: 'applied' }).nodes();
+        var vTotal = rows.length;
+        var vDisconnected = 0;
+        var vDataPresent = 0;
+        var vAlarm = 0;
+
+        $(rows).each(function () {
+            var $r = $(this);
+            var st = $r.data('status');
+            var fl = $r.data('flow');
+            var al = $r.data('alarm');
+
+            if (st === 'DataPresent') vDataPresent++;
+            else if (st === 'Disconnected') vDisconnected++;
+            if (al === 'Yes') vAlarm++;
         });
-    }
+
+        // If the current filter is Total we prefer to show the original totals,
+        // but if a filter is applied show the filtered KPI values.
+        if (currentStatusFilter === 'Total') {
+            $('#kpi-total').text(totalSites);
+            $('#kpi-disconnected').text(disconnectedSites);
+            $('#kpi-data-present').text(dataPresent);
+            $('#kpi-alarm').text(alarmSites);
+        } else {
+            $('#kpi-total').text(vTotal);
+            $('#kpi-disconnected').text(vDisconnected);
+            $('#kpi-data-present').text(vDataPresent);
+            $('#kpi-alarm').text(vAlarm);
+        }
+    });
+
+    // Trigger initial draw to allow KPIs to reflect initial filter (Total)
+    table.draw();
 }
 
-function countErrorSite(data) {
-    let obj = {};
-    obj.Normal = 0;
-    obj.Delay = 0;
-    obj.OverFlow = 0;
+$(document).ready(function () {
+    // 2. Initial Data Processing & KPI Calculation
 
-    let result = [];
-
-    if (data.length > 0) {
-        for (let item of data) {
-            if (item.Status.length > 0) {
-                const status = Math.min(...item.Status.map((x) => x.Status));
-
-                switch (status) {
-                    case 2:
-                        obj.Delay += 1;
-                        break;
-                    case 4:
-                        obj.OverFlow += 1;
-                        break;
-                    case 4:
-                        obj.OverFlow += 1;
-                        break;
-                    default:
-                        obj.Normal += 1;
-                        break;
-                }
-            } else {
-            }
-        }
-
-        if (obj.Normal > 0) {
-            let objNormal = {
-                label: 'Normal ',
-                value: obj.Normal,
-                color: am4core.color('#2ecc71'),
-            };
-
-            result.push(objNormal);
-        }
-
-        if (obj.Delay > 0) {
-            let objDelay = {
-                label: 'Disconnected',
-                value: obj.Delay,
-                color: am4core.color('#f1c40f'),
-            };
-
-            result.push(objDelay);
-        }
-
-        if (obj.OverFlow > 0) {
-            let objOverFlow = {
-                label: 'Over Flow',
-                value: obj.OverFlow,
-                color: am4core.color('#e74c3c'),
-            };
-
-            result.push(objOverFlow);
-        }
-    }
-
-    return result;
-}
-
-function drawPieChart(data) {
-    // Themes begin
-    am4core.useTheme(am4themes_animated);
-    // Themes end
-    am4core.addLicense('ch-custom-attribution');
-
-    var chart = am4core.create('chartTypeError', am4charts.PieChart3D);
-    chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
-
-    chart.legend = new am4charts.Legend();
-
-    chart.data = data;
-
-    var series = chart.series.push(new am4charts.PieSeries3D());
-    series.dataFields.value = 'value';
-    series.dataFields.category = 'label';
-    series.slices.template.propertyFields.fill = 'color';
-    series.labels.template.text = '{category}: {value.value}';
-    series.slices.template.tooltipText = '{category}: {value.value}';
-}
-
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
-        getUser();
-
-        setTimeout(() => {
-            getData();
-        }, 0);
-    },
-    false,
-);
-
-setInterval(() => {
-    setTimeout(() => {
-        getData();
-    }, 0);
-}, intervalGetData);
+    getStatusSite();
+});

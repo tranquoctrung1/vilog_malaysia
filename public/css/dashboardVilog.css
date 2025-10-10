@@ -1,57 +1,138 @@
-.table-header 
-{
-    background-color: #3498db;
+/* Card Styles: Khôi phục lại màu nền ban đầu (Subtle) */
+.card-kpi {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+.card-kpi:hover {
+    transform: translateY(-3px);
+}
+/* CSS cho Thẻ Đang Được Chọn (Highlight) */
+.card-kpi.active-filter {
+    border: 3px solid var(--bs-primary) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.font-white {
-    color: #fff
+.kpi-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6c757d;
+}
+.kpi-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+.kpi-icon {
+    font-size: 1.5rem;
 }
 
-#tableData {
-    /* overflow: scroll; */
-    width: 97%;
+/* Status Tag Styles */
+.status-tag {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    display: inline-block;
 }
-#chartTypeError, #chartVAcc, #chartVLogger, #chartVMetter
-{
-    width: 100%;
+.tag-danger {
+    background-color: #fcebeb;
+    color: #dc3545;
 }
-
-#chartTypeError {
-    height: 400px;
+.tag-warning {
+    background-color: #fff3cd;
+    color: #bea963;
 }
-
-#chartVAcc, #chartVLogger, #chartVMetter
-{
-    height: 1400px;
-}
-
-
-.d-center
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 10px 0;
+.tag-success {
+    background-color: #e6ffed;
+    color: #198754;
 }
 
-.chart-type-error, .chart-V_acc{
-    padding: 20px;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
-
-    box-shadow: 0 0 5px 0 rgb(0 0 0 / 20%);
-    margin-bottom: 10px;
+/* Progress Bar Text Style */
+.signal-text {
+    font-size: 0.8rem;
+    color: #6c757d;
 }
 
-.table-data {
-    border-radius: 10px;
-    box-shadow: 0 0 5px 0 rgb(0 0 0 / 20%);
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
+/* Nhãn hướng dẫn */
+.instruction-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.3em 0.6em;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    color: #999;
+    border: 1px solid #f1f1f1;
+}
+
+/* Export Buttons Styling - Màu Icon Cố Định */
+div.dt-buttons {
+    float: right;
+}
+div.dt-buttons .btn {
+    background-color: #f8f9fa !important;
+    color: #495057 !important;
+    border: 1px solid #ced4da;
+    margin-left: 5px !important;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+div.dt-buttons .buttons-excel i {
+    color: #198754; /* Xanh lá cho Excel */
+}
+div.dt-buttons .buttons-csv i {
+    color: #0d6efd; /* Xanh dương cho CSV */
+}
+div.dt-buttons .buttons-pdf i {
+    color: #dc3545; /* Đỏ cho PDF */
+}
+div.dt-buttons .buttons-excel:hover {
+    background-color: #e6ffed !important;
+    border-color: #c3e6cb !important;
+}
+div.dt-buttons .buttons-csv:hover {
+    background-color: #e8f5ff !important;
+    border-color: #bee5eb !important;
+}
+div.dt-buttons .buttons-pdf:hover {
+    background-color: #fcebeb !important;
+    border-color: #f5c6cb !important;
+}
+
+/* Progress bar gradient suggestions (kept neutral so not forcing colors) */
+.progress-bar.bg-success {
+    background: linear-gradient(
+        90deg,
+        rgba(40, 167, 69, 1),
+        rgba(143, 209, 158, 0.9)
+    );
+}
+.progress-bar.bg-warning {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 193, 7, 1),
+        rgba(255, 229, 138, 0.9)
+    );
+}
+.progress-bar.bg-danger {
+    background: linear-gradient(
+        90deg,
+        rgba(220, 53, 69, 1),
+        rgba(245, 166, 168, 0.9)
+    );
+}
+
+@media (max-width: 768px) {
+    #vlogTable td,
+    #vlogTable th {
+        font-size: 0.75rem;
+    }
+    .kpi-value {
+        font-size: 1.3rem;
+    }
+}
+
+.w-150 {
+    width: 150px;
 }

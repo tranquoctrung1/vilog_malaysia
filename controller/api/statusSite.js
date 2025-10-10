@@ -56,10 +56,12 @@ module.exports.GetStatusSite = async function (req, res) {
     let result = {};
     result.totalSite = 0;
     result.totalSiteHasValue = 0;
-    result.totalSiteActing = 0;
     result.totalSiteDelay = 0;
-    result.totalSiteNoValue = 0;
     result.totalSiteAlarm = 0;
+    result.sites = [];
+    result.siteDelay = [];
+    result.siteAlarm = [];
+    result.siteHasValue = [];
 
     let timeDelay = 60;
 
@@ -68,6 +70,8 @@ module.exports.GetStatusSite = async function (req, res) {
 
         for (let site of listSite) {
             let channels = await ChannelModel.find({ LoggerId: site.LoggerId });
+            const objSite = { ...site._doc, ListChannel: [...channels] };
+            result.sites.push(objSite);
 
             if (
                 site.TimeDelay != 'null' &&
@@ -78,55 +82,50 @@ module.exports.GetStatusSite = async function (req, res) {
             }
 
             let isError = false;
-            let noValue = 0;
+            let isDelay = false;
 
             for (let channel of channels) {
                 if (isError == false) {
                     if (
-                        channel.TimeStamp == null ||
-                        channel.TimeStamp == undefined
+                        Math.round(
+                            (Date.now() - channel.TimeStamp.getTime()) /
+                                1000 /
+                                60,
+                        ) > timeDelay
                     ) {
-                        noValue += 1;
+                        result.totalSiteDelay += 1;
+                        result.siteDelay.push(site);
+                        isError = true;
+                        isDelay = true;
                     } else {
-                        if (channel.ChannelId == '1066_01') {
-                            console.log(channel.TimeStamp);
+                        let isOverflow = false;
+                        if (isOverflow == false) {
+                            if (channel.BaseMin != null) {
+                                if (channel.LastValue < channel.BaseMin) {
+                                    result.totalSiteAlarm += 1;
+                                    isOverflow = true;
+                                    isError = true;
+                                    result.siteAlarm.push(site);
+                                }
+                            }
                         }
-                        if (
-                            Math.round(
-                                (Date.now() - channel.TimeStamp.getTime()) /
-                                    1000 /
-                                    60,
-                            ) > timeDelay
-                        ) {
-                            result.totalSiteDelay += 1;
-                            isError = true;
-                        } else {
-                            let isOverflow = false;
-                            if (isOverflow == false) {
-                                if (channel.BaseMin != null) {
-                                    if (channel.LastValue < channel.BaseMin) {
-                                        result.totalSiteAlarm += 1;
-                                        isOverflow = true;
-                                        isError = true;
-                                    }
+                        if (isOverflow == false) {
+                            if (channel.BaseMax != null) {
+                                if (channel.LastValue > channel.BaseMax) {
+                                    result.totalSiteAlarm += 1;
+                                    isOverflow = true;
+                                    isError = true;
+                                    result.siteAlarm.push(site);
                                 }
                             }
-                            if (isOverflow == false) {
-                                if (channel.BaseMax != null) {
-                                    if (channel.LastValue > channel.BaseMax) {
-                                        result.totalSiteAlarm += 1;
-                                        isOverflow = true;
-                                        isError = true;
-                                    }
-                                }
-                            }
-                            if (isOverflow == false) {
-                                if (channel.Baseline != null) {
-                                    if (channel.LastValue > channel.BaseLine) {
-                                        result.totalSiteAlarm += 1;
-                                        isOverflow = true;
-                                        isError = true;
-                                    }
+                        }
+                        if (isOverflow == false) {
+                            if (channel.Baseline != null) {
+                                if (channel.LastValue > channel.BaseLine) {
+                                    result.totalSiteAlarm += 1;
+                                    isOverflow = true;
+                                    isError = true;
+                                    result.siteAlarm.push(site);
                                 }
                             }
                         }
@@ -134,13 +133,9 @@ module.exports.GetStatusSite = async function (req, res) {
                 }
             }
 
-            if (noValue == channels.length) {
-                result.totalSiteNoValue += 1;
-            } else {
+            if (isDelay == false) {
+                result.siteHasValue.push(site);
                 result.totalSiteHasValue += 1;
-                if (isError == false) {
-                    result.totalSiteActing += 1;
-                }
             }
         }
     }

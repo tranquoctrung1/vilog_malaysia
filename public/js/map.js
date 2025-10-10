@@ -21,10 +21,9 @@ const urlGetStatusSite = `${hostname}/GetStatusSite/${userName}`;
 
 let totalSite = document.getElementById('totalSite');
 let totalSiteHasValue = document.getElementById('totalSiteHasValue');
-let totalSiteActing = document.getElementById('totalSiteActing');
 let totalSiteDelay = document.getElementById('totalSiteDelay');
-let totalSiteNoValue = document.getElementById('totalSiteNoValue');
 let totalSiteAlarm = document.getElementById('totalSiteAlarm');
+let legend = document.getElementById('legend');
 
 function initMap() {
     map = L.map('map', {
@@ -56,6 +55,21 @@ function initMap() {
             '<strong style="color: #0078a8">Copyright &copy by Bavitech</strong>',
         maxZoom: 18,
     }).addTo(map);
+
+    L.Control.Watermark = L.Control.extend({
+        onAdd: function (map) {
+            return legend;
+        },
+        onRemove: function (map) {
+            // Nothing to do here
+        },
+    });
+
+    L.control.watermark = function (opts) {
+        return new L.Control.Watermark(opts);
+    };
+
+    L.control.watermark({ position: 'bottomleft' }).addTo(map);
 
     axios
         .get(urlGetSiteByUid)
@@ -92,12 +106,12 @@ function initMap() {
                         let isErrorDelay = false;
                         let contentError = '';
                         labelHtml =
-                            '<table cellspacing="0" cellpadding="0" style="width: 180px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:blue;background-color:white; "><span>' +
+                            '<table cellspacing="0" cellpadding="0" style="min-width: 300px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:blue;background-color:white; "><span>' +
                             site.Location +
                             '</span></td></tr>' +
                             `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
                         infoHtml =
-                            '<span style="font-weight:bold">Location: ' +
+                            '<span style="font-weight:bold">Sitename: ' +
                             site.Location +
                             '</span>' +
                             '<br/><span>Logger Id: ' +
@@ -263,15 +277,15 @@ function initMap() {
                             }
 
                             dLabelHtml +=
-                                '<tr style="background-color:#3498db"><td style="text-align:center;font-weight:bold;color:white;"><span>' +
+                                '<tr style="background-color:#3498db"><td style="font-weight:bold;color:white;"><span>' +
                                 channel.ChannelName +
                                 ': ' +
+                                '</span></td>' +
+                                '<td style="font-weight:bold;color:white;">' +
                                 val +
                                 ' (' +
                                 channel.Unit +
                                 ')' +
-                                '</span></td><td style="text-align:right">' +
-                                '' +
                                 '</td></tr>';
                         }
 
@@ -397,12 +411,12 @@ function updateMap() {
                 let isErrorDelay = false;
                 let contentError = '';
                 labelHtml =
-                    '<table cellspacing="0" cellpadding="0" style="width: 180px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:blue;background-color:white; "><span>' +
+                    '<table cellspacing="0" cellpadding="0" style="min-width: 300px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:blue;background-color:white; "><span>' +
                     site.Location +
                     '</span></td></tr>' +
                     `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
                 infoHtml =
-                    '<span style="font-weight:bold">Location: ' +
+                    '<span style="font-weight:bold">Sitename: ' +
                     site.Location +
                     '</span>' +
                     '<br/><span>Logger Id: ' +
@@ -571,15 +585,15 @@ function updateMap() {
                     }
 
                     dLabelHtml +=
-                        '<tr style="background-color:#3498db"><td style="text-align:center;font-weight:bold;color:white;"><span>' +
+                        '<tr style="background-color:#3498db"><td style="font-weight:bold;color:white;"><span>' +
                         channel.ChannelName +
                         ': ' +
+                        '</span></td>' +
+                        '<td style="font-weight:bold;color:white;">' +
                         val +
                         ' (' +
                         channel.Unit +
                         ')' +
-                        '</span></td><td style="text-align:right">' +
-                        '' +
                         '</td></tr>';
                 }
 
@@ -639,12 +653,6 @@ function getStatusSite() {
             totalSiteAlarm.innerHTML = fillDataIntoInputTag(
                 res.data.totalSiteAlarm,
             );
-            totalSiteNoValue.innerHTML = fillDataIntoInputTag(
-                res.data.totalSiteNoValue,
-            );
-            totalSiteActing.innerHTML = fillDataIntoInputTag(
-                res.data.totalSiteActing,
-            );
             totalSiteDelay.innerHTML = fillDataIntoInputTag(
                 res.data.totalSiteDelay,
             );
@@ -659,4 +667,4 @@ setTimeout(() => {
     getStatusSite();
 }, 500);
 
-setInterval(updateMap, 1000 * 60 * 60);
+setInterval(updateMap, 1000 * 60 * 2);
