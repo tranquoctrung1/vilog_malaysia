@@ -12,6 +12,7 @@ if (userName == null || userName == undefined || userName.trim() == '') {
 }
 
 let markers = [];
+let statusSites = [];
 
 const urlGetSiteByUid = `${hostname}/GetSiteByUId/${userName}`;
 const urlGetChannels = `${hostname}/GetChannelByLoggerId/`;
@@ -24,6 +25,8 @@ let totalSiteHasValue = document.getElementById('totalSiteHasValue');
 let totalSiteDelay = document.getElementById('totalSiteDelay');
 let totalSiteAlarm = document.getElementById('totalSiteAlarm');
 let legend = document.getElementById('legend');
+let tbodyStatistic = document.getElementById('tbodyStatistic');
+let statisticLabel = document.getElementById('statisticLabel');
 
 function initMap() {
     map = L.map('map', {
@@ -659,8 +662,100 @@ function getStatusSite() {
             totalSiteHasValue.innerHTML = fillDataIntoInputTag(
                 res.data.totalSiteHasValue,
             );
+
+            statusSites = res.data;
         })
         .catch((err) => console(err));
+}
+
+function renderTableStatistic(data, type) {
+    let content = ``;
+
+    if (type === 'sites') {
+        statisticLabel.innerHTML = `Site List: Total Sites`;
+        if (data.sites.length > 0) {
+            for (const item of data.siteAlarm) {
+                content += `<tr>
+                            <td>${item.SiteId}</td>
+                            <td>${item.Location}</td>
+                            <td class="text-success">Connected</td>
+                            <td class="text-danger">Alarm</td>
+                        </tr>`;
+            }
+
+            for (const item of data.siteDelay) {
+                content += `<tr>
+                            <td>${item.SiteId}</td>
+                            <td>${item.Location}</td>
+                            <td class="text-warning">Disconnected</td>
+                            <td class="text-warning">Disconnected</td>
+                        </tr>`;
+            }
+
+            for (const item of data.siteHasValue) {
+                content += `<tr>
+                            <td>${item.SiteId}</td>
+                            <td>${item.Location}</td>
+                            <td class="text-success">Connected</td>
+                            <td class="text-info">Data Present</td>
+                        </tr>`;
+            }
+        } else {
+            content += `<tr>
+                            <td colspan="4">No Data Available</td>
+                        </tr>`;
+        }
+    } else {
+        if (data[type].length > 0) {
+            let status = ``;
+            let alarm = ``;
+            let statusClassName = ``;
+            let alarmClassName = ``;
+
+            if (type === 'siteHasValue') {
+                status = `Connected`;
+                alarm = `Data Present`;
+                statusClassName = `text-success`;
+                alarmClassName = `text-info`;
+                statisticLabel.innerHTML = `Site List: Data Present`;
+            } else if (type === 'siteDelay') {
+                status = `Disconnected`;
+                alarm = `Disconnected`;
+                statusClassName = `text-warning`;
+                alarmClassName = `text-warning`;
+                statisticLabel.innerHTML = `Site List: Disconnected`;
+            } else if (type === 'siteAlarm') {
+                status = `Connected`;
+                alarm = `Alarm`;
+                statusClassName = `text-success`;
+                alarmClassName = `text-danger`;
+                statisticLabel.innerHTML = `Site List: Alarm`;
+            }
+            for (const item of data[type]) {
+                content += `<tr>
+                                <td>${item.SiteId}</td>
+                                <td>${item.Location}</td>
+                                <td class="${statusClassName}">${status}</td>
+                                <td class="${alarmClassName}">${alarm}</td>
+                            </tr>`;
+            }
+        } else {
+            content += `<tr>
+                            <td colspan="4">No Data Available</td>
+                        </tr>`;
+        }
+    }
+
+    tbodyStatistic.innerHTML = content;
+}
+
+function showStatistic(e) {
+    renderTableStatistic(statusSites, e.dataset.status);
+    $('#staictis').show();
+}
+
+function closeStatisticModal() {
+    $('#staictis').hide();
 }
 
 setTimeout(() => {

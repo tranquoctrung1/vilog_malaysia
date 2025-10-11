@@ -14,7 +14,7 @@ block content
                     div 
                         div.p-2
                             img(src="/images/green.png", alt="icon blue") 	
-                            span.ml-2 Normal
+                            span.ml-2 Normal/Data Present
                         div.p-2
                             img(src="/images/yellow.png", alt="icon yellow") 	
                             span.ml-2 Disconnected	
@@ -85,20 +85,38 @@ block content
                                     #modalMaxBatteryLogger.text-battery
                                     #modalMinBatteryMeter.text-battery
                                     #modalMaxBatteryMeter.text-battery
+                        .modal-footer
+                            button.btn.btn-default#closeChart(type='button' data-dismiss='modal') Close
+            #staictis.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='staictis' aria-hidden='true')
+                .modal-dialog.modal-lg(role='document')
+                    .modal-content
+                        .modal-header
+                            h5#statisticLabel.modal-title
+                        .modal-body
+                            table.table.table-striped.table-hover
+                                thead
+                                    tr
+                                        th SiteId
+                                        th Sitename 
+                                        th Connection 
+                                        th Data Status
+                                tbody#tbodyStatistic
+                        .modal-footer
+                            button.btn.btn-default#closeStatistic(type='button' data-dismiss='modal' onclick="closeStatisticModal()") Close
     .container-fluid
         .row.text-center
             .col-sm-3 
-                div.text-normal Total sites: 
-                    span#totalSite.text-success
+                div.text-normal.text-uppercase.border-right(data-status="sites" onclick="showStatistic(this)") Total sites
+                    div#totalSite.text-success.fw-bold
             .col-sm-3 
-                div.text-normal Total data present sites: 
-                    span#totalSiteHasValue.text-success 
+                div.text-normal.text-uppercase.border-right(data-status="siteHasValue" onclick="showStatistic(this)") data present
+                    div#totalSiteHasValue.text-info.fw-bold
             .col-sm-3 
-                div.text-normal Total disconnected sites:
-                    span#totalSiteDelay.text-warning 
+                div.text-normal.text-uppercase.border-right(data-status="siteDelay" onclick="showStatistic(this)") disconnected
+                    div#totalSiteDelay.text-warning.fw-bold
             .col-sm-3 
-                div.text-normal Total alarm sites:
-                    span#totalSiteAlarm.text-danger 
+                div.text-normal.text-uppercase.border-right(data-status="siteAlarm" onclick="showStatistic(this)") alarm
+                    div#totalSiteAlarm.text-danger.fw-bold
 
 
 block linkcriptbody

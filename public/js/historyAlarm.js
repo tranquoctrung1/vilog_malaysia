@@ -1,28 +1,6 @@
-let startDate = document.getElementById('startDate');
-let endDate = document.getElementById('endDate');
-let tablePlaceHolder = document.getElementById('tablePlaceHolder');
-let viewHistoryAlarm = document.getElementById('viewHistoryAlarm');
-let loading = document.getElementById('loading');
-
 let urlGetHistoryAlarm = `${hostname}/gethistoryalarmdata`;
 
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
-        let now = new Date(Date.now());
-        let temp = new Date(Date.now());
-        temp.setDate(temp.getDate() - 1);
-
-        startDate.value = convertDateToDateTimeLocalInputTag(temp);
-        endDate.value = convertDateToDateTimeLocalInputTag(now);
-
-        // add hide
-        loading.classList.add('hide');
-
-        getDataHistoryAlarm(temp.getTime(), now.getTime());
-    },
-    false,
-);
+let alarmTableBody = document.getElementById('alarmTableBody');
 
 function getDataHistoryAlarm(start, end) {
     let url = `${urlGetHistoryAlarm}/${start}/${end}`;
@@ -30,157 +8,127 @@ function getDataHistoryAlarm(start, end) {
     axios
         .get(url)
         .then((res) => {
-            if (res.data.length > 0) {
-                loading.classList.add('hide');
-                loading.classList.remove('show');
-                createTable(res.data);
-            }
+            renderDataTable(res.data);
+
+            drawTable();
         })
-        .catch((err) => conosle.log(err.message));
+        .catch((err) => console.log(err.message));
 }
 
-function createHeader(data) {
-    let head = document.getElementById('head');
+function renderDataTable(data) {
+    let content = ``;
 
-    head.innerHTML = '';
-
-    let content = '';
-
-    if (CheckExistsData(data)) {
-        content += `<tr>
-					<th>Points Code </th>
-					<th>Location</th>
-					<th>Channel</th>
-					<th>Timestamp data</th>
-					<th>Timestamp alarm</th>
-					<th>Content</th>
-					</tr>`;
+    for (const item of data) {
+        content += `<tr data-alarm-type="${item.Content}">
+                            <td>${item.SiteId}</td>
+                            <td>${item.Location}</td>
+                            <td>${item.ChannelName}</td>
+                            <td>${convertDateToString(
+                                new Date(item.TimeStampHasValue),
+                            )}</td>
+                            <td>${convertDateToString(
+                                new Date(item.TimeStampAlarm),
+                            )}</td>
+                            <td>${item.Content}</td>
+                        </tr>`;
     }
 
-    head.innerHTML = content;
+    alarmTableBody.innerHTML = content;
 }
 
-function createBody(data) {
-    let body = document.getElementById('body');
+function drawTable() {
+    function getAlarmTag(content) {
+        let tagClass = 'tag-secondary';
+        const lower = content.toLowerCase();
 
-    body.innerHTML = '';
-
-    let content = '';
-
-    if (CheckExistsData(data)) {
-        for (let item of data) {
-            let background = '';
-            let color = '';
-
-            if (item.Type == 1) {
-                background = 'delay';
-                color = 'font-white';
-            } else {
-                background = 'error';
-                color = 'font-white';
-            }
-
-            content += `<tr class="${background}">`;
-            content += `<td class="${color}">${ConvertDataIntoTable(
-                item.SiteId,
-            )}</td>`;
-            content += `<td class="${color}">${ConvertDataIntoTable(
-                item.Location,
-            )}</td>`;
-            content += `<td class="${color}">${ConvertDataIntoTable(
-                item.ChannelName,
-            )}</td>`;
-            content += `<td class="${color}">${ConvertDataIntoTable(
-                convertDateToString(convertDateFromApi(item.TimeStampHasValue)),
-            )}</td>`;
-            content += `<td class="${color}">${ConvertDataIntoTable(
-                convertDateToString(convertDateFromApi(item.TimeStampAlarm)),
-            )}</td>`;
-            content += `<td class="${color}">${ConvertDataIntoTable(
-                item.Content,
-            )}</td>`;
-            content += `</tr>`;
-        }
+        if (lower.includes('disconnect') || lower.includes('delay'))
+            tagClass = 'tag-warning';
+        else tagClass = 'tag-danger';
+        return `<span class="alarm-tag ${tagClass}">${content.toUpperCase()}</span>`;
     }
 
-    body.innerHTML = content;
-}
+    // === Add Tag to Alarm Column ===
+    $('#alarmTable tbody tr').each(function () {
+        const $row = $(this);
+        const content = $row.find('td:eq(5)').text();
+        $row.find('td:eq(5)').html(getAlarmTag(content));
+    });
 
-function createTable(data) {
-    createTablePlaceHolder();
-
-    createHeader(data);
-    createBody(data);
-
-    $('#example').DataTable({
-        pageLength: 20,
-        initComplete: function () {
-            this.api()
-                .columns([])
-                .every(function () {
-                    var column = this;
-                    var select = $(
-                        '<select><option value=""></option></select>',
-                    )
-                        .appendTo($(column.footer()).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val(),
-                            );
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
-                        });
-                    column
-                        .data()
-                        .unique()
-                        .sort()
-                        .each(function (d, j) {
-                            select.append(
-                                '<option value="' + d + '">' + d + '</option>',
-                            );
-                        });
-                });
+    // === Initialize DataTable ===
+    $('#alarmTable').DataTable({
+        retrieve: true,
+        language: {
+            search: 'Search:',
+            lengthMenu: 'Show _MENU_ entries',
+            info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+            paginate: { previous: 'Previous', next: 'Next' },
         },
-        dom: 'Bfrtip',
+        dom: 'lBrtip',
+        pageLength: 50,
+        order: [[4, 'desc']],
         buttons: [
             {
-                extend: 'excelHtml5',
-                title: `History alarm`,
+                extend: 'excel',
+                text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                className: 'btn btn-sm buttons-excel',
             },
             {
-                extend: 'csvHtml5',
-                title: `History alarm`,
+                extend: 'csv',
+                text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                className: 'btn btn-sm buttons-csv',
             },
             {
-                extend: 'pdfHtml5',
-                title: `History alarm`,
+                extend: 'pdf',
+                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                className: 'btn btn-sm buttons-pdf',
+            },
+        ],
+        columnDefs: [
+            {
+                targets: 5,
+                render: function (data, type) {
+                    if (type === 'filter' || type === 'sort') {
+                        return $(data).text();
+                    }
+                    return data;
+                },
             },
         ],
     });
 }
 
-viewHistoryAlarm.addEventListener('click', () => {
-    loading.classList.add('show');
-    loading.classList.remove('hide');
+// === View Button Logic ===
+$('#viewButton').on('click', function () {
+    const startTime = $('#startHour').val();
+    const endTime = $('#endHour').val();
 
-    if (
-        startDate.value == '' ||
-        startDate.value == null ||
-        startDate.value == undefined
-    ) {
-        swal('Err', 'Not null start date', 'error');
-    } else if (
-        endDate.value == '' ||
-        endDate.value == null ||
-        endDate.value == undefined
-    ) {
-        swal('Err', 'Not null end date', 'error');
-    } else {
-
-		let totalMilisecondStart = new Date(startDate.value).getTime();
-		let totalMilisecondEnd = new Date(endDate.value).getTime();
-
-		getDataHistoryAlarm(totalMilisecondStart, totalMilisecondEnd);
+    if (!startTime || !endTime) {
+        alert('Please enter start time and end time!!!');
+        return;
     }
+
+    getDataHistoryAlarm(
+        new Date(startTime).getTime(),
+        new Date(endTime).getTime(),
+    );
+});
+
+$(document).ready(function () {
+    // === Default DateTime Initialization ===
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const end = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
+        now.getDate(),
+    )}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    $('#endHour').val(end);
+
+    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000 * 30);
+    const start = `${oneDayAgo.getFullYear()}-${pad(
+        oneDayAgo.getMonth() + 1,
+    )}-${pad(oneDayAgo.getDate())}T${pad(oneDayAgo.getHours())}:${pad(
+        oneDayAgo.getMinutes(),
+    )}`;
+    $('#startHour').val(start);
+
+    getDataHistoryAlarm(oneDayAgo.getTime(), now.getTime());
 });

@@ -25,7 +25,7 @@
 } */
 
 .container-fluid.map {
-    height: calc(100% - 40px);
+    height: calc(100% - 60px);
 }
 
 .container-fluid.map .row,
@@ -256,4 +256,29 @@
 
 .modebar-group a {
     display: none !important;
+}
+
+.fw-bold {
+    font-weight: 600;
+}
+
+.border-right {
+    border-right: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.modal-content {
+    border-radius: 15px !important;
+    -webkit-border-radius: 15px !important;
+    -moz-border-radius: 15px !important;
+    -ms-border-radius: 15px !important;
+    -o-border-radius: 15px !important;
+}
+
+.modal-header {
+    background-color: #2980b9;
+}
+
+.modal-header h5 {
+    color: white;
 }
