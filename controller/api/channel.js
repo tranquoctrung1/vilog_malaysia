@@ -496,7 +496,9 @@ module.exports.GetChannelCard = async function (req, res) {
     let site = await SiteModel.find({ SiteId: siteid });
 
     if (site.length > 0) {
-        let channels = await ChannelModel.find({ LoggerId: site[0].LoggerId });
+        let channels = await ChannelModel.find({
+            LoggerId: site[0].LoggerId,
+        }).sort({ ChannelName: 1 });
 
         for (let channel of channels) {
             let obj = {};
@@ -555,7 +557,9 @@ module.exports.GetChannelBySiteId = async function (req, res) {
     let site = await SiteModel.find({ SiteId: siteid });
 
     if (site.length > 0) {
-        let channels = await ChannelModel.find({ LoggerId: site[0].LoggerId });
+        let channels = await ChannelModel.find({
+            LoggerId: site[0].LoggerId,
+        }).sort({ ChannelName: 1 });
 
         res.json(channels);
     }
