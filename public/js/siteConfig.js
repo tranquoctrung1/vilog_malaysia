@@ -70,8 +70,6 @@ site.addEventListener('change', function (e) {
                 note.value = fillDataIntoInputTag(res.data[0].Note);
                 interval.value = fillDataIntoInputTag(res.data[0].InterVal);
                 id.value = fillDataIntoInputTag(res.data[0]._id);
-                isPrimayer.checked = res.data[0].IsPrimayer;
-                MNF.value = fillDataIntoInputTag(res.data[0].MNF);
                 typeMeter.value = fillDataIntoInputTag(res.data[0].TypeMeter);
                 IMEI.value = fillDataIntoInputTag(res.data[0].IMEI);
             }
@@ -130,8 +128,8 @@ btnInsert.addEventListener('click', function (e) {
             Available: CreateDataNullForPost(available.value),
             TimeDelay: CreateDataNullForPost(timeDelay.value),
             Note: CreateDataNullForPost(note.value),
-            IsPrimayer: `${isPrimayer.checked}`,
-            MNF: CreateDataNullForPost(MNF.value),
+            IsPrimayer: false,
+            MNF: null,
             TypeMeter: CreateDataNullForPost(typeMeter.value),
             IMEI: CreateDataNullForPost(IMEI.value),
         };
@@ -184,8 +182,8 @@ btnUpdate.addEventListener('click', function (e) {
             Available: CreateDataNullForPost(available.value),
             TimeDelay: CreateDataNullForPost(timeDelay.value),
             Note: CreateDataNullForPost(note.value),
-            IsPrimayer: `${isPrimayer.checked}`,
-            MNF: CreateDataNullForPost(MNF.value),
+            IsPrimayer: false,
+            MNF: null,
             TypeMeter: CreateDataNullForPost(typeMeter.value),
             IMEI: CreateDataNullForPost(IMEI.value),
         };
@@ -215,24 +213,36 @@ btnDelete.addEventListener('click', function (e) {
     ) {
         swal('Err', 'Not null point code', 'error');
     } else {
-        const obj = {
-            id: CreateDataNullForPost(id.value),
-        };
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+        }).then((willDelete) => {
+            if (willDelete) {
+                const obj = {
+                    id: CreateDataNullForPost(id.value),
+                };
 
-        let url = `${urlDeleteSite}`;
+                let url = `${urlDeleteSite}`;
 
-        axios
-            .post(url, obj)
-            .then((res) => {
-                if (res.data != 0) {
-                    swal('Done', 'Delete success', 'success');
-                    SetEmptySite();
-                    fetchSiteForDisplayGroup(displayGroup.value);
-                } else {
-                    swal('Err', 'Delete failed', 'error');
-                }
-            })
-            .catch((err) => console.log(err));
+                axios
+                    .post(url, obj)
+                    .then((res) => {
+                        if (res.data != 0) {
+                            swal('Done', 'Delete success', 'success');
+                            SetEmptySite();
+                            fetchSiteForDisplayGroup(displayGroup.value);
+                        } else {
+                            swal('Err', 'Delete failed', 'error');
+                        }
+                    })
+                    .catch((err) => console.log(err));
+            }
+        });
     }
 });
 
@@ -240,7 +250,7 @@ let map;
 
 let marker;
 
-map = L.map('map', {}).setView([10.7611111, 106.675], 12);
+map = L.map('map', {}).setView([3.103577, 101.702153], 12);
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '',
     maxZoom: 18,

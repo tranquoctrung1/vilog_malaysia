@@ -1,238 +1,242 @@
 extends ./partial/layout.pug
 block linkcss
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css")
     link(rel="stylesheet", href="/css/leaflet/leaflet.1.6.0.css")
     link(rel="stylesheet", href="/css/leaflet/context-menu.min.css")
     link(rel="stylesheet", href="/css/siteConfig.css")
     link(rel="stylesheet", href="/css/pageCommon.css")
 block content
-    .container-fluid
-        .row.title-pressure
-            h3 Config Points
-        .row.info
-            .col-sm-6 
-                .input-group.mb-3
-                    button#lbDisplayGroup.btn.btn-outline-primary(type='button' data-bs-toggle="modal" data-bs-target="#Model") Display group
-                    input.form-control#displayGroup.form-select( type="text" aria-label='lbDisplayGroup' aria-describedby='lbDisplayGroup' list="listDisplayGroup")
-                    datalist#listDisplayGroup
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbSite.input-group-text Site Id
-                    input.form-control#site.form-select( type="text" aria-label='lbSite' aria-describedby='lbSite' list="listSite")
-                    datalist#listSite
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbLocation.input-group-text Sitename
-                    input.form-control#location(type='text' placeholder='Sitename' aria-label='lbLocation' aria-describedby='lbLocation')
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbLat.input-group-text Latitude
-                    input.form-control#lat(type='number' placeholder='Latitude' aria-label='lbLat' aria-describedby='lbLat')
-                    button.btn.btn-outline-secondary(type='button' onclick="showMap()")
-                        i.fa.fa-map
-                    //- button.btn.btn-outline-secondary(type='button' onclick="getLocation()")
-                    //-     i.fa.fa-map-marker
-                #map.show
-            .col-sm-6 
-                .input-group.mb-3
-                    button#lbLoggerId.btn.btn-outline-primary(type='button') LoggerId
-                    input.form-control#loggerId(type='text' placeholder='LoggerId' aria-label='lbLoggerId' aria-describedby='lbLoggerId')
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbLong.input-group-text Longitude
-                    input.form-control#long(type='number' placeholder='Longitude' aria-label='lbLong' aria-describedby='lbLong')
-                    button.btn.btn-outline-secondary(type='button' onclick="showMap()") 
-                        i.fa.fa-map
-                    //- button.btn.btn-outline-secondary(type='button' onclick="getLocation()")
-                    //-     i.fa.fa-map-marker
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbStartDay.input-group-text Day to calculate volume site
-                    input.form-control#startDay(type='number' placeholder='Day to calculate volume site' min="1" max="31" aria-label='lbStartDay' aria-describedby='lbStartDay')
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbStartHour.input-group-text Hour to calculate volume site
-                    input.form-control#startHour(type='number' placeholder='Hour to calculate volume site' min="0" max="23" aria-label='lbStartHour' aria-describedby='lbStartHour')
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbTimeDelay.input-group-text Number of minutes late 
-                    input.form-control#timeDelay(type='number' placeholder='Number of minutes late' min="0"  aria-label='lbTimeDelay' aria-describedby='lbTimeDelay')
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbStatus.input-group-text Operator
-                    input.form-control#status(type='text' placeholder='Operator' aria-label='lbStatus' aria-describedby='lbStatus')
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbAvailable.input-group-text Status
-                    input.form-control#available(type='text' placeholder='Status' aria-label='lbAvailable' aria-describedby='lbAvailable')
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbPipeSize.input-group-text Size metter
-                    input.form-control#pipeSize(type='number' placeholder='Size metter' aria-label='lbPipeSize' min="0" aria-describedby='lbPipeSize')
-            .col-sm-6 
-                .input-group.mb-3
-                    span#lbInterval.input-group-text Data sending cycle
-                    input.form-control#interval(type='number' placeholder='Data sending cycle' aria-label='lbInterval' min="0" aria-describedby='lbInterval')
-            .col-sm-6
-                .row 
-                    .col-sm-12.pt-0.pl-0
-                        .input-group.mb-3
-                            span#lbTypeMeter.input-group-text Type meter
-                            select.form-control#typeMeter( placeholder='Note' aria-label='lbTypeMeter' aria-describedby='lbTypeMeter')
+    .container.py-4
+        .card.card-config
+            .config-header
+                i.fas.fa-gear.me-2
+                | Site Configuration
+            .card-body.p-4.p-lg-5
+                form#siteConfigForm
+                    .section-header
+                        i.fas.fa-info-circle.me-2
+                        | General Information
+                    .row
+                        .col-md-6.mb-3
+                            label#lbDisplayGroup.form-label.form-label-config(data-bs-toggle="modal", data-bs-target="#Model")
+                                i.fas.fa-list-check.me-1
+                                | Display Group (Click View Config display group)
+                            input.form-control#displayGroup.form-select( type="text" aria-label='lbDisplayGroup' aria-describedby='lbDisplayGroup' list="listDisplayGroup")
+                            datalist#listDisplayGroup
+                        .col-md-6.mb-3
+                            label#lbSite.form-label.form-label-config(for="location") Site Id
+                            input.form-control#site.form-select( type="text" aria-label='lbSite' aria-describedby='lbSite' list="listSite")
+                            datalist#listSite
+
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="location") Sitename
+                            input#location.form-control(type="text")
+                        .col-md-6.mb-3
+                            label#lbLoggerId.form-label.form-label-config
+                                i.fas.fa-list-check.me-1
+                                | Logger Id (Click View Config Channel)
+                            input#loggerId.form-control(type="text")
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="latitude") Latitude
+                            .input-group
+                                input#lat.form-control(type="number")
+                                button.btn.btn-outline-secondary(type="button", title="Get GPS from Map"  onclick="showMap()")
+                                    i.fas.fa-map-pin
+                           
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="longitude") Longitude
+                            .input-group
+                                input#long.form-control(type="text")
+                                button.btn.btn-outline-secondary(type="button", title="Get GPS from Map" onclick="showMap()")
+                                    i.fas.fa-map-pin
+                        .col-12 
+                            #map.show
+                        .col-sm-6.d-none
+                            .input-group.mb-3
+                                span#lbId.input-group-text id
+                                input.form-control#id(type='text' placeholder='id' aria-label='lbId' aria-describedby='lbId')
+                        .col-sm-2.check-box.pt-0.d-none
+                            .form-check
+                                input#isPrimayer.form-check-input(type='checkbox' value='')
+                                label.form-check-label(for='isPrimayer')
+                                    | Other device
+                    .section-header
+                        i.fas.fa-cogs.me-2
+                        | Vilog Parameters
+                    .row
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="startDay") Day to calculate volume site
+                            input#startDay.form-control(type="number", value="1", min="0", max="31")
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="startHour") Hour to calculate volume site
+                            input#startHour.form-control(type="number", value="0", min="0", max="23")
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="timeDelay") Number of minutes late (Mins)
+                            input#timeDelay.form-control(type="number", value="60", min="5")
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="interval") Data sending cycle (Mins)
+                            input#interval.form-control(type="number", value="15", min="1")
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="IMEI") IMEI
+                            input#IMEI.form-control(type="text")
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="operator") Operator
+                            input#status.form-control(type="text")
+                        .col-md-12.mb-3
+                            label.form-label.form-label-config(for="note") Notes for Vilog
+                            textarea#note.form-control(rows="2")
+
+                    .section-header
+                        i.fas.fa-gauge-simple-max.me-2
+                        | Meter Details
+                    .row
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="available") Status
+                            input.form-control#available(type='text' placeholder='Status' aria-label='lbAvailable' aria-describedby='lbAvailable')
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="typeMeter") Type meter
+                            select#typeMeter.form-select
                                 option(value="SU") SU
                                 option(value="Kronhe") Kronhe
-            .col-sm-6
-                .row
-                    .col-sm-12.pt-0.pl-0
-                        .input-group.mb-3
-                            span#lbIMEI.input-group-text IMEI
-                            input.form-control#IMEI( placeholder='Note' aria-label='lbIMEI' aria-describedby='lbIMEI')
-            .col-sm-6
-                .row 
-                    .col-sm-12.pt-0.pl-0
-                        .input-group.mb-3
-                            span#lbNote.input-group-text Note
-                            input.form-control#note(type='text' placeholder='Note' aria-label='lbNote' aria-describedby='lbNote')
-                    .col-sm-2.check-box.pt-0.d-none
-                        .form-check
-                            input#isPrimayer.form-check-input(type='checkbox' value='')
-                            label.form-check-label(for='isPrimayer')
-                                | Other device
-            .col-sm-6(style="opacity: 0")
-                .input-group.mb-3
-                    span#lbMNF.input-group-text Min Night Flow
-                    input.form-control#MNF(type='number' placeholder='Min Night Flow' aria-label='lbMNF' min="0" aria-describedby='lbMNF')
-            .col-sm-6.d-none
-                .input-group.mb-3
-                    span#lbId.input-group-text id
-                    input.form-control#id(type='text' placeholder='id' aria-label='lbId' aria-describedby='lbId')
-            .col-12.button
-                .box-button 
-                    button.btn.btn-success#btnInsert(type="button") Add
-                    button.btn.btn-info#btnUpdate(type="button") Update
-                    button.btn.btn-danger#btnDelete(type="button") Delete
-            #Model.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='ModelLabel' aria-hidden='true')
-                .modal-dialog.modal-lg(role='document')
-                    .modal-content
-                        .modal-header
-                            h5#ModelLabel.modal-title Add info 
-                            span.close-button(data-dismiss='modal') x
-                        .modal-body
-                            .row#rowDisplayGroup
-                                .col-sm-6 
-                                    .input-group.mb-3
-                                        span#lbModalDisplayGroup.input-group-text Display Group
-                                        input.form-control#modalDisplayGroup.form-select( type="text" aria-label='lbModalDisplayGroup' aria-describedby='lbModalDisplayGroup' list="listModalDisplayGroup" onchange="modalDisplayGroupChanged(this)")
-                                        datalist#listModalDisplayGroup
-                                .col-sm-6 
-                                    .input-group.mb-3
-                                        span#lbModalNoteDisplayGroup.input-group-text Description
-                                        input.form-control#modalNoteDisplayGroup.form-select( type="text" aria-label='lbModalNoteDisplayGroup' aria-describedby='lbModalNoteDisplayGroup')
-                                .col-sm-6.d-none
-                                    .input-group.mb-3
-                                        span#lbModalIdDisplayGroup.input-group-text Id
-                                        input.form-control#modalIdDisplayGroup.form-select( type="text" aria-label='lbModalIdDisplayGroup' aria-describedby='lbModalIdDisplayGroup' )
-                                .col-12.button
-                                    .box-button 
-                                        button.btn.btn-success#btnModalDisplayGroupInsert(type="button" onclick="insertDisplayGroup(this)") Add
-                                        button.btn.btn-info#btnModalDisplayGroupUpdate(type="button" onclick="updateDisplayGroup(this)") Update
-                                        button.btn.btn-danger#btnModalDisplayGroupDelete(type="button" onclick="deleteDisplayGroup(this)") Delete
-                            .row#rowLoggerId
-                                .col-sm-6 
-                                    .input-group.mb-3
-                                        span#lbModalLoggerId.input-group-text LoggerId
-                                        input.form-control#modalLoggerId.form-select( type="text" aria-label='lbModalLoggerId' aria-describedby='lbModalLoggerId' disabled="true")
-                                .col-sm-6 
-                                    .input-group.mb-3
-                                        span#lbModalChannelId.input-group-text Channel Code
-                                        input.form-control#modalChannelId.form-select( type="text" aria-label='lbModalChannelId' aria-describedby='lbModalChannelId' list="listModalChannelId" onchange="modalChannelIdChanged(this)")
-                                        datalist#listModalChannelId
-                                .col-sm-6 
-                                    .input-group.mb-3
-                                        span#lbModalChannelName.input-group-text Channel name
-                                        input.form-control#modalChannelName.form-select( type="text" aria-label='lbModalChannelName' aria-describedby='lbModalChannelName')
-                                .col-sm-6 
-                                    .input-group.mb-3
-                                        span#lbModalUnit.input-group-text Unit
-                                        input.form-control#modalUnit.form-select( type="text" aria-label='lbModalUnit' aria-describedby='lbModalUnit')
-                                .col-sm-6 
-                                    .input-group.mb-3
-                                        span#lbModalBaseMin.input-group-text Lower threshold
-                                        input.form-control#modalBaseMin.form-select( type="number" aria-label='lbModalBaseMin' aria-describedby='lbModalBaseMin')
-                                .col-sm-6 
-                                    .input-group.mb-3
-                                        span#lbModalBaseMax.input-group-text Upper threshold
-                                        input.form-control#modalBaseMax.form-select( type="number" aria-label='lbModalBaseMax' aria-describedby='lbModalBaseMax')
-                                .col-sm-6.d-none
-                                    .input-group.mb-3
-                                        span#lbBaseLine.input-group-text Base line
-                                        input.form-control#modalBaseLine.form-select( type="number" aria-label='lbBaseLine' aria-describedby='lbBaseLine')
-                                .col-sm-6.d-none
-                                    .input-group.mb-3
-                                        span#lbBatThreshold.input-group-text Voltage rating
-                                        input.form-control#modalBatThreshold.form-select( type="number" aria-label='lbBatThreshold' aria-describedby='lbBatThreshold')
-                                .col-sm-6.d-none
-                                    .input-group.mb-3
-                                        span#lbFromHour.input-group-text Strat hour
-                                        input.form-control#modalFromHour.form-select( type="number" aria-label='lbFromHour' aria-describedby='lbFromHour')
-                                .col-sm-6.d-none
-                                    .input-group.mb-3
-                                        span#lbToHour.input-group-text End hour
-                                        input.form-control#modalToHour.form-select( type="number" aria-label='lbToHour' aria-describedby='lbToHour')
-                                .col-sm-12.d-none
-                                    .input-group.mb-3
-                                        span#lbIdChannelConfig.input-group-text id
-                                        input.form-control#modalIdChannelConfig.form-select( type="text" aria-label='lbIdChannelConfig' aria-describedby='lbIdChannelConfig')
-                                .col-sm-6.check-box
-                                    .form-check
-                                        input#modalPressure1.form-check-input(type='checkbox' name="typeChannel")
-                                        label.form-check-label(for='modalPressure1')
-                                            | Pressure 1
-                                .col-sm-6.check-box
-                                    .form-check
-                                        input#modalPressure2.form-check-input(type='checkbox' name="typeChannel")
-                                        label.form-check-label(for='modalPressure2')
-                                            | Pressure 2
-                                .col-sm-6.check-box
-                                    .form-check
-                                        input#modalForwardFlow.form-check-input(type='checkbox' name="typeChannel")
-                                        label.form-check-label(for='modalForwardFlow')
-                                            | Forward Flow
-                                .col-sm-6.check-box
-                                    .form-check
-                                        input#modalReverseFlow.form-check-input(type='checkbox' name="typeChannel")
-                                        label.form-check-label(for='modalReverseFlow')
-                                            | Reverse Flow
-                                .col-sm-6.check-box
-                                    .form-check
-                                        input#modalBatSolarChannel.form-check-input(type='checkbox' name="typeChannel")
-                                        label.form-check-label(for='modalSolarChannel')
-                                            | Battery Accquy
-                                .col-sm-6.check-box
-                                    .form-check
-                                        input#modalBatMetterChannel.form-check-input(type='checkbox' name="typeChannel")
-                                        label.form-check-label(for='modalBatMetterChannel')
-                                            | Battery Metter
-                                .col-sm-6.check-box
-                                    .form-check
-                                        input#modalBatLoggerChannel.form-check-input(type='checkbox' name="typeChannel")
-                                        label.form-check-label(for='modalBatLoggerChannel')
-                                            | Battery Logger
-                                .col-sm-6.check-box
-                                    .form-check
-                                        input#modalOtherChannel.form-check-input(type='checkbox' name="typeChannel")
-                                        label.form-check-label(for='modalOtherChannel')
-                                            | Other channel
-                                .col-12.button
-                                    .box-button 
-                                        button.btn.btn-success#btnModalChannelInsert(type="button" onclick="insertChannelConfig(this)") Add
-                                        button.btn.btn-info#btnModalChannelUpdate(type="button" onclick="UpdateChannelConfig(this)") Update
-                                        button.btn.btn-danger#btnModalChannelDelete(type="button" onclick="DeleteChannelConfig(this)") Delete
+                        .col-md-6.mb-3
+                            label.form-label.form-label-config(for="pipeSize") Size meter
+                            input#pipeSize.form-control(type="text")
+
+                .config-actions.text-end
+                    button.btn.btn-success.me-2#btnInsert(type="button")
+                        i.fas.fa-plus.me-1
+                        | Add
+                    button.btn.btn-info.me-2.text-white#btnUpdate(type="button")
+                        i.fas.fa-save.me-1
+                        | Update
+                    button.btn.btn-danger#btnDelete(type="button")
+                        i.fas.fa-trash.me-1
+                        | Delete
+    #Model.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='ModelLabel' aria-hidden='true')
+        .modal-dialog.modal-lg(role='document')
+            .modal-content
+                .modal-header.bg-primary.text-white
+                    h5#ModelLabel.modal-title Add info 
+                    button.btn-close.btn-close-white(type="button" data-bs-dismiss="modal" aria-label="Close")
+                .modal-body
+                    .row#rowDisplayGroup
+                        .col-sm-6 
+                            label#lbModalDisplayGroup.form-label.form-label-config(for="modalDisplayGroup") Display Group
+                            input.form-control#modalDisplayGroup.form-select( type="text" aria-label='lbModalDisplayGroup' aria-describedby='lbModalDisplayGroup' list="listModalDisplayGroup" onchange="modalDisplayGroupChanged(this)")
+                            datalist#listModalDisplayGroup                
+                        .col-sm-6 
+                            label#lbModalNoteDisplayGroup.form-label.form-label-config(for="modalNoteDisplayGroup") Description
+                            input.form-control#modalNoteDisplayGroup.form-select( type="text" aria-label='lbModalNoteDisplayGroup' aria-describedby='lbModalNoteDisplayGroup')
+                        .col-sm-6.d-none
+                            span#lbModalIdDisplayGroup.input-group-text Id
+                            input.form-control#modalIdDisplayGroup.form-select( type="text" aria-label='lbModalIdDisplayGroup' aria-describedby='lbModalIdDisplayGroup' )
+                        .col-12.button
+                            .config-actions.text-end
+                                button.btn.btn-success.me-2#btnInsert(type="button" onclick="insertDisplayGroup(this)")
+                                    i.fas.fa-plus.me-1
+                                    | Add
+                                button.btn.btn-info.me-2.text-white#btnUpdate(type="button" onclick="updateDisplayGroup(this)")
+                                    i.fas.fa-save.me-1
+                                    | Update
+                                button.btn.btn-danger#btnDelete(type="button" onclick="deleteDisplayGroup(this)")
+                                    i.fas.fa-trash.me-1
+                                    | Delete
+                         
+                    .row#rowLoggerId
+                        .col-sm-6
+                            label#lbModalLoggerId.form-label.form-label-config(for="modalLoggerId") LoggerId
+                            input.form-control#modalLoggerId.form-select( type="text" aria-label='lbModalLoggerId' aria-describedby='lbModalLoggerId' disabled="true")         
+                        .col-sm-6 
+                            span#lbModalChannelId.form-label.form-label-config Channel Code
+                            input.form-control#modalChannelId.form-select( type="text" aria-label='lbModalChannelId' aria-describedby='lbModalChannelId' list="listModalChannelId" onchange="modalChannelIdChanged(this)")
+                            datalist#listModalChannelId
+                        .col-sm-6 
+                            lable#lbModalChannelName.form-label.form-label-config Channel name
+                            input.form-control#modalChannelName.form-select( type="text" aria-label='lbModalChannelName' aria-describedby='lbModalChannelName')
+                        .col-sm-6 
+                            label#lbModalUnit.form-label.form-label-config Unit
+                            input.form-control#modalUnit.form-select( type="text" aria-label='lbModalUnit' aria-describedby='lbModalUnit')
+                        .col-sm-6 
+                            label#lbModalBaseMin.form-label.form-label-config Lower threshold
+                            input.form-control#modalBaseMin.form-select( type="number" aria-label='lbModalBaseMin' aria-describedby='lbModalBaseMin')
+                        .col-sm-6 
+                            label#lbModalBaseMax.form-label.form-label-config Upper threshold
+                            input.form-control#modalBaseMax.form-select( type="number" aria-label='lbModalBaseMax' aria-describedby='lbModalBaseMax')
+                        .col-sm-6.d-none
+                            label#lbBaseLine.form-label.form-label-config Base line
+                            input.form-control#modalBaseLine.form-select( type="number" aria-label='lbBaseLine' aria-describedby='lbBaseLine')
+                        .col-sm-6.d-none
+                            label#lbBatThreshold.form-label.form-label-config Voltage rating
+                            input.form-control#modalBatThreshold.form-select( type="number" aria-label='lbBatThreshold' aria-describedby='lbBatThreshold')
+                        .col-sm-6.d-none
+                            label#lbFromHour.form-label.form-label-config Strat hour
+                            input.form-control#modalFromHour.form-select( type="number" aria-label='lbFromHour' aria-describedby='lbFromHour')
+                        .col-sm-6.d-none
+                            label#lbToHour.form-label.form-label-config End hour
+                            input.form-control#modalToHour.form-select( type="number" aria-label='lbToHour' aria-describedby='lbToHour')
+                        .col-sm-12.d-none
+                            label#lbIdChannelConfig.form-label.form-label-config id
+                            input.form-control#modalIdChannelConfig.form-select( type="text" aria-label='lbIdChannelConfig' aria-describedby='lbIdChannelConfig')
+                        .col-sm-6.check-box
+                            .form-check
+                                input#modalPressure1.form-check-input(type='checkbox' name="typeChannel")
+                                label.form-check-label(for='modalPressure1')
+                                    | Pressure 1
+                        .col-sm-6.check-box
+                            .form-check
+                                input#modalPressure2.form-check-input(type='checkbox' name="typeChannel")
+                                label.form-check-label(for='modalPressure2')
+                                    | Pressure 2
+                        .col-sm-6.check-box
+                            .form-check
+                                input#modalForwardFlow.form-check-input(type='checkbox' name="typeChannel")
+                                label.form-check-label(for='modalForwardFlow')
+                                    | Forward Flow
+                        .col-sm-6.check-box
+                            .form-check
+                                input#modalReverseFlow.form-check-input(type='checkbox' name="typeChannel")
+                                label.form-check-label(for='modalReverseFlow')
+                                    | Reverse Flow
+                        .col-sm-6.check-box
+                            .form-check
+                                input#modalBatSolarChannel.form-check-input(type='checkbox' name="typeChannel")
+                                label.form-check-label(for='modalSolarChannel')
+                                    | Battery Accquy
+                        .col-sm-6.check-box
+                            .form-check
+                                input#modalBatMetterChannel.form-check-input(type='checkbox' name="typeChannel")
+                                label.form-check-label(for='modalBatMetterChannel')
+                                    | Battery Metter
+                        .col-sm-6.check-box
+                            .form-check
+                                input#modalBatLoggerChannel.form-check-input(type='checkbox' name="typeChannel")
+                                label.form-check-label(for='modalBatLoggerChannel')
+                                    | Battery Logger
+                        .col-sm-6.check-box
+                            .form-check
+                                input#modalOtherChannel.form-check-input(type='checkbox' name="typeChannel")
+                                label.form-check-label(for='modalOtherChannel')
+                                    | Other channel
+                        .col-12.button
+                            .config-actions.text-end
+                                button.btn.btn-success.me-2#btnInsert(type="button" onclick="insertChannelConfig(this)")
+                                    i.fas.fa-plus.me-1
+                                    | Add
+                                button.btn.btn-info.me-2.text-white#btnUpdate(type="button" onclick="UpdateChannelConfig(this)")
+                                    i.fas.fa-save.me-1
+                                    | Update
+                                button.btn.btn-danger#btnDelete(type="button" onclick="DeleteChannelConfig(this)")
+                                    i.fas.fa-trash.me-1
+                                    | Delete
            
 block linkcriptbody
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js")
     script(src='/js/leaflet/leaflet.1.6.0.js')
     script(src='/js/leaflet/context-menu.js')
     script(src="/js/hostname.js")
     script(src="/js/displayGroup.js")
     script(src="/js/channelConfig.js")
+    script(src="/js/util.js")
     script(src="/js/siteConfig.js")
-    script(src="/js/util.js") 
