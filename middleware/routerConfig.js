@@ -120,8 +120,7 @@ module.exports.RouterConfig = async function (req, res) {
         <ul>
             <li><a href="/createUser">Create User</a></li>
             <li><a href="/viewUser">View User</a></li>
-            <li><a href="/viewStaff">View Staff</a></li>
-            <li><a href="/viewConsumer">View Consumer</a></li>
+            
         </ul>
     </li>
 

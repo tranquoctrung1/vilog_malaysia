@@ -1,146 +1,334 @@
-let urlGetUser = `${hostname}/GetUser`;
-let urlDeleteUser = `${hostname}/DeleteUser`;
+const urlGetUser = `${hostname}/GetUser`;
+const urlDeleteUser = `${hostname}/DeleteUser`;
+const urlGetStatusSite = `${hostname}/GetStatusSite`;
 
-let loading = document.getElementById("loading");
+let bodyTable = document.getElementById('bodyTable');
 
 function getData() {
-  loading.classList.add("show");
-  loading.classList.remove("hide");
-
-  getDataAndDrawTable();
-}
-
-function createHeader(data) {
-  let head = document.getElementById("head");
-
-  head.innerHTML = "";
-
-  let content = "";
-
-  if (CheckExistsData(data)) {
-    content += `<tr>
-                    <th>Tên đăng nhập</th>
-                    <th>Email</th>
-                    <th>Quyền</th>
-                    <th>Tên nhân viên</th>
-                    <th>Tên khách hàng</th>
-                    <th></th>
-                </tr>`;
-  }
-
-  head.innerHTML = content;
+    getDataAndDrawTable();
 }
 
 function createBody(data) {
-  let body = document.getElementById("body");
+    bodyTable.innerHTML = '';
 
-  body.innerHTML = "";
+    let content = '';
 
-  let content = "";
-
-  if (CheckExistsData(data)) {
-    for (let item of data) {
-      content += `<tr>`;
-      content += `<td>${ConvertDataIntoTable(item.Username)}</td>`;
-      content += `<td>${ConvertDataIntoTable(item.Email)}</td>`;
-      content += `<td>${ConvertDataIntoTable(item.Role)}</td>`;
-      content += `<td>${ConvertDataIntoTable(item.StaffId)}</td>`;
-      content += `<td>${ConvertDataIntoTable(item.ConsumerId)}</td>`;
-      content += `<td> <button class="btn btn-danger btn-sm" data-id="${item._id}" onclick="onBtnDeleteClicked(this)">Xóa</button></td>`;
-      content += `</tr>`;
+    if (CheckExistsData(data)) {
+        for (let item of data) {
+            content += `<tr>`;
+            content += `<td>${ConvertDataIntoTable(item.Username)}</td>`;
+            content += `<td>${ConvertDataIntoTable(item.Email)}</td>`;
+            content += `<td>${ConvertDataIntoTable(item.Role)}</td>`;
+            content += `<td>${ConvertDataIntoTable(item.StaffId)}</td>`;
+            content += `<td>${ConvertDataIntoTable(item.ConsumerId)}</td>`;
+            content += `<td class="text-center"><span class="site-count-link" data-bs-toggle="modal" data-bs-target="#siteListModal" data-username="${item.Username}" data-site-count="${item.sites}" data-id="${item._id}"><span class="site-count-badge">${item.sites}</span></span></td>`;
+            content += `<td> <button class="btn btn-danger btn-sm" data-id="${item._id}" onclick="onBtnDeleteClicked(this)"><i class="fa fa-trash"></i> Delete</button></td>`;
+            content += `</tr>`;
+        }
     }
-  }
-
-  body.innerHTML = content;
-}
-
-function createFooter(data) {
-  let foot = document.getElementById("foot");
-
-  foot.innerHTML = "";
-
-  let content = "";
-
-  if (CheckExistsData(data)) {
-    content += `<tr>
-                    <th>Tên đăng nhập</th>
-                    <th>Email</th>
-                    <th>Quyền</th>
-                    <th>Tên nhân viên</th>
-                    <th>Tên khách hàng</th>
-                    <th></th>
-                </tr>`;
-  }
-
-  foot.innerHTML = content;
+    bodyTable.innerHTML = content;
 }
 
 function getDataAndDrawTable() {
-  axios
-    .get(urlGetUser)
-    .then((res) => {
-      loading.classList.add("hide");
-      loading.classList.remove("show");
+    axios
+        .get(urlGetUser)
+        .then((res) => {
+            if ($.fn.DataTable.isDataTable('#userTable')) {
+                $('#userTable').DataTable().clear().destroy();
+            }
 
-      createTablePlaceHolder();
+            createBody(res.data);
 
-      createHeader(res.data);
-      createBody(res.data);
-      createFooter(res.data);
-
-      $("#example").DataTable({
-        initComplete: function () {
-          this.api()
-            .columns([0])
-            .every(function () {
-              var column = this;
-              var select = $('<select><option value=""></option></select>')
-                .appendTo($(column.footer()).empty())
-                .on("change", function () {
-                  var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                  column.search(val ? "^" + val + "$" : "", true, false).draw();
-                });
-              column
-                .data()
-                .unique()
-                .sort()
-                .each(function (d, j) {
-                  select.append('<option value="' + d + '">' + d + "</option>");
-                });
+            $('#userTable').DataTable({
+                language: {
+                    search: 'Search:',
+                    lengthMenu: 'Show _MENU_ entries',
+                    info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+                    paginate: { previous: 'Previous', next: 'Next' },
+                },
+                pageLength: 20,
+                order: [[0, 'desc']],
+                initComplete: function () {
+                    this.api()
+                        .columns([0])
+                        .every(function () {
+                            var column = this;
+                            var select = $(
+                                '<select><option value=""></option></select>',
+                            )
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                        $(this).val(),
+                                    );
+                                    column
+                                        .search(
+                                            val ? '^' + val + '$' : '',
+                                            true,
+                                            false,
+                                        )
+                                        .draw();
+                                });
+                            column
+                                .data()
+                                .unique()
+                                .sort()
+                                .each(function (d, j) {
+                                    select.append(
+                                        '<option value="' +
+                                            d +
+                                            '">' +
+                                            d +
+                                            '</option>',
+                                    );
+                                });
+                        });
+                },
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                        className: 'btn btn-sm buttons-excel',
+                        filename: `user_list`,
+                    },
+                    {
+                        extend: 'csv',
+                        text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                        className: 'btn btn-sm buttons-csv',
+                        filename: `user_list`,
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                        className: 'btn btn-sm buttons-pdf',
+                        filename: `user_list`,
+                    },
+                ],
             });
-        },
-        dom: "Bfrtip",
-        buttons: [
-          {
-            extend: "excelHtml5",
-            title: `Danh_Sach_Nguoi_Dung`,
-          },
-          {
-            extend: "csvHtml5",
-            title: `Danh_Sach_Nguoi_Dung`,
-          },
-          {
-            extend: "pdfHtml5",
-            title: `Danh_Sach_Nguoi_Dung`,
-          },
-        ],
-      });
-    })
-    .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
 }
 
 function onBtnDeleteClicked(e) {
-  let url = `${urlDeleteUser}/${CreateDataNullForPost(e.dataset.id)}`;
-  axios
-    .post(url)
-    .then((res) => {
-      if (res.data != 0) {
-        swal("Thành công", "Xóa thành công", "success");
-        getDataAndDrawTable();
-      } else {
-        swal("Lỗi", "Xóa không thành công", "error");
-      }
-    })
-    .catch((err) => console.log(err));
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+    }).then((willDelete) => {
+        if (willDelete) {
+            let url = `${urlDeleteUser}/${CreateDataNullForPost(e.dataset.id)}`;
+            axios
+                .post(url)
+                .then((res) => {
+                    if (res.data != 0) {
+                        swal('success', 'Delete success!!', 'success');
+                        getDataAndDrawTable();
+                    } else {
+                        swal('Error', 'Delete failed', 'error');
+                    }
+                })
+                .catch((err) => console.log(err));
+        }
+    });
 }
 getData();
+
+$('#siteListModal').on('show.bs.modal', function (event) {
+    if ($.fn.DataTable.isDataTable('#siteListTable')) {
+        $('#siteListTable').DataTable().clear().destroy();
+    }
+
+    const button = $(event.relatedTarget);
+    const username = button.data('username');
+    const siteCount = button.data('site-count');
+    const sitesJson = button.closest('tr').attr('data-sites-details');
+
+    const modal = $(this);
+    modal.find('#modalUsername').text(username);
+    modal.find('#modalSiteCount').text(siteCount);
+
+    const tableBody = modal.find('#siteListContainer');
+    tableBody.empty();
+
+    let url = `${urlGetStatusSite}/${username}`;
+
+    axios
+        .get(url)
+        .then((res) => {
+            let data = [];
+
+            for (const item of res.data.siteAlarm) {
+                const obj = {};
+                const find = res.data.sites.find(
+                    (el) => el.SiteId === item.SiteId,
+                );
+
+                if (find !== undefined) {
+                    obj.LastData = find.ListChannel[0].TimeStamp;
+                }
+
+                obj.Location = item.Location;
+                obj.SiteId = item.SiteId;
+                obj.Status = 'Connected';
+                obj.Alarm = 'Yes';
+
+                data.push(obj);
+            }
+            for (const item of res.data.siteDelay) {
+                const obj = {};
+                const find = res.data.sites.find(
+                    (el) => el.SiteId === item.SiteId,
+                );
+
+                if (find !== undefined) {
+                    obj.LastData = find.ListChannel[0].TimeStamp;
+                }
+
+                obj.Location = item.Location;
+                obj.SiteId = item.SiteId;
+                obj.Status = 'Disconnected';
+                obj.Alarm = 'No';
+
+                data.push(obj);
+            }
+            for (const item of res.data.siteHasValue) {
+                const obj = {};
+                const find = res.data.sites.find(
+                    (el) => el.SiteId === item.SiteId,
+                );
+
+                if (find !== undefined) {
+                    obj.LastData = find.ListChannel[0].TimeStamp;
+                }
+
+                obj.Location = item.Location;
+                obj.SiteId = item.SiteId;
+                obj.Status = 'Connected';
+                obj.Alarm = 'No';
+
+                data.push(obj);
+            }
+
+            data.sort((a, b) => a.Location.localeCompare(b.Location));
+
+            if (data.length > 0) {
+                for (const item of data) {
+                    const statusHtml = renderStatusTag(item.Status);
+                    const alarmHtml = renderAlarmTag(item.Alarm);
+                    const row = `
+                    <tr>
+                        <td>${item.SiteId}</td>
+                        <td>${item.Location}</td>
+                        <td>${statusHtml}</td>
+                        <td>${convertDateToString(new Date(item.LastData))}</td>
+                        <td>${alarmHtml}</td>
+                    </tr>`;
+                    tableBody.append(row);
+                }
+
+                $('#siteListTable').DataTable({
+                    language: {
+                        search: 'Search:',
+                        lengthMenu: 'Show _MENU_ entries',
+                        info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+                        paginate: { previous: 'Previous', next: 'Next' },
+                    },
+                    pageLength: 20,
+                    order: [[0, 'desc']],
+                    initComplete: function () {
+                        this.api()
+                            .columns([0])
+                            .every(function () {
+                                var column = this;
+                                var select = $(
+                                    '<select><option value=""></option></select>',
+                                )
+                                    .appendTo($(column.footer()).empty())
+                                    .on('change', function () {
+                                        var val =
+                                            $.fn.dataTable.util.escapeRegex(
+                                                $(this).val(),
+                                            );
+                                        column
+                                            .search(
+                                                val ? '^' + val + '$' : '',
+                                                true,
+                                                false,
+                                            )
+                                            .draw();
+                                    });
+                                column
+                                    .data()
+                                    .unique()
+                                    .sort()
+                                    .each(function (d, j) {
+                                        select.append(
+                                            '<option value="' +
+                                                d +
+                                                '">' +
+                                                d +
+                                                '</option>',
+                                        );
+                                    });
+                            });
+                    },
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                            className: 'btn btn-sm buttons-excel',
+                            filename: `user_list`,
+                        },
+                        {
+                            extend: 'csv',
+                            text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                            className: 'btn btn-sm buttons-csv',
+                            filename: `user_list`,
+                        },
+                        {
+                            extend: 'pdf',
+                            text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                            className: 'btn btn-sm buttons-pdf',
+                            filename: `user_list`,
+                        },
+                    ],
+                });
+            } else {
+                tableBody.append(`
+                <tr>
+                    <td colspan="5" class="text-center text-muted">
+                        This user currently manages 0 sites.
+                    </td>
+                </tr>
+            `);
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+});
+
+function renderStatusTag(status) {
+    if (status === 'Connected') {
+        return `<span class="status-tag tag-success">Connected</span>`;
+    } else if (status === 'Disconnected') {
+        return `<span class="status-tag tag-warning">Disconnected</span>`;
+    }
+    return status;
+}
+
+// Function to render alarm tags in modal
+function renderAlarmTag(alarm) {
+    if (alarm === 'Yes') {
+        return `<span class="status-tag tag-danger">ALARM</span>`;
+    } else if (alarm === 'No') {
+        return `<span class="status-tag tag-success">NORMAL</span>`;
+    }
+    return alarm;
+}

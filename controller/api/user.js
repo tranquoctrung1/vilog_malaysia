@@ -1,9 +1,43 @@
 const UserModel = require('../../model/user');
 const bcrypt = require('bcryptjs');
 const md5 = require('md5');
+const ConsumerSiteModel = require('../../model/consumerSite');
+const StaffSiteModel = require('../../model/staffSite');
+const SiteModel = require('../../model/site');
 
 module.exports.GetUser = async function (req, res) {
-    res.json(await UserModel.find({}));
+    const result = [];
+
+    const data = await UserModel.find({});
+
+    const sites = await SiteModel.find({});
+
+    for (const user of data) {
+        const obj = { ...user._doc };
+        if (user.Role !== 'admin') {
+            if (user.Role === 'consumer') {
+                let listIdSite = await ConsumerSiteModel.find(
+                    { IdUser: user._id },
+                    { IdSite: 1, _id: 0 },
+                );
+
+                obj.sites = listIdSite.length;
+            } else if (user.Role === 'staff') {
+                let listIdSite = await StaffSiteModel.find(
+                    { IdUser: user._id },
+                    { IdSite: 1, _id: 0 },
+                );
+
+                obj.sites = listIdSite.length;
+            }
+        } else {
+            obj.sites = sites.length;
+        }
+
+        result.push(obj);
+    }
+
+    res.json(result);
 };
 
 module.exports.GetUserByUserName = async function (req, res) {

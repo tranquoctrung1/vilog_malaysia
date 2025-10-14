@@ -1,0 +1,110 @@
+/* Card & General Styles */
+.card-custom {
+    border: none;
+    border-radius: 15px;
+}
+
+/* Status Tag Styles */
+.status-tag {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+.tag-danger {
+    background-color: #fcebeb;
+    color: #dc3545;
+}
+
+.tag-warning {
+    background-color: #fff3cd;
+    color: #bea963;
+}
+
+.tag-success {
+    background-color: #e6ffed;
+    color: #198754;
+}
+
+/* Site Count Badge */
+.site-count-link {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.site-count-badge {
+    background-color: #0d6efd;
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: 50%;
+    min-width: 30px;
+    height: 30px;
+    box-shadow: 0 0 0 rgba(13, 110, 253, 0.4);
+    transition: all 0.3s ease-in-out;
+}
+.site-count-link:hover .site-count-badge {
+    background-color: #0a58ca;
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(13, 110, 253, 0.2);
+}
+
+/* Delete Button */
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+.btn-delete:hover {
+    background-color: #c82333;
+    color: white;
+}
+
+/* Modal Table */
+#siteListTable th {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Center column */
+.dt-center {
+    text-align: center !important;
+}
+
+div.dt-buttons .btn {
+    background-color: #f8f9fa !important;
+    color: #495057 !important;
+    border: 1px solid #ced4da;
+    margin-left: 5px !important;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+div.dt-buttons .buttons-excel i {
+    color: #198754; /* Xanh lá cho Excel */
+}
+div.dt-buttons .buttons-csv i {
+    color: #0d6efd; /* Xanh dương cho CSV */
+}
+div.dt-buttons .buttons-pdf i {
+    color: #dc3545; /* Đỏ cho PDF */
+}
+div.dt-buttons .buttons-excel:hover {
+    background-color: #e6ffed !important;
+    border-color: #c3e6cb !important;
+}
+div.dt-buttons .buttons-csv:hover {
+    background-color: #e8f5ff !important;
+    border-color: #bee5eb !important;
+}
+div.dt-buttons .buttons-pdf:hover {
+    background-color: #fcebeb !important;
+    border-color: #f5c6cb !important;
+}
+
+#siteListTable {
+    width: 100% !important;
+}

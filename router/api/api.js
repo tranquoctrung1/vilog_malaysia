@@ -218,7 +218,7 @@ router.get(
 router.get('/GetSitePremission/:userId', StaffSiteApi.GetSitePermission);
 router.get('/GetSiteNotPremission/:userId', StaffSiteApi.GetSiteNotPermission);
 
-router.post('/UpdateStaffSite/:data', StaffSiteApi.UpdateStaffSite);
+router.post('/UpdateStaffSite', StaffSiteApi.UpdateStaffSite);
 
 router.get(
     '/GetSiteByUserIdInConsumerSite/:userId',
@@ -234,7 +234,7 @@ router.get(
     ConsumerSiteApi.GetSiteNotPermission,
 );
 
-router.post('/UpdateConsumerSite/:data', ConsumerSiteApi.UpdateConsumerSite);
+router.post('/UpdateConsumerSite', ConsumerSiteApi.UpdateConsumerSite);
 
 router.get('/GetListNameStation', CameraApi.GetListNameStation);
 

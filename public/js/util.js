@@ -315,6 +315,42 @@ function createOptionsInUserNameSelectBox(data, idDom) {
     domSelect.innerHTML = content;
 }
 
+function createOptionsInUserNameSelectBoxStaffPermission(data, idDom) {
+    let domSelect = document.getElementById(`${idDom}`);
+
+    domSelect.innerHTML = '';
+
+    let content = '';
+
+    content += `<option value="" selected disabled>-- Select a Staff Member --</option>`;
+
+    if (CheckExistsData(data)) {
+        for (let item of data) {
+            content += `<option value="${item._id}">${item.Username}</option>`;
+        }
+    }
+
+    domSelect.innerHTML = content;
+}
+
+function createOptionsInUserNameSelectConsumerBoxPermission(data, idDom) {
+    let domSelect = document.getElementById(`${idDom}`);
+
+    domSelect.innerHTML = '';
+
+    let content = '';
+
+    content += `<option value="" selected disabled>-- Select a Consumer Member --</option>`;
+
+    if (CheckExistsData(data)) {
+        for (let item of data) {
+            content += `<option value="${item._id}">${item.Username}</option>`;
+        }
+    }
+
+    domSelect.innerHTML = content;
+}
+
 function createOptionsInNameStationSelectox(data, idDom) {
     let domSelect = document.getElementById(`${idDom}`);
 
@@ -365,7 +401,7 @@ function createDataForListSite(data, idDom) {
     //content += `<li class="item d-none" data-id=""><span>Danh sach</span></li>`;
     if (CheckExistsData(data)) {
         for (let item of data) {
-            content += `<li class=item data-id="${item._id}"><span>${item.SiteId}</span></li>`;
+            content += `<li class=site-list-item item data-id="${item._id}"><span>${item.SiteId}</span></li>`;
         }
     }
 
