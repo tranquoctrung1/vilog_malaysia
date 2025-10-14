@@ -1,11 +1,67 @@
-.button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.card-config {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.button .box-button button {
-  margin: 0 20px;
-  padding-left: 40px;
-  padding-right: 40px;
+.config-header {
+    background-color: #0d6efd;
+    color: white;
+    padding: 15px 25px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Section Headers */
+.section-header {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0d6efd;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+.section-header:first-child {
+    margin-top: 0;
+}
+
+/* Labels & Inputs */
+.form-label-config {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 4px;
+}
+.form-control,
+.form-select {
+    border-radius: 8px;
+}
+
+/* Clickable LoggerId label */
+#lbConsumerId,
+#lbStaffId {
+    cursor: pointer;
+    color: #0d6efd;
+    transition: color 0.2s;
+}
+#loggerIdLabel:hover {
+    text-decoration: underline;
+}
+
+/* Input groups */
+.input-group-append button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.input-group .form-control {
+    border-right: none;
+}
+
+/* Actions */
+.config-actions {
+    border-top: 1px solid #e9ecef;
+    padding-top: 20px;
+    margin-top: 30px;
 }
