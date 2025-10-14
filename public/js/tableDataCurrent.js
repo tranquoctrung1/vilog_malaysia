@@ -5,191 +5,39 @@ if (userName == null || userName == undefined || userName.trim() == '') {
 
 let urlGetTabledDataCurrent = `${hostname}/GetTableDataCurrent/${userName}`;
 
-let dataElement = document.getElementById('data');
-let loadingElement = document.getElementById('loading');
-let reload = document.getElementById('reload');
-let loadMoreButton = document.getElementById('loadMoreButton');
-let search = document.getElementById('searchInfo');
+let siteCardsContainer = document.getElementById('siteCardsContainer');
 
-let startPage = 0;
-let totalPage;
-
-let totalData = [];
-
-loadMoreButton.classList.add('hide');
-
-function GetData() {
-    let url = `${urlGetTabledDataCurrent}`;
-
+function getData() {
     axios
-        .get(url)
+        .get(urlGetTabledDataCurrent)
         .then((res) => {
-            totalData = res.data;
-            totalPage = Math.ceil(res.data.length / 12);
-
-            loadingElement.classList.add('hide');
-            loadingElement.classList.remove('show');
-
-            dataElement.insertAdjacentHTML(
-                'beforeend',
-                createTable(totalData, startPage),
-            );
-
-            if (totalPage > 1) {
-                loadMoreButton.classList.remove('hide');
-                loadMoreButton.classList.add('show');
-            }
+            renderCard(res.data);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            console.error(err);
+        });
 }
 
-function createTable(data, startPage) {
-    let content = '';
-    if (CheckExistsData(data)) {
-        for (let item of [
-            ...data.slice(startPage * 12, (startPage + 1) * 12),
-        ]) {
-            let colorCard = `normal`;
-            if (item.isDelay === true) {
-                colorCard = `delay`;
-            } else {
-                if (item.isError === true) {
-                    colorCard = `error`;
-                }
-            }
+function renderStatusChannelSU(data) {
+    let content = ``;
+    for (const item of data) {
+        let status = 'status-success';
+        let value = 'No';
 
-            console.log(item);
-
-            content += `<div class="col-md-6 col-lg-6 col-xl-4">
-                <div class="card card-${colorCard} text-dark bg-light mb-3">
-                    <div class="card-header card-header-${colorCard}">
-                        <span>SiteId</span>
-                        <span class="bolder">${ConvertDataIntoTable(
-                            item.SiteId,
-                        )}</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="content-card  mt-3 location">
-                            <p>Location</p>
-                            <p class="bolder">${ConvertDataIntoTable(
-                                item.Location,
-                            )}</p>
-                        </div>
-                        ${createListChannel(item.ListChannel, item.TypeMeter)}
-                    </div>
-                </div>
-            </div>`;
-
-            // <div class="content-card">
-            //     <p>LoggerId</p>
-            //     <p class="bolder">${ConvertDataIntoTable(
-            //       item.LoggerId
-            //     )}</p>
-            // </div>
+        if (item.isDelay == true) {
+            status = 'status-warning';
+        } else if (item.isDelay === false && item.isError === true) {
+            status = 'status-danger';
         }
-    }
 
-    return content;
-}
-
-function createTableForSearch(data) {
-    let content = '';
-    if (CheckExistsData(data)) {
-        for (let item of data) {
-            let colorCard = `normal`;
-            if (item.isDelay === true) {
-                colorCard = `delay`;
-            } else {
-                if (item.isError === true) {
-                    colorCard = `error`;
-                }
-            }
-
-            content += `<div class="col-md-6 col-lg-6 col-xl-4">
-                <div class="card card-${colorCard} text-dark bg-light mb-3">
-                    <div class="card-header card-header-${colorCard}">
-                        <span>SiteId</span>
-                        <span class="bolder">${ConvertDataIntoTable(
-                            item.SiteId,
-                        )}</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="content-card  mt-3 location">
-                            <p>Location</p>
-                            <p class="bolder">${ConvertDataIntoTable(
-                                item.Location,
-                            )}</p>
-                        </div>
-                        
-                        ${createListChannel(item.ListChannel, item.TypeMeter)}
-                    </div>
-                </div>
-            </div>`;
-
-            // <div class="content-card">
-            //     <p>LoggerId</p>
-            //     <p class="bolder">${ConvertDataIntoTable(
-            //       item.LoggerId
-            //     )}</p>
-            // </div>
+        if (item.Value === 1) {
+            value = 'Yes';
         }
-    }
 
-    return content;
-}
-
-function createListChannel(data, typeMeter) {
-    let content = '';
-    if (data != null) {
-        for (let item of data) {
-            let colorText = `normal`;
-            if (item.isDelay === true) {
-                colorText = `delay`;
-            } else {
-                if (item.isError === true) {
-                    colorText = `error`;
-                }
-            }
-
-            let value = item.Value;
-            if (typeMeter === 'SU') {
-                if (item.ChannelName[0] === '1') {
-                    if (value === 0) {
-                        value = 'No';
-                    } else {
-                        value = 'Yes';
-                    }
-                }
-            } else if (typeMeter === 'Kronhe') {
-                if (item.ChannelName[0] === '6' || item.OtherChannel === true) {
-                    if (value <= 0) {
-                        value = 'No error';
-                    } else if (value === 1) {
-                        value = ' Flow measurement ';
-                    } else if (value === 2) {
-                        value = ' < 10% battery ';
-                    } else if (value === 4) {
-                        value = ' EEPROM error ';
-                    } else if (value === 8) {
-                        value = ' Communication error ';
-                    } else if (value === 16) {
-                        value = ' Empty pipe';
-                    } else if (value === 32) {
-                        value = 'Mains power failure ';
-                    }
-                }
-            }
-
-            content += ` <div class="content-card row channel">
-                        <div class="bolder col-5 value-${colorText}">${ConvertDataIntoTable(
-                item.ChannelName,
-            )}</div>
-                        <div class="bolder col-4 value-${colorText}">${convertDateToString(
-                convertDateFromApi(item.TimeStamp),
-            )}</div>
-                        <div class="bolder value col-3 value-${colorText}">${ConvertDataIntoTable(
-                value,
-            )} <span>${ConvertDataIntoTable(item.Unit)}</span> </div>
+        if (item.ChannelName[0] === '1') {
+            content += `<div class="channel-item">
+                        <span class="channel-label">${item.ChannelName}</span>
+                        <span class="channel-value ${status}">${value}</span>
                     </div>`;
         }
     }
@@ -197,35 +45,248 @@ function createListChannel(data, typeMeter) {
     return content;
 }
 
-reload.addEventListener('click', function () {
-    startPage = 0;
-    dataElement.innerHTML = '';
-    // hide button is first
-    loadMoreButton.classList.add('hide');
-    dataElement.insertAdjacentHTML(
-        'beforeend',
-        createTable(totalData, startPage),
-    );
-    // show button when load all data
-    loadingElement.classList.add('hide');
-    loadingElement.classList.remove('show');
-    if (totalPage > 1) {
-        loadMoreButton.classList.remove('hide');
-        loadMoreButton.classList.add('show');
-    }
-});
+function renderValueChannelSU(data) {
+    let content = ``;
+    for (const item of data) {
+        let status = 'status-success';
+        let value = 'No';
 
-function onLoadmoreClick() {
-    startPage += 1;
-    dataElement.insertAdjacentHTML(
-        'beforeend',
-        createTable(totalData, startPage),
-    );
-    if (startPage == totalPage) {
-        loadMoreButton.classList.add('hide');
-        loadMoreButton.classList.remove('show');
+        if (item.isDelay == true) {
+            status = 'status-warning';
+        } else if (item.isDelay === false && item.isError === true) {
+            status = 'status-danger';
+        }
+
+        if (item.ChannelName[0] === '2') {
+            let channelSplit = item.ChannelId.split('_');
+            if (channelSplit[channelSplit.length - 1] === '109') {
+                let signal = '(Bad)';
+                if (item.Value > 25) {
+                    signal = '(Good)';
+                } else if (item.Value > 20) {
+                    signal = '(Medium)';
+                }
+                content += `<div class="channel-item">
+                            <span class="channel-label">${item.ChannelName}</span>
+                            <span class="channel-value ${status}">${item.Value} ${item.Unit} ${signal}</span>
+                        </div>`;
+            } else if (channelSplit[channelSplit.length - 1] === '110') {
+                let battery = '(Bad)';
+                if (item.Value > 3.6) {
+                    battery = '(Good)';
+                } else if (item.Value > 3.3) {
+                    battery = '(Medium)';
+                }
+                content += `<div class="channel-item">
+                            <span class="channel-label">${item.ChannelName}</span>
+                            <span class="channel-value ${status}">${item.Value} ${item.Unit} ${battery}</span>
+                        </div>`;
+            } else {
+                content += `<div class="channel-item">
+                            <span class="channel-label">${item.ChannelName}</span>
+                            <span class="channel-value ${status}">${item.Value} ${item.Unit}</span>
+                        </div>`;
+            }
+        }
     }
+
+    return content;
 }
+
+function renderValueChannelKronhe(data) {
+    let content = ``;
+    for (const item of data) {
+        let status = 'status-success';
+        let value = 'No';
+
+        if (item.isDelay == true) {
+            status = 'status-warning';
+        } else if (item.isDelay === false && item.isError === true) {
+            status = 'status-danger';
+        }
+
+        {
+            let channelSplit = item.ChannelId.split('_');
+            if (channelSplit[channelSplit.length - 1] === '05') {
+                let signal = '(Bad)';
+                if (item.Value > 25) {
+                    signal = '(Good)';
+                } else if (item.Value > 20) {
+                    signal = '(Medium)';
+                }
+                content += `<div class="channel-item">
+                            <span class="channel-label">${item.ChannelName}</span>
+                            <span class="channel-value ${status}">${item.Value} ${item.Unit} ${signal}</span>
+                        </div>`;
+            } else if (channelSplit[channelSplit.length - 1] === '06') {
+                let battery = '(Bad)';
+                if (item.Value > 3.6) {
+                    battery = '(Good)';
+                } else if (item.Value > 3.3) {
+                    battery = '(Medium)';
+                }
+                content += `<div class="channel-item">
+                            <span class="channel-label">${item.ChannelName}</span>
+                            <span class="channel-value ${status}">${item.Value} ${item.Unit} ${battery}</span>
+                        </div>`;
+            } else {
+                content += `<div class="channel-item">
+                            <span class="channel-label">${item.ChannelName}</span>
+                            <span class="channel-value ${status}">${item.Value} ${item.Unit}</span>
+                        </div>`;
+            }
+        }
+    }
+
+    return content;
+}
+
+function renderCard(data) {
+    let content = ``;
+
+    for (const item of data) {
+        let alarm = 'No';
+        let status = 'Connected';
+        let card = `card-status-info`;
+        let tag = `tag-info`;
+        let text = `text-info`;
+
+        if (item.isDelay == true) {
+            status = 'Disconnected';
+            card = `card-status-warning`;
+            tag = `tag-warning`;
+            text = `text-warning`;
+        } else if (item.isDelay === false && item.isError === true) {
+            alarm = 'Yes';
+            card = `card-status-danger`;
+            status = 'Alarm';
+            tag = `tag-danger`;
+            text = `text-danger`;
+        }
+
+        if (item.TypeMeter === 'SU') {
+            content += `<div class="col-lg-4 col-md-6 mb-4 site-card" data-status="${status}" data-alarm="${alarm}">
+                <div class="card card-site-summary p-3 ${card}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="site-header ${text}">${
+                item.SiteId
+            }</div>
+                            <div class="site-subheader">Sitename: ${
+                                item.Location
+                            } </div>
+            <div class="site-subheader"> Last Update: <span class="fw-bold">${convertDateToString(
+                new Date(item.ListChannel[0].TimeStamp),
+            )}</span></div>
+                        </div>
+                        <span class="status-tag ${tag}">${status}</span>
+                    </div>
+                    
+                    <hr class="my-3">
+                    
+                    <div class="channel-group-header text-danger"><i class="fas fa-triangle-exclamation"></i> 1. Status & Alarm</div>
+                    
+                    ${renderStatusChannelSU(item.ListChannel)}
+                    
+                    <div class="channel-group-header text-primary"><i class="fas fa-chart-line"></i> 2. Flow & System</div>
+
+                   ${renderValueChannelSU(item.ListChannel)}
+                    
+                </div>
+            </div>`;
+        } else if (item.TypeMeter === 'Kronhe') {
+            content += `<div class="col-lg-4 col-md-6 mb-4 site-card" data-status="${status}" data-alarm="${alarm}">
+                <div class="card card-site-summary p-3 ${card}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="site-header ${text}">${
+                item.SiteId
+            }</div>
+                            <div class="site-subheader">Sitename: ${
+                                item.Location
+                            } </div>
+            <div class="site-subheader"> Last Update: <span class="fw-bold">${convertDateToString(
+                new Date(item.ListChannel[0].TimeStamp),
+            )}</span></div>
+                        </div>
+                        <span class="status-tag ${tag}">${status}</span>
+                    </div>
+                    
+                    <hr class="my-3">
+                    <div class="channel-group-header text-primary"><i class="fas fa-chart-line"></i>Flow & System</div>
+
+                   ${renderValueChannelKronhe(item.ListChannel)}
+                    
+                </div>
+            </div>`;
+        }
+    }
+
+    siteCardsContainer.innerHTML = content;
+}
+
+$(document).ready(function () {
+    getData();
+    // --- Filter logic ---
+    $('#statusFilter').on('change', function () {
+        const filterValue = $(this).val();
+        const $cards = $('.site-card');
+        $cards.hide();
+
+        if (filterValue === 'all') {
+            $cards.show();
+        } else if (filterValue === 'Alarm') {
+            $('.site-card[data-alarm="Yes"]').show();
+        } else {
+            $(`.site-card[data-status="${filterValue}"]`).show();
+        }
+    });
+
+    // --- Search logic ---
+    $('#searchSite').on(
+        'keyup',
+        debounce(function () {
+            const searchText = $(this).val().toLowerCase();
+            const $cards = $('.site-card');
+
+            $cards.each(function () {
+                const $card = $(this);
+                const siteId = $card.find('.site-header').text().toLowerCase();
+                const location = $card
+                    .find('.site-subheader')
+                    .text()
+                    .toLowerCase();
+
+                const currentStatusFilter = $('#statusFilter').val();
+                let statusMatch = true;
+
+                if (currentStatusFilter !== 'all') {
+                    if (currentStatusFilter === 'Alarm') {
+                        statusMatch = $card.data('alarm') === 'Yes';
+                    } else {
+                        statusMatch =
+                            $card.data('status') === currentStatusFilter;
+                    }
+                }
+
+                if (
+                    statusMatch &&
+                    (siteId.includes(searchText) ||
+                        location.includes(searchText))
+                ) {
+                    $card.show();
+                } else {
+                    $card.hide();
+                }
+            });
+        }, 1000),
+    );
+
+    // --- Click card logic ---
+    $('.card-site-summary').on('click', function () {
+        const siteId = $(this).find('.site-header').text();
+    });
+});
 
 function debounce(func, wait, immediate) {
     var timeout;
@@ -242,21 +303,3 @@ function debounce(func, wait, immediate) {
         if (callNow) func.apply(context, args);
     };
 }
-
-search.addEventListener(
-    'keyup',
-    debounce(function (e) {
-        let data = totalData.filter(
-            (item) =>
-                item.Location.toLowerCase().indexOf(
-                    e.target.value.toLowerCase(),
-                ) !== -1,
-        );
-        loadMoreButton.classList.add('hide');
-        loadMoreButton.classList.remove('show');
-        dataElement.innerHTML = createTableForSearch(data);
-    }),
-    1000,
-);
-
-GetData();

@@ -9,7 +9,7 @@ block linkcss
 block content
     .container-fluid
         .container-fluid.py-4
-            h2.mb-4.text-primary Vlog Site Activity Summary
+            h2.mb-4.text-primary Vilog Site Activity Summary
             .row.mb-5
                 .col-md-3.mb-3
                     .card.card-kpi.p-3.text-center(data-filter="Total")
@@ -33,9 +33,9 @@ block content
                         .kpi-title ALARM SITES
                         .kpi-value.text-danger#kpi-alarm 0
 
-            .card.card-kpi.p-4
+            .card.b-none.p-4
                 h5.card-title.text-primary.mb-3
-                    | Vlog Data Table
+                    | Vilog Data Table
                     span.instruction-label.badge.bg-secondary-subtle.text-secondary.ms-2(title="Click on the KPI cards above to filter")
                         i.fas.fa-mouse-pointer.me-1
                         |  Click KPI Cards to Filter
@@ -53,60 +53,6 @@ block content
                                 th Battery Logger (V)
                                 th Alarm
                         tbody#vlogTableBody
-                            //- tr(data-status="Disconnected" data-alarm="Yes" data-flow="0")
-                            //-     td VINA
-                            //-     td PUB
-                            //-     td Disconnected
-                            //-     td(data-signal="15") 15
-                            //-     td 0
-                            //-     td N/A
-                            //-     td 3.488V
-                            //-     td Yes
-                            //- tr(data-status="Connected" data-alarm="No" data-flow="120")
-                            //-     td BBB-01
-                            //-     td 3303
-                            //-     td Connected
-                            //-     td(data-signal="45") 45
-                            //-     td 120
-                            //-     td 5
-                            //-     td 4.100V
-                            //-     td No
-                            //- tr(data-status="Disconnected" data-alarm="Yes" data-flow="0")
-                            //-     td CCC-02
-                            //-     td 3303
-                            //-     td Disconnected
-                            //-     td(data-signal="25") 25
-                            //-     td 0
-                            //-     td N/A
-                            //-     td 2.848V
-                            //-     td Yes
-                            //- tr(data-status="Connected" data-alarm="No" data-flow="99")
-                            //-     td DDD-03
-                            //-     td RIV-2
-                            //-     td Connected
-                            //-     td(data-signal="35") 35
-                            //-     td 99
-                            //-     td 10
-                            //-     td 4.050V
-                            //-     td No
-                            //- tr(data-status="Connected" data-alarm="No" data-flow="50")
-                            //-     td EEE-04
-                            //-     td RIV-2
-                            //-     td Connected
-                            //-     td(data-signal="19") 19
-                            //-     td 50
-                            //-     td 2
-                            //-     td 3.950V
-                            //-     td No
-                            //- tr(data-status="Disconnected" data-alarm="Yes" data-flow="0")
-                            //-     td FFF-05
-                            //-     td HEAD-Q
-                            //-     td Disconnected
-                            //-     td(data-signal="10") 10
-                            //-     td 0
-                            //-     td N/A
-                            //-     td 3.200V
-                            //-     td Yes
 block linkcriptbody
     script(src="/js/hostname.js") 
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")

@@ -286,16 +286,19 @@ function drawTable() {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel me-1"></i> Excel',
                 className: 'btn btn-sm buttons-excel',
+                filename: 'list_vilog',
             },
             {
                 extend: 'csv',
                 text: '<i class="fas fa-file-csv me-1"></i> CSV',
                 className: 'btn btn-sm buttons-csv',
+                filename: 'list_vilog',
             },
             {
                 extend: 'pdf',
                 text: '<i class="fas fa-file-pdf me-1"></i> PDF',
                 className: 'btn btn-sm buttons-pdf',
+                filename: 'list_vilog',
             },
         ],
         columnDefs: [
@@ -341,19 +344,20 @@ function drawTable() {
             if (al === 'Yes') vAlarm++;
         });
 
-        // If the current filter is Total we prefer to show the original totals,
-        // but if a filter is applied show the filtered KPI values.
+        // // If the current filter is Total we prefer to show the original totals,
+        // // but if a filter is applied show the filtered KPI values.
         if (currentStatusFilter === 'Total') {
             $('#kpi-total').text(totalSites);
             $('#kpi-disconnected').text(disconnectedSites);
             $('#kpi-data-present').text(dataPresent);
             $('#kpi-alarm').text(alarmSites);
-        } else {
-            $('#kpi-total').text(vTotal);
-            $('#kpi-disconnected').text(vDisconnected);
-            $('#kpi-data-present').text(vDataPresent);
-            $('#kpi-alarm').text(vAlarm);
         }
+        // else {
+        //     $('#kpi-total').text(vTotal);
+        //     $('#kpi-disconnected').text(vDisconnected);
+        //     $('#kpi-data-present').text(vDataPresent);
+        //     $('#kpi-alarm').text(vAlarm);
+        // }
     });
 
     // Trigger initial draw to allow KPIs to reflect initial filter (Total)

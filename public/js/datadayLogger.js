@@ -6,10 +6,8 @@ let urlGetSites = `${hostname}/GetSiteByUId/${userName}`;
 let urlGetDataDayLogger = `${hostname}/GetDataDayLogger`;
 let selectedSite = null;
 
-let loading = document.getElementById('loading');
-
-// add hide
-loading.classList.add('hide');
+let dailyDataTableBody = document.getElementById('dailyDataTableBody');
+let sumConsumption = document.getElementById('sumConsumption');
 
 function fetchSites() {
     axios
@@ -31,9 +29,6 @@ fetchSites();
 let viewDataDayLogger = document.getElementById('viewDataDayLogger');
 
 viewDataDayLogger.addEventListener('click', function (e) {
-    loading.classList.add('show');
-    loading.classList.remove('hide');
-
     let startDate = document.getElementById('startDate');
     let endDate = document.getElementById('endDate');
     let siteid = selectedSite.getValue();
@@ -80,16 +75,26 @@ viewDataDayLogger.addEventListener('click', function (e) {
 });
 
 function fillDataTable(data) {
-    loading.classList.add('hide');
-    loading.classList.remove('show');
+    if ($.fn.DataTable.isDataTable('#dailyDataTable')) {
+        $('#dailyDataTable').DataTable().clear().destroy();
+    }
 
-    createTablePlaceHolder();
-
-    createHeader(data);
     createBody(data);
     createFooter(data);
 
-    $('#example').DataTable({
+    $('#dailyDataTable').DataTable({
+        language: {
+            search: 'Search:',
+            lengthMenu: 'Show _MENU_ entries',
+            info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+            paginate: { previous: 'Previous', next: 'Next' },
+        },
+        pageLength: 20,
+        order: [[0, 'desc']],
+        columnDefs: [
+            { type: 'date', targets: 0 },
+            { type: 'num', targets: [3, 4, 5, 6, 7, 8, 9] },
+        ],
         initComplete: function () {
             this.api()
                 .columns([])
@@ -121,52 +126,43 @@ function fillDataTable(data) {
         dom: 'Bfrtip',
         buttons: [
             {
-                extend: 'excelHtml5',
-                title: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
+                extend: 'excel',
+                text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                className: 'btn btn-sm buttons-excel',
+                filename: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
             },
             {
-                extend: 'csvHtml5',
-                title: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
+                extend: 'csv',
+                text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                className: 'btn btn-sm buttons-csv',
+                filename: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
             },
             {
-                extend: 'pdfHtml5',
-                title: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
+                extend: 'pdf',
+                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                className: 'btn btn-sm buttons-pdf',
+                filename: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
             },
         ],
+
+        footerCallback: function (row, data, start, end, display) {
+            var api = this.api();
+
+            var totalConsumption = api
+                .column(5, { page: 'current' })
+                .data()
+                .reduce(function (a, b) {
+                    var val = parseFloat(b.replace(/<[^>]*>?/gm, '')) || 0;
+                    return a + val;
+                }, 0);
+
+            $('#sumConsumption').html(totalConsumption.toFixed(2));
+        },
     });
 }
 
-function createHeader(data) {
-    let head = document.getElementById('head');
-
-    head.innerHTML = '';
-
-    let content = '';
-
-    if (CheckExistsData(data)) {
-        content += `<tr>
-            <th>Timestamp</th>
-            <th>SiteId</th>
-            <th>Location</th>
-            <th>Flow max</th>
-            <th>Flow Min</th>
-            <th>Consumption</th>
-            <th>Battery Logger Max</th>
-            <th>Battery Logger Min</th>
-            <th>Battery Meter Max</th>
-            <th>Battery Meter Min</th>
-            <th>Press Max</th>
-            <th>Press Min</th>
-      </tr>`;
-    }
-
-    head.innerHTML = content;
-}
-
 function createBody(data) {
-    let body = document.getElementById('body');
-
-    body.innerHTML = '';
+    dailyDataTableBody.innerHTML = '';
 
     let content = '';
 
@@ -185,37 +181,27 @@ function createBody(data) {
                 item.MaxBatteryLogger,
             )}</td>`;
             content += `<td>${ConvertDataIntoTable(
-                item.MinBatteryLogger,
+                item.MaxBatteryLogger,
             )}</td>`;
-            content += `<td>${ConvertDataIntoTable(item.MaxBatteryMeter)}</td>`;
-            content += `<td>${ConvertDataIntoTable(item.MinBatteryMeter)}</td>`;
             content += `<td>${ConvertDataIntoTable(item.MaxPressure)}</td>`;
             content += `<td>${ConvertDataIntoTable(item.MinPressure)}</td>`;
             content += `</tr>`;
         }
     }
 
-    body.innerHTML = content;
+    dailyDataTableBody.innerHTML = content;
 }
 
 function createFooter(data) {
-    let foot = document.getElementById('foot');
-
-    foot.innerHTML = '';
-
-    let content = '';
+    sumConsumption.innerHTML = '';
 
     if (CheckExistsData(data)) {
         let totalValue = 0;
         for (let item of data) {
             totalValue += parseFloat(item.NetIndex);
         }
-        content += `<tr>
-                <th colspan="5">Sum consumption </th>
-                <th>${ConvertDataIntoTable(totalValue)}</th>
-                <th colspan="6"></th>
-      </tr>`;
+        sumConsumption.innerHTML = totalValue;
+    } else {
+        sumConsumption.innerHTML = '';
     }
-
-    foot.innerHTML = content;
 }

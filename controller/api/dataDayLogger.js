@@ -96,22 +96,6 @@ module.exports.GetDataDayLogger = async function (req, res) {
                         if (minValue.length > 0) {
                             obj.MinPressure = minValue[0].Value.toFixed(2);
                         }
-                    } else if (channel.BatLoggerChannel == true) {
-                        if (maxValue.length > 0) {
-                            obj.MaxBatteryLogger = maxValue[0].Value.toFixed(2);
-                        }
-
-                        if (minValue.length > 0) {
-                            obj.MinBatteryLogger = minValue[0].Value.toFixed(2);
-                        }
-                    } else if (channel.BatMetterChannel == true) {
-                        if (maxValue.length > 0) {
-                            obj.MaxBatteryMeter = maxValue[0].Value.toFixed(2);
-                        }
-
-                        if (minValue.length > 0) {
-                            obj.MinBatteryMeter = minValue[0].Value.toFixed(2);
-                        }
                     } else if (
                         channel.ForwardFlow == true ||
                         channel.ReverseFlow == true
@@ -173,6 +157,32 @@ module.exports.GetDataDayLogger = async function (req, res) {
                             if (valueIndexAfter.length > 0) {
                                 indexReverseAfter +=
                                     valueIndexAfter[0].Value.toFixed(2);
+                            }
+                        }
+                    } else if (site.TypeMeter === 'SU') {
+                        let channelSplit = channel.ChannelId.split('_');
+
+                        if (channelSplit[channelSplit.length - 1] === '110') {
+                            if (maxValue.length > 0) {
+                                obj.MaxBatteryLogger =
+                                    maxValue[0].Value.toFixed(2);
+                            }
+
+                            if (minValue.length > 0) {
+                                obj.MinBatteryLogger =
+                                    minValue[0].Value.toFixed(2);
+                            }
+                        }
+                    } else if (site.TypeMeter === 'Kronhe') {
+                        if (channelSplit[channelSplit.length - 1] === '06') {
+                            if (maxValue.length > 0) {
+                                obj.MaxBatteryLogger =
+                                    maxValue[0].Value.toFixed(2);
+                            }
+
+                            if (minValue.length > 0) {
+                                obj.MaxBatteryLogger =
+                                    minValue[0].Value.toFixed(2);
                             }
                         }
                     }

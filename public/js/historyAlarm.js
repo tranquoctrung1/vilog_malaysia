@@ -71,16 +71,19 @@ function drawTable() {
                 extend: 'excel',
                 text: '<i class="fas fa-file-excel me-1"></i> Excel',
                 className: 'btn btn-sm buttons-excel',
+                filename: 'list_alarm',
             },
             {
                 extend: 'csv',
                 text: '<i class="fas fa-file-csv me-1"></i> CSV',
                 className: 'btn btn-sm buttons-csv',
+                filename: 'list_alarm',
             },
             {
                 extend: 'pdf',
                 text: '<i class="fas fa-file-pdf me-1"></i> PDF',
                 className: 'btn btn-sm buttons-pdf',
+                filename: 'list_alarm',
             },
         ],
         columnDefs: [
