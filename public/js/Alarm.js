@@ -24,7 +24,6 @@ const urlGetLatestAlarmData = `${hostnameAlarm}/GetLatestHistoryAlarm`;
 async function GetAlarm() {
     axios.get(urlGetLatestAlarmData).then(async function (res) {
         let bodyAlarm = '';
-
         for (let site of res.data) {
             bodyAlarm += createTd(site, site.SiteId, site.Type, site.Type);
         }
@@ -41,11 +40,13 @@ function createHeaderAlarm(data) {
     let content = '';
 
     if (data.length > 0) {
-        content += `<thead class="text-center bg-primary" >
-            <th style="color: white">Sitename</th>
-            <th style="color: white">Channel</th>
-            <th style="color: white">Timestamp</th>
-            <th style="color: white">Status</th>
+        content += `<thead>
+            <th class="bg-primary" style="color: white">SiteId</th>
+            <th class="bg-primary" style="color: white">Sitename</th>
+            <th class="bg-primary" style="color: white">Channel</th>
+            <th class="bg-primary" style="color: white">TimeStamp Data</th>
+            <th class="bg-primary" style="color: white">TimeStamp Alarm</th>
+            <th class="bg-primary" style="color: white">Status</th>
         </thead>`;
     }
 
@@ -65,12 +66,20 @@ function createTd(data, siteid, status, statusColor) {
     }
 
     content += `<tr>
-            <td class="${color}" font-weight: 500">${siteid}</td>
-            <td class="${color}" font-weight: 500">${data.ChannelName}</td>
-            <td class="${color}" font-weight: 500">${convertDateToString(
+            <td class="${color}" style="font-size: .9rem;">${data.SiteId}</td>
+            <td class="${color}" style="font-size: .9rem;">${data.Location}</td>
+            <td class="${color}" style="font-size: .9rem;">${
+        data.ChannelName
+    }</td>
+            <td class="${color}" style="font-size: .9rem;">${convertDateToString(
+        convertDateFromApi(data.TimeStampHasValue),
+    )}</td>
+     <td class="${color}" style="font-size: .9rem;">${convertDateToString(
         convertDateFromApi(data.TimeStampAlarm),
     )}</td>
-              <td class="${color}" font-weight: 500">${text}</td>
+              <td class="${color}" style="font-size: .9rem;">${
+        data.Content
+    }</td>
         </tr>`;
 
     return content;
