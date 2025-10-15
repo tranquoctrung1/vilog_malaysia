@@ -161,29 +161,14 @@ $('#siteListModal').on('show.bs.modal', function (event) {
         .get(url)
         .then((res) => {
             let data = [];
+            let temp = [];
 
-            for (const item of res.data.siteAlarm) {
-                const obj = {};
-                const find = res.data.sites.find(
-                    (el) => el.SiteId === item.SiteId,
-                );
-
-                if (find !== undefined) {
-                    obj.LastData = find.ListChannel[0].TimeStamp;
-                }
-
-                obj.Location = item.Location;
-                obj.SiteId = item.SiteId;
-                obj.Status = 'Connected';
-                obj.Alarm = 'Yes';
-
-                data.push(obj);
-            }
             for (const item of res.data.siteDelay) {
                 const obj = {};
                 const find = res.data.sites.find(
                     (el) => el.SiteId === item.SiteId,
                 );
+                temp.push(item.SiteId);
 
                 if (find !== undefined) {
                     obj.LastData = find.ListChannel[0].TimeStamp;
@@ -196,22 +181,48 @@ $('#siteListModal').on('show.bs.modal', function (event) {
 
                 data.push(obj);
             }
-            for (const item of res.data.siteHasValue) {
-                const obj = {};
-                const find = res.data.sites.find(
-                    (el) => el.SiteId === item.SiteId,
-                );
+            for (const item of res.data.siteAlarm) {
+                const f = temp.find((el) => el === item.SiteId);
+                if (f === undefined) {
+                    const obj = {};
+                    const find = res.data.sites.find(
+                        (el) => el.SiteId === item.SiteId,
+                    );
 
-                if (find !== undefined) {
-                    obj.LastData = find.ListChannel[0].TimeStamp;
+                    if (find !== undefined) {
+                        obj.LastData = find.ListChannel[0].TimeStamp;
+                    }
+
+                    obj.Location = item.Location;
+                    obj.SiteId = item.SiteId;
+                    obj.Status = 'Connected';
+                    obj.Alarm = 'Yes';
+
+                    temp.push(item.SiteId);
+                    data.push(obj);
                 }
+            }
 
-                obj.Location = item.Location;
-                obj.SiteId = item.SiteId;
-                obj.Status = 'Connected';
-                obj.Alarm = 'No';
+            for (const item of res.data.siteHasValue) {
+                const f = temp.find((el) => el === item.SiteId);
+                if (f === undefined) {
+                    const obj = {};
+                    const find = res.data.sites.find(
+                        (el) => el.SiteId === item.SiteId,
+                    );
 
-                data.push(obj);
+                    if (find !== undefined) {
+                        obj.LastData = find.ListChannel[0].TimeStamp;
+                    }
+
+                    obj.Location = item.Location;
+                    obj.SiteId = item.SiteId;
+                    obj.Status = 'Connected';
+                    obj.Alarm = 'No';
+
+                    temp.push(item.SiteId);
+                    data.push(obj);
+                }
             }
 
             data.sort((a, b) => a.Location.localeCompare(b.Location));

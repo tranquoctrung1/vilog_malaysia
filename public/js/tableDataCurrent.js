@@ -30,8 +30,9 @@ function renderStatusChannelSU(data) {
 
         if (item.isDelay == true) {
             status = 'status-warning';
-        } else if (item.isDelay === false && item.isError === true) {
+        } else if (item.isError === true) {
             status = 'status-danger';
+            value = 'Yes';
         }
 
         if (item.Value === 1) {
@@ -57,7 +58,7 @@ function renderValueChannelSU(data) {
 
         if (item.isDelay == true) {
             status = 'status-warning';
-        } else if (item.isDelay === false && item.isError === true) {
+        } else if (item.isError === true) {
             status = 'status-danger';
         }
 
@@ -105,7 +106,7 @@ function renderValueChannelKronhe(data) {
 
         if (item.isDelay == true) {
             status = 'status-warning';
-        } else if (item.isDelay === false && item.isError === true) {
+        } else if (item.isError === true) {
             status = 'status-danger';
         }
 

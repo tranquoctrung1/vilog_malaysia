@@ -21,6 +21,7 @@ function getStatusSite() {
         .get(urlGetStatusSite)
         .then((res) => {
             if (res?.data) {
+                console.log(res.data);
                 totalSite = res.data.totalSite;
                 disconnectedSites = res.data.totalSiteDelay;
                 dataPresent = res.data.totalSiteHasValue;
@@ -101,28 +102,12 @@ function findValueChannel(data, siteid) {
 function renderVilogTable(data) {
     let content = ``;
 
-    for (const item of data.siteAlarm) {
-        const valueChannel = findValueChannel(data.sites, item.SiteId);
-
-        content += ` <tr data-status="DataPresent" data-alarm="Yes" data-flow="${ConvertDataIntoTable(
-            valueChannel.flow,
-        )}">
-                        <td>${item.SiteId}</td>
-                        <td>${item.Location}</td>
-                        <td>DataPresent</td>
-                        <td data-signal="${ConvertDataIntoTable(
-                            valueChannel.signal,
-                        )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
-                        <td>Yes</td>
-                    </tr>`;
-    }
+    let temp = [];
 
     for (const item of data.siteDelay) {
         const valueChannel = findValueChannel(data.sites, item.SiteId);
 
+        temp.push(item.SiteId);
         content += ` <tr data-status="Disconnected" data-alarm="No" data-flow="${ConvertDataIntoTable(
             valueChannel.flow,
         )}">
@@ -139,12 +124,38 @@ function renderVilogTable(data) {
                     </tr>`;
     }
 
+    for (const item of data.siteAlarm) {
+        const valueChannel = findValueChannel(data.sites, item.SiteId);
+
+        const find = temp.find((el) => el === item.SiteId);
+        if (find === undefined) {
+            temp.push(item.SiteId);
+            content += ` <tr data-status="DataPresent" data-alarm="Yes" data-flow="${ConvertDataIntoTable(
+                valueChannel.flow,
+            )}">
+                        <td>${item.SiteId}</td>
+                        <td>${item.Location}</td>
+                        <td>DataPresent</td>
+                        <td data-signal="${ConvertDataIntoTable(
+                            valueChannel.signal,
+                        )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
+                        <td>Yes</td>
+                    </tr>`;
+        }
+    }
+
     for (const item of siteHasValue) {
         const valueChannel = findValueChannel(data.sites, item.SiteId);
 
-        content += ` <tr data-status="DataPresent" data-alarm="No" data-flow="${ConvertDataIntoTable(
-            valueChannel.flow,
-        )}">
+        const find = temp.find((el) => el === item.SiteId);
+        if (find === undefined) {
+            temp.push(item.SiteId);
+            content += ` <tr data-status="DataPresent" data-alarm="No" data-flow="${ConvertDataIntoTable(
+                valueChannel.flow,
+            )}">
                         <td>${item.SiteId}</td>
                         <td>${item.Location}</td>
                         <td>DataPresent</td>
@@ -156,6 +167,7 @@ function renderVilogTable(data) {
                         <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
                         <td>No</td>
                     </tr>`;
+        }
     }
 
     vlogTableBody.innerHTML = content;

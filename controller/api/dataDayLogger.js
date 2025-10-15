@@ -79,11 +79,15 @@ module.exports.GetDataDayLogger = async function (req, res) {
                         .sort({ Value: 1 })
                         .limit(1);
 
+                    minValue = minValue.filter((d) => d.Value !== undefined);
+
                     let maxValue = await DataLogger.find({
                         TimeStamp: { $gte: t, $lt: t2 },
                     })
                         .sort({ Value: -1 })
                         .limit(1);
+
+                    maxValue = maxValue.filter((d) => d.Value !== undefined);
 
                     if (
                         channel.Pressure1 == true ||

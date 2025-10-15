@@ -634,7 +634,6 @@ function CreateDataTable() {
             }
         })
         .catch((err) => {
-            console.log(err);
             let dataTable = document.getElementById('dataTable');
             dataTable.innerHTML =
                 '<div class="alert alert-danger">Error loading data. Please try again.</div>';

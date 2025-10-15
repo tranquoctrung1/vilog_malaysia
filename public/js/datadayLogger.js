@@ -62,7 +62,6 @@ function getDataApi(siteid) {
     let totalMilisecondEnd = end.getTime();
 
     const temp = [];
-    console.log(siteid);
 
     for (const id of siteid) {
         let url = `${urlGetDataDayLogger}/${id}/${totalMilisecondStart}/${totalMilisecondEnd}`;
@@ -76,6 +75,7 @@ function getDataApi(siteid) {
             for (const d of res) {
                 data.push(...d.data);
             }
+
             fillDataTable(data);
         })
         .catch((err) => console.log(err));
@@ -123,6 +123,7 @@ viewDataDayLogger.addEventListener('click', function (e) {
                 for (const d of res) {
                     data.push(...d.data);
                 }
+
                 fillDataTable(data);
             })
             .catch((err) => console.log(err));
@@ -146,10 +147,7 @@ function fillDataTable(data) {
         },
         pageLength: 20,
         order: [[0, 'desc']],
-        columnDefs: [
-            { type: 'date', targets: 0 },
-            { type: 'num', targets: [3, 4, 5, 6, 7, 8, 9] },
-        ],
+        columnDefs: [{ type: 'num', targets: [3, 4, 5, 6, 7, 8, 9] }],
         initComplete: function () {
             this.api()
                 .columns([])
