@@ -314,6 +314,8 @@ router.get(
     ChannelApi.CheckPerformanceWithMinValueTest,
 );
 
+router.get('/GetLatestHistoryAlarm', HistoryAlarmAPI.GetLatestHistoryAlarm);
+
 router.post('/login', LoginAPI.Login);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const hostnameAlarm = `http://157.66.81.22:3003/api`;
+const hostnameAlarm = `http://localhost:3000/api`;
 
 let tableAlarm = document.getElementById('tableAlarm');
 let amountAlarm = document.getElementById('amountAlarm');
@@ -19,58 +19,19 @@ if (
     userNameByAlarm = 'admin';
 }
 
-const urlGetSiteByUidByAlarm = `${hostnameAlarm}/GetSiteByUId/${userNameByAlarm}`;
-const urlGetChannelsByAlarm = `${hostnameAlarm}/GetChannelByLoggerId/`;
-const urlGetAlarmLostWaterAlarm = `${hostnameAlarm}/GetAlarmLostWater`;
+const urlGetLatestAlarmData = `${hostnameAlarm}/GetLatestHistoryAlarm`;
 
 async function GetAlarm() {
-    axios.get(urlGetSiteByUidByAlarm).then(async function (res) {
+    axios.get(urlGetLatestAlarmData).then(async function (res) {
         let bodyAlarm = '';
-        let countAlarm = 0;
 
         for (let site of res.data) {
-            let logger = '';
-
-            if (
-                site.LoggerId != null &&
-                site.LoggerId != undefined &&
-                site.LoggerId.trim() != ''
-            ) {
-                logger = site.LoggerId.trim();
-            } else {
-                logger = 'nothing';
-            }
-
-            let result = await axios.get(urlGetChannelsByAlarm + logger);
-
-            for (let channel of result.data) {
-                switch (channel.Status) {
-                    case 2:
-                        bodyAlarm += createTd(
-                            channel,
-                            site.SiteId,
-                            'Disconected',
-                            channel.Status,
-                        );
-                        countAlarm += 1;
-                        break;
-                    case 4:
-                        bodyAlarm += createTd(
-                            channel,
-                            site.SiteId,
-                            'Over threshold',
-                            channel.Status,
-                        );
-                        countAlarm += 1;
-                        break;
-                }
-            }
+            bodyAlarm += createTd(site, site.SiteId, site.Type, site.Type);
         }
 
         let headAlarm = createHeaderAlarm(res.data);
-        //amountAlarm.innerHTML = countAlarm.toString();
-        tableAlarm.innerHTML =
-            headAlarm + "<tbody class='text-center'>" + bodyAlarm + '</tbody>';
+        amountAlarm.innerHTML = res.data.length;
+        tableAlarm.innerHTML = headAlarm + '<tbody>' + bodyAlarm + '</tbody>';
     });
 }
 
@@ -81,9 +42,8 @@ function createHeaderAlarm(data) {
 
     if (data.length > 0) {
         content += `<thead class="text-center bg-primary" >
-            <th style="color: white">Location</th>
+            <th style="color: white">Sitename</th>
             <th style="color: white">Channel</th>
-            <th style="color: white">Value</th>
             <th style="color: white">Timestamp</th>
             <th style="color: white">Status</th>
         </thead>`;
@@ -94,32 +54,23 @@ function createHeaderAlarm(data) {
 
 function createTd(data, siteid, status, statusColor) {
     let content = '';
+    let color = `text-success`;
+    let text = `Discconnected`;
 
-    let backgroundColor = '';
-    let color = '';
-
-    if (statusColor == 2) {
-        backgroundColor = '#f1c40f';
-        color = 'white';
-    } else if (statusColor == 4) {
-        backgroundColor = '#e74c3c';
-        color = 'white';
+    if (status === 1) {
+        color = 'text-warning';
+    } else {
+        color = `text-danger`;
+        text = `Alarm`;
     }
 
-    content += `<tr style="background-color: ${backgroundColor}">
-            <td style="color:${color}; font-weight: 500">${fillDataIntoInputTag(
-        siteid,
+    content += `<tr>
+            <td class="${color}" font-weight: 500">${siteid}</td>
+            <td class="${color}" font-weight: 500">${data.ChannelName}</td>
+            <td class="${color}" font-weight: 500">${convertDateToString(
+        convertDateFromApi(data.TimeStampAlarm),
     )}</td>
-            <td style="color:${color}; font-weight: 500">${fillDataIntoInputTag(
-        data.ChannelName,
-    )}</td>
-            <td style="color:${color}; font-weight: 500">${fillDataIntoInputTag(
-        data.LastValue,
-    )}</td>
-            <td style="color:${color}; font-weight: 500">${convertDateToString(
-        convertDateFromApi(data.TimeStamp),
-    )}</td>
-              <td style="color:${color}; font-weight: 500">${status}</td>
+              <td class="${color}" font-weight: 500">${text}</td>
         </tr>`;
 
     return content;
@@ -129,7 +80,7 @@ function createTdLostWater(data) {
     let content = '';
 
     content += `<tr>
-            <td>${fillDataIntoInputTag(data.SiteId)}</td>
+            <td>${data.SiteId}</td>
             <td></td>
             <td></td>
             <td></td>
@@ -139,27 +90,27 @@ function createTdLostWater(data) {
     return content;
 }
 
-// hideAlarm.addEventListener('click', function (e) {
-//     if ($('#boxAlarm').hasClass('d-none')) {
-//         $('#boxAlarm').removeClass('d-none');
-//         // $("#boxAlarm").addClass("d-block");
-//         $('#boxAlarm').slideDown('slow');
-//         isShowAlarm = true;
-//         isHoverOutAlarm = true;
-//         isClickedOutAlarm = true;
-//     } else {
-//         $('#boxAlarm').slideToggle('slow');
-//         if (isShowAlarm == true) {
-//             isShowAlarm = false;
-//             isHoverOutAlarm = true;
-//             isClickedOutAlarm = true;
-//         } else {
-//             isShowAlarm = true;
-//             isHoverOutAlarm = true;
-//             isClickedOutAlarm = true;
-//         }
-//     }
-// });
+hideAlarm.addEventListener('click', function (e) {
+    if ($('#boxAlarm').hasClass('d-none')) {
+        $('#boxAlarm').removeClass('d-none');
+        // $("#boxAlarm").addClass("d-block");
+        $('#boxAlarm').slideDown('slow');
+        isShowAlarm = true;
+        isHoverOutAlarm = true;
+        isClickedOutAlarm = true;
+    } else {
+        $('#boxAlarm').slideToggle('slow');
+        if (isShowAlarm == true) {
+            isShowAlarm = false;
+            isHoverOutAlarm = true;
+            isClickedOutAlarm = true;
+        } else {
+            isShowAlarm = true;
+            isHoverOutAlarm = true;
+            isClickedOutAlarm = true;
+        }
+    }
+});
 
 $('#boxAlarm').on('mouseout', function (e) {
     isHoverOutAlarm = true;
@@ -195,3 +146,47 @@ sidebar.addEventListener('mouseover', function (e) {
 sidebar.addEventListener('mouseout', function (e) {
     $('#bodySidebar').addClass('sidebar-hide');
 });
+
+function convertDateFromApi(date) {
+    if (
+        date != null &&
+        date != undefined &&
+        date.toString().trim() != '' &&
+        date != 'NO DATA'
+    ) {
+        let result = new Date(date);
+        result.setHours(result.getHours() - 7);
+
+        return result;
+    }
+    return 'NO DATA';
+}
+
+function convertDateToString(date) {
+    if (
+        date != null &&
+        date != undefined &&
+        date.toString().trim() != '' &&
+        date != 'NO DATA'
+    ) {
+        let year = date.getFullYear();
+        let month =
+            date.getMonth() + 1 >= 10
+                ? date.getMonth() + 1
+                : `0${date.getMonth() + 1}`;
+        let day = date.getDate() >= 10 ? date.getDate() : `0${date.getDate()}`;
+        let hours =
+            date.getHours() >= 10 ? date.getHours() : `0${date.getHours()}`;
+        let minute =
+            date.getMinutes() >= 10
+                ? date.getMinutes()
+                : `0${date.getMinutes()}`;
+        let second =
+            date.getSeconds() >= 10
+                ? date.getSeconds()
+                : `0${date.getSeconds()}`;
+
+        return `${day}/${month}/${year} ${hours}:${minute}:${second}`;
+    }
+    return 'NO DATA';
+}
