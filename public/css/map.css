@@ -282,3 +282,46 @@
 .modal-header h5 {
     color: white;
 }
+
+.dt-search {
+    display: flex;
+    float: right;
+}
+
+.dt-center {
+    text-align: center !important;
+}
+
+div.dt-buttons .btn {
+    background-color: #f8f9fa !important;
+    color: #495057 !important;
+    border: 1px solid #ced4da;
+    margin-left: 5px !important;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+div.dt-buttons .buttons-excel i {
+    color: #198754; /* Xanh lá cho Excel */
+}
+div.dt-buttons .buttons-csv i {
+    color: #0d6efd; /* Xanh dương cho CSV */
+}
+div.dt-buttons .buttons-pdf i {
+    color: #dc3545; /* Đỏ cho PDF */
+}
+div.dt-buttons .buttons-excel:hover {
+    background-color: #e6ffed !important;
+    border-color: #c3e6cb !important;
+}
+div.dt-buttons .buttons-csv:hover {
+    background-color: #e8f5ff !important;
+    border-color: #bee5eb !important;
+}
+div.dt-buttons .buttons-pdf:hover {
+    background-color: #fcebeb !important;
+    border-color: #f5c6cb !important;
+}
+
+#tableStatistic {
+    width: 100% !important;
+}

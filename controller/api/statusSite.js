@@ -84,48 +84,66 @@ module.exports.GetStatusSite = async function (req, res) {
             let isError = false;
             let isDelay = false;
 
-            for (let channel of channels) {
-                if (isError == false) {
-                    if (
-                        Math.round(
-                            (Date.now() - channel.TimeStamp.getTime()) /
-                                1000 /
-                                60,
-                        ) > timeDelay
-                    ) {
-                        result.totalSiteDelay += 1;
-                        result.siteDelay.push(site);
-                        isError = true;
-                        isDelay = true;
-                    } else {
-                        let isOverflow = false;
-                        if (isOverflow == false) {
-                            if (channel.BaseMin != null) {
-                                if (channel.LastValue < channel.BaseMin) {
-                                    result.totalSiteAlarm += 1;
-                                    isOverflow = true;
-                                    isError = true;
-                                    result.siteAlarm.push(site);
+            if (channels.length <= 0) {
+                isError = true;
+                isDelay = true;
+                result.totalSiteDelay += 1;
+                result.siteDelay.push(site);
+            } else {
+                for (let channel of channels) {
+                    if (isError == false) {
+                        if (
+                            channel.TimeStamp !== null &&
+                            channel.TimeStamp !== undefined
+                        ) {
+                            if (
+                                Math.round(
+                                    (Date.now() - channel.TimeStamp.getTime()) /
+                                        1000 /
+                                        60,
+                                ) > timeDelay
+                            ) {
+                                result.totalSiteDelay += 1;
+                                result.siteDelay.push(site);
+                                isError = true;
+                                isDelay = true;
+                            }
+                        } else {
+                            isError = true;
+                            isDelay = true;
+                            result.totalSiteDelay += 1;
+                            result.siteDelay.push(site);
+                        }
+                        if (isError === false) {
+                            let isOverflow = false;
+                            if (isOverflow == false) {
+                                if (channel.BaseMin != null) {
+                                    if (channel.LastValue < channel.BaseMin) {
+                                        result.totalSiteAlarm += 1;
+                                        isOverflow = true;
+                                        isError = true;
+                                        result.siteAlarm.push(site);
+                                    }
                                 }
                             }
-                        }
-                        if (isOverflow == false) {
-                            if (channel.BaseMax != null) {
-                                if (channel.LastValue > channel.BaseMax) {
-                                    result.totalSiteAlarm += 1;
-                                    isOverflow = true;
-                                    isError = true;
-                                    result.siteAlarm.push(site);
+                            if (isOverflow == false) {
+                                if (channel.BaseMax != null) {
+                                    if (channel.LastValue > channel.BaseMax) {
+                                        result.totalSiteAlarm += 1;
+                                        isOverflow = true;
+                                        isError = true;
+                                        result.siteAlarm.push(site);
+                                    }
                                 }
                             }
-                        }
-                        if (isOverflow == false) {
-                            if (channel.Baseline != null) {
-                                if (channel.LastValue > channel.BaseLine) {
-                                    result.totalSiteAlarm += 1;
-                                    isOverflow = true;
-                                    isError = true;
-                                    result.siteAlarm.push(site);
+                            if (isOverflow == false) {
+                                if (channel.Baseline != null) {
+                                    if (channel.LastValue > channel.BaseLine) {
+                                        result.totalSiteAlarm += 1;
+                                        isOverflow = true;
+                                        isError = true;
+                                        result.siteAlarm.push(site);
+                                    }
                                 }
                             }
                         }

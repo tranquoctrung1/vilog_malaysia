@@ -11,6 +11,10 @@ function getData() {
     axios
         .get(urlGetTabledDataCurrent)
         .then((res) => {
+            res.data = res.data.sort((a, b) =>
+                a.Location.localeCompare(b.Location),
+            );
+
             renderCard(res.data);
         })
         .catch((err) => {
@@ -105,36 +109,34 @@ function renderValueChannelKronhe(data) {
             status = 'status-danger';
         }
 
-        {
-            let channelSplit = item.ChannelId.split('_');
-            if (channelSplit[channelSplit.length - 1] === '05') {
-                let signal = '(Bad)';
-                if (item.Value > 25) {
-                    signal = '(Good)';
-                } else if (item.Value > 20) {
-                    signal = '(Medium)';
-                }
-                content += `<div class="channel-item">
+        let channelSplit = item.ChannelId.split('_');
+        if (channelSplit[channelSplit.length - 1] === '07') {
+            let signal = '(Bad)';
+            if (item.Value > 25) {
+                signal = '(Good)';
+            } else if (item.Value > 20) {
+                signal = '(Medium)';
+            }
+            content += `<div class="channel-item">
                             <span class="channel-label">${item.ChannelName}</span>
                             <span class="channel-value ${status}">${item.Value} ${item.Unit} ${signal}</span>
                         </div>`;
-            } else if (channelSplit[channelSplit.length - 1] === '06') {
-                let battery = '(Bad)';
-                if (item.Value > 3.6) {
-                    battery = '(Good)';
-                } else if (item.Value > 3.3) {
-                    battery = '(Medium)';
-                }
-                content += `<div class="channel-item">
+        } else if (channelSplit[channelSplit.length - 1] === '06') {
+            let battery = '(Bad)';
+            if (item.Value > 3.6) {
+                battery = '(Good)';
+            } else if (item.Value > 3.3) {
+                battery = '(Medium)';
+            }
+            content += `<div class="channel-item">
                             <span class="channel-label">${item.ChannelName}</span>
                             <span class="channel-value ${status}">${item.Value} ${item.Unit} ${battery}</span>
                         </div>`;
-            } else {
-                content += `<div class="channel-item">
+        } else {
+            content += `<div class="channel-item">
                             <span class="channel-label">${item.ChannelName}</span>
                             <span class="channel-value ${status}">${item.Value} ${item.Unit}</span>
                         </div>`;
-            }
         }
     }
 
@@ -150,6 +152,7 @@ function renderCard(data) {
         let card = `card-status-info`;
         let tag = `tag-info`;
         let text = `text-info`;
+        let latestUpdate = '';
 
         if (item.isDelay == true) {
             status = 'Disconnected';
@@ -164,6 +167,12 @@ function renderCard(data) {
             text = `text-danger`;
         }
 
+        if (item.ListChannel.length > 0) {
+            latestUpdate = convertDateToString(
+                convertDateFromApi(item.ListChannel[0].TimeStamp),
+            );
+        }
+
         if (item.TypeMeter === 'SU') {
             content += `<div class="col-lg-4 col-md-6 mb-4 site-card" data-status="${status}" data-alarm="${alarm}">
                 <div class="card card-site-summary p-3 ${card}">
@@ -175,9 +184,7 @@ function renderCard(data) {
                             <div class="site-subheader">Sitename: ${
                                 item.Location
                             } </div>
-            <div class="site-subheader"> Last Update: <span class="fw-bold">${convertDateToString(
-                new Date(item.ListChannel[0].TimeStamp),
-            )}</span></div>
+            <div class="site-subheader"> Last Update: <span class="fw-bold">${latestUpdate}</span></div>
                         </div>
                         <span class="status-tag ${tag}">${status}</span>
                     </div>
@@ -205,9 +212,7 @@ function renderCard(data) {
                             <div class="site-subheader">Sitename: ${
                                 item.Location
                             } </div>
-            <div class="site-subheader"> Last Update: <span class="fw-bold">${convertDateToString(
-                new Date(item.ListChannel[0].TimeStamp),
-            )}</span></div>
+            <div class="site-subheader"> Last Update: <span class="fw-bold">${latestUpdate}</span></div>
                         </div>
                         <span class="status-tag ${tag}">${status}</span>
                     </div>

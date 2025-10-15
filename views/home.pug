@@ -1,5 +1,6 @@
 extends ./partial/layout.pug
 block linkcss
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css")
     link(rel="stylesheet", href="/css/leaflet/leaflet.1.6.0.css")
     link(rel="stylesheet", href="/css/leaflet/context-menu.min.css")
     link(rel="stylesheet", href="/assets/css/lib/listtree/listree.min.css")
@@ -91,7 +92,7 @@ block content
                         .modal-header
                             h5#statisticLabel.modal-title
                         .modal-body
-                            table.table.table-striped.table-hover
+                            table.table.table-striped.table-hover#tableStatistic
                                 thead
                                     tr
                                         th SiteId
@@ -104,20 +105,37 @@ block content
     .container-fluid
         .row.text-center
             .col-sm-3 
-                div.text-uppercase.border-right.text-success(data-status="sites" onclick="showStatistic(this)") Total sites
+                div.text-uppercase.border-right.text-success(data-status="sites" onclick="showStatistic(this)")
+                    i.fas.fa-users.text-total.kpi-icon-sm 
+                    | Total sites
                     div#totalSite.text-success.fw-bold
             .col-sm-3 
-                div.text-uppercase.border-right.text-info(data-status="siteHasValue" onclick="showStatistic(this)") data present
+                div.text-uppercase.border-right.text-info(data-status="siteHasValue" onclick="showStatistic(this)") 
+                    i.fas.fa-database.text-total.kpi-icon-sm 
+                    | Data present
                     div#totalSiteHasValue.text-info.fw-bold
             .col-sm-3 
-                div.text-uppercase.border-right.text-warning(data-status="siteDelay" onclick="showStatistic(this)") disconnected
+                div.text-uppercase.border-right.text-warning(data-status="siteDelay" onclick="showStatistic(this)") 
+                    i.fas.fa-plug-circle-xmark.text-disconnected.kpi-icon-sm
+                    | Disconnected
                     div#totalSiteDelay.text-warning.fw-bold
             .col-sm-3 
-                div.text-uppercase.border-right.text-danger(data-status="siteAlarm" onclick="showStatistic(this)") alarm
+                div.text-uppercase.border-right.text-danger(data-status="siteAlarm" onclick="showStatistic(this)") 
+                    i.fas.fa-triangle-exclamation.text-alarm.kpi-icon-sm
+                    | Alarm
                     div#totalSiteAlarm.text-danger.fw-bold
 
 
 block linkcriptbody
+    script(src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js")
+    script(src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.bootstrap5.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js")
     script(src='/js/leaflet/leaflet.1.6.0.js')
     script(src='/js/leaflet/context-menu.js')
     script(src='/axios/axios.min.js')

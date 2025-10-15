@@ -669,7 +669,13 @@ function getStatusSite() {
 }
 
 function renderTableStatistic(data, type) {
+    if ($.fn.DataTable.isDataTable('#tableStatistic')) {
+        $('#tableStatistic').DataTable().clear().destroy();
+    }
+
     let content = ``;
+
+    let hasContent = false;
 
     if (type === 'sites') {
         statisticLabel.innerHTML = `Site List: Total Sites`;
@@ -681,6 +687,7 @@ function renderTableStatistic(data, type) {
                             <td class="text-success">Connected</td>
                             <td class="text-danger">Alarm</td>
                         </tr>`;
+                hasContent = true;
             }
 
             for (const item of data.siteDelay) {
@@ -690,6 +697,7 @@ function renderTableStatistic(data, type) {
                             <td class="text-warning">Disconnected</td>
                             <td class="text-warning">Disconnected</td>
                         </tr>`;
+                hasContent = true;
             }
 
             for (const item of data.siteHasValue) {
@@ -699,6 +707,7 @@ function renderTableStatistic(data, type) {
                             <td class="text-success">Connected</td>
                             <td class="text-info">Data Present</td>
                         </tr>`;
+                hasContent = true;
             }
         } else {
             content += `<tr>
@@ -711,6 +720,7 @@ function renderTableStatistic(data, type) {
             let alarm = ``;
             let statusClassName = ``;
             let alarmClassName = ``;
+            hasContent = true;
 
             if (type === 'siteHasValue') {
                 status = `Connected`;
@@ -747,6 +757,76 @@ function renderTableStatistic(data, type) {
     }
 
     tbodyStatistic.innerHTML = content;
+
+    if (hasContent === true) {
+        $('#tableStatistic').DataTable({
+            language: {
+                search: 'Search:',
+                lengthMenu: 'Show _MENU_ entries',
+                info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+                paginate: { previous: 'Previous', next: 'Next' },
+            },
+            pageLength: 20,
+            order: [[0, 'desc']],
+            initComplete: function () {
+                this.api()
+                    .columns([0])
+                    .every(function () {
+                        var column = this;
+                        var select = $(
+                            '<select><option value=""></option></select>',
+                        )
+                            .appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val(),
+                                );
+                                column
+                                    .search(
+                                        val ? '^' + val + '$' : '',
+                                        true,
+                                        false,
+                                    )
+                                    .draw();
+                            });
+                        column
+                            .data()
+                            .unique()
+                            .sort()
+                            .each(function (d, j) {
+                                select.append(
+                                    '<option value="' +
+                                        d +
+                                        '">' +
+                                        d +
+                                        '</option>',
+                                );
+                            });
+                    });
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                    className: 'btn btn-sm buttons-excel',
+                    filename: `user_list`,
+                },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                    className: 'btn btn-sm buttons-csv',
+                    filename: `user_list`,
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                    className: 'btn btn-sm buttons-pdf',
+                    filename: `user_list`,
+                },
+            ],
+        });
+    }
 }
 
 function showStatistic(e) {
