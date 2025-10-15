@@ -766,7 +766,7 @@ function renderTableStatistic(data, type) {
                 info: 'Showing _START_ to _END_ of _TOTAL_ entries',
                 paginate: { previous: 'Previous', next: 'Next' },
             },
-            pageLength: 20,
+            pageLength: 10,
             order: [[0, 'desc']],
             initComplete: function () {
                 this.api()

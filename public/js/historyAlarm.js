@@ -24,10 +24,10 @@ function renderDataTable(data) {
                             <td>${item.Location}</td>
                             <td>${item.ChannelName}</td>
                             <td>${convertDateToString(
-                                new Date(item.TimeStampHasValue),
+                                convertDateFromApi(item.TimeStampHasValue),
                             )}</td>
                             <td>${convertDateToString(
-                                new Date(item.TimeStampAlarm),
+                                convertDateFromApi(item.TimeStampAlarm),
                             )}</td>
                             <td>${item.Content}</td>
                         </tr>`;

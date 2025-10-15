@@ -460,14 +460,14 @@ function CreateDataTable() {
                 let body = '';
 
                 let dataConvert = convertData(res.data);
-                
+
                 if (dataConvert.length > 0) {
                     // Create header from first object properties
                     let firstRow = dataConvert[0];
                     let properties = Object.getOwnPropertyNames(firstRow);
-                    
+
                     // Create header row
-                    properties.forEach(prop => {
+                    properties.forEach((prop) => {
                         if (prop === 'TimeStamp') {
                             header += `<th>TimeStamp</th>`;
                         } else {
@@ -478,16 +478,20 @@ function CreateDataTable() {
                     // Create body rows
                     dataConvert.forEach((row, index) => {
                         body += `<tr>`;
-                        properties.forEach(prop => {
+                        properties.forEach((prop) => {
                             let cellValue = '';
                             if (prop in row) {
                                 if (prop === 'TimeStamp') {
                                     cellValue = convertDateToString(row[prop]);
                                 } else {
-                                    cellValue = row[prop] !== null && row[prop] !== undefined ? row[prop] : 'N/A';
+                                    cellValue =
+                                        row[prop] !== null &&
+                                        row[prop] !== undefined
+                                            ? row[prop]
+                                            : '';
                                 }
                             } else {
-                                cellValue = 'N/A'; // Handle missing properties
+                                cellValue = ''; // Handle missing properties
                             }
                             body += `<td>${cellValue}</td>`;
                         });
@@ -515,86 +519,125 @@ function CreateDataTable() {
                         buttons: [
                             {
                                 extend: 'excelHtml5',
-                                title: `Data_Detail_From_${convertDateToString(new Date(startDateTime))}_To_${convertDateToString(new Date(endDateTime))}`,
+                                title: `Data_Detail_From_${convertDateToString(
+                                    new Date(startDateTime),
+                                )}_To_${convertDateToString(
+                                    new Date(endDateTime),
+                                )}`,
                                 exportOptions: {
-                                    columns: ':visible'
-                                }
+                                    columns: ':visible',
+                                },
                             },
                             {
                                 extend: 'csvHtml5',
-                                title: `Data_Detail_From_${convertDateToString(new Date(startDateTime))}_To_${convertDateToString(new Date(endDateTime))}`,
+                                title: `Data_Detail_From_${convertDateToString(
+                                    new Date(startDateTime),
+                                )}_To_${convertDateToString(
+                                    new Date(endDateTime),
+                                )}`,
                                 exportOptions: {
-                                    columns: ':visible'
-                                }
+                                    columns: ':visible',
+                                },
                             },
                             {
                                 extend: 'pdfHtml5',
-                                title: `Data_Detail_From_${convertDateToString(new Date(startDateTime))}_To_${convertDateToString(new Date(endDateTime))}`,
+                                title: `Data_Detail_From_${convertDateToString(
+                                    new Date(startDateTime),
+                                )}_To_${convertDateToString(
+                                    new Date(endDateTime),
+                                )}`,
                                 exportOptions: {
-                                    columns: ':visible'
-                                }
-                            }
+                                    columns: ':visible',
+                                },
+                            },
                         ],
                         language: {
-                            search: "Search:",
-                            lengthMenu: "Show _MENU_ entries",
-                            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                            search: 'Search:',
+                            lengthMenu: 'Show _MENU_ entries',
+                            info: 'Showing _START_ to _END_ of _TOTAL_ entries',
                             paginate: {
-                                previous: "Previous",
-                                next: "Next"
-                            }
+                                previous: 'Previous',
+                                next: 'Next',
+                            },
                         },
-                        columnDefs: [
-                            {
-                                targets: 0, // Timestamp column
-                                type: 'date',
-                                render: function(data) {
-                                    return data ? convertDateToString(new Date(data)) : '';
-                                }
-                            }
-                        ],
-                        initComplete: function() {
+                        // columnDefs: [
+                        //     {
+                        //         targets: 0, // Timestamp column
+                        //         type: 'date',
+                        //         render: function (data) {
+                        //             return data
+                        //                 ? convertDateToString(new Date(data))
+                        //                 : '';
+                        //         },
+                        //     },
+                        // ],
+                        initComplete: function () {
                             // Add column-specific filtering if needed
-                            this.api().columns().every(function() {
-                                var column = this;
-                                // Only add filter for timestamp column (index 0)
-                                if (column.index() === 0) {
-                                    var select = $('<select><option value=""></option></select>')
-                                        .appendTo($(column.footer()).empty())
-                                        .on('change', function() {
-                                            var val = $.fn.dataTable.util.escapeRegex(
-                                                $(this).val()
-                                            );
-                                            column
-                                                .search(val ? '^' + val + '$' : '', true, false)
-                                                .draw();
-                                        });
+                            this.api()
+                                .columns()
+                                .every(function () {
+                                    var column = this;
+                                    // Only add filter for timestamp column (index 0)
+                                    if (column.index() === 0) {
+                                        var select = $(
+                                            '<select><option value=""></option></select>',
+                                        )
+                                            .appendTo(
+                                                $(column.footer()).empty(),
+                                            )
+                                            .on('change', function () {
+                                                var val =
+                                                    $.fn.dataTable.util.escapeRegex(
+                                                        $(this).val(),
+                                                    );
+                                                column
+                                                    .search(
+                                                        val
+                                                            ? '^' + val + '$'
+                                                            : '',
+                                                        true,
+                                                        false,
+                                                    )
+                                                    .draw();
+                                            });
 
-                                    column
-                                        .data()
-                                        .unique()
-                                        .sort()
-                                        .each(function(d, j) {
-                                            if (d) {
-                                                var dateStr = convertDateToString(new Date(d));
-                                                select.append('<option value="' + dateStr + '">' + dateStr + '</option>');
-                                            }
-                                        });
-                                }
-                            });
-                        }
+                                        column
+                                            .data()
+                                            .unique()
+                                            .sort()
+                                            .each(function (d, j) {
+                                                if (d) {
+                                                    var dateStr =
+                                                        convertDateToString(
+                                                            new Date(d),
+                                                        );
+                                                    select.append(
+                                                        '<option value="' +
+                                                            dateStr +
+                                                            '">' +
+                                                            dateStr +
+                                                            '</option>',
+                                                    );
+                                                }
+                                            });
+                                    }
+                                });
+                        },
                     });
                 } else {
-                    dataTable.innerHTML = '<div class="alert alert-info">No data available for the selected criteria.</div>';
+                    dataTable.innerHTML =
+                        '<div class="alert alert-info">No data available for the selected criteria.</div>';
                 }
             } else {
-                dataTable.innerHTML = '<div class="alert alert-info">No data available for the selected criteria.</div>';
+                dataTable.innerHTML =
+                    '<div class="alert alert-info">No data available for the selected criteria.</div>';
             }
         })
         .catch((err) => {
             console.log(err);
             let dataTable = document.getElementById('dataTable');
-            dataTable.innerHTML = '<div class="alert alert-danger">Error loading data. Please try again.</div>';
+            dataTable.innerHTML =
+                '<div class="alert alert-danger">Error loading data. Please try again.</div>';
         });
 }
 

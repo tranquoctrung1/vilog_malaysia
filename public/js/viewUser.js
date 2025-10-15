@@ -225,7 +225,9 @@ $('#siteListModal').on('show.bs.modal', function (event) {
                         <td>${item.SiteId}</td>
                         <td>${item.Location}</td>
                         <td>${statusHtml}</td>
-                        <td>${convertDateToString(new Date(item.LastData))}</td>
+                        <td>${convertDateToString(
+                            convertDateFromApi(item.LastData),
+                        )}</td>
                         <td>${alarmHtml}</td>
                     </tr>`;
                     tableBody.append(row);

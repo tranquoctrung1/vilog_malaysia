@@ -13,18 +13,73 @@ function fetchSites() {
     axios
         .get(urlGetSites)
         .then((res) => {
+            const siteidFirstValue = [];
+
             createOptionsInSelectBox(res.data, 'selectSite');
             selectedSite = new TomSelect('#selectSite', {
                 plugins: ['remove_button'], // Adds "x" to remove items
                 create: false, // Disallow custom entries
                 sortField: { field: 'text', direction: 'asc' },
                 placeholder: 'Choose site..',
+                onInitialize() {
+                    firstValue =
+                        this.options[Object.keys(this.options)[0]].value;
+                    siteidFirstValue.push(firstValue);
+                    this.setValue(firstValue);
+                },
             });
+
+            const now = new Date(Date.now());
+            const start = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+            );
+            start.setDate(start.getDate() - 3);
+
+            let startDate = document.getElementById('startDate');
+            startDate.value = convertDateToDateInputTag(start);
+            let endDate = document.getElementById('endDate');
+            endDate.value = convertDateToDateInputTag(now);
+
+            if (res.data.length > 0) {
+                getDataApi(siteidFirstValue);
+            }
         })
         .catch((err) => console.log(err));
 }
 
 fetchSites();
+
+function getDataApi(siteid) {
+    let startDate = document.getElementById('startDate');
+    let endDate = document.getElementById('endDate');
+
+    let start = new Date(startDate.value);
+    let end = new Date(endDate.value);
+
+    let totalMilisecondStart = start.getTime();
+    let totalMilisecondEnd = end.getTime();
+
+    const temp = [];
+    console.log(siteid);
+
+    for (const id of siteid) {
+        let url = `${urlGetDataDayLogger}/${id}/${totalMilisecondStart}/${totalMilisecondEnd}`;
+
+        temp.push(axios.get(url));
+    }
+
+    Promise.all(temp)
+        .then((res) => {
+            let data = [];
+            for (const d of res) {
+                data.push(...d.data);
+            }
+            fillDataTable(data);
+        })
+        .catch((err) => console.log(err));
+}
 
 let viewDataDayLogger = document.getElementById('viewDataDayLogger');
 
