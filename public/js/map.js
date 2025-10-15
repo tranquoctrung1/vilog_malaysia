@@ -680,34 +680,45 @@ function renderTableStatistic(data, type) {
     if (type === 'sites') {
         statisticLabel.innerHTML = `Site List: Total Sites`;
         if (data.sites.length > 0) {
-            for (const item of data.siteAlarm) {
+            let temp = [];
+
+            for (const item of data.siteDelay) {
+                temp.push(item.SiteId);
                 content += `<tr>
+                            <td>${item.SiteId}</td>
+                            <td>${item.Location}</td>
+                            <td class="text-warning">Disconnected</td>
+                            <td class="text-warning">Disconnected</td>
+                        </tr>`;
+                hasContent = true;
+            }
+
+            for (const item of data.siteAlarm) {
+                const find = temp.find((el) => el === item.SiteId);
+                if (find === undefined) {
+                    temp.push(item.SiteId);
+                    content += `<tr>
                             <td>${item.SiteId}</td>
                             <td>${item.Location}</td>
                             <td class="text-success">Connected</td>
                             <td class="text-danger">Alarm</td>
                         </tr>`;
-                hasContent = true;
-            }
-
-            for (const item of data.siteDelay) {
-                content += `<tr>
-                            <td>${item.SiteId}</td>
-                            <td>${item.Location}</td>
-                            <td class="text-warning">Disconnected</td>
-                            <td class="text-warning">Disconnected</td>
-                        </tr>`;
-                hasContent = true;
+                    hasContent = true;
+                }
             }
 
             for (const item of data.siteHasValue) {
-                content += `<tr>
+                const find = temp.find((el) => el === item.SiteId);
+                if (find === undefined) {
+                    temp.push(item.SiteId);
+                    content += `<tr>
                             <td>${item.SiteId}</td>
                             <td>${item.Location}</td>
                             <td class="text-success">Connected</td>
                             <td class="text-info">Data Present</td>
                         </tr>`;
-                hasContent = true;
+                    hasContent = true;
+                }
             }
         } else {
             content += `<tr>
