@@ -51,6 +51,7 @@ function CardsLoad(siteID, start, end) {
         .then(function (res) {
             loading.classList.remove('show');
             loading.classList.add('hide');
+
             for (let c of res.data) {
                 if (CheckIsDisplay(c.ChannelId) > -1) {
                     html +=

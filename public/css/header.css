@@ -13,7 +13,7 @@
     font-size: 10px !important;
 }
 
-.box-alarm {
+/* .box-alarm {
     width: 50%;
     height: 300px;
     z-index: 9999;
@@ -45,7 +45,7 @@
 #boxAlarm::-webkit-scrollbar-thumb {
     background-color: darkgrey;
     outline: 1px solid slategrey;
-}
+} */
 
 @media only screen and (min-width: 769px) {
     .header .float-left {
@@ -63,4 +63,8 @@
     .header {
         margin-left: 0 !important;
     }
+}
+
+#alarmModal {
+    z-index: 9990;
 }

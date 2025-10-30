@@ -4,6 +4,7 @@ let tableAlarm = document.getElementById('tableAlarm');
 let amountAlarm = document.getElementById('amountAlarm');
 let hideAlarm = document.getElementById('hideAlarm');
 let contentWrap = document.getElementById('contentWrap');
+let closeAlarmModal = document.getElementById('closeAlarmModal');
 
 let userNameByAlarm = document.getElementById('userName').innerHTML;
 
@@ -100,42 +101,37 @@ function createTdLostWater(data) {
 }
 
 hideAlarm.addEventListener('click', function (e) {
-    if ($('#boxAlarm').hasClass('d-none')) {
-        $('#boxAlarm').removeClass('d-none');
-        // $("#boxAlarm").addClass("d-block");
-        $('#boxAlarm').slideDown('slow');
-        isShowAlarm = true;
-        isHoverOutAlarm = true;
-        isClickedOutAlarm = true;
-    } else {
-        $('#boxAlarm').slideToggle('slow');
-        if (isShowAlarm == true) {
-            isShowAlarm = false;
-            isHoverOutAlarm = true;
-            isClickedOutAlarm = true;
-        } else {
-            isShowAlarm = true;
-            isHoverOutAlarm = true;
-            isClickedOutAlarm = true;
-        }
-    }
+    $('#alarmModal').show();
+    $('#hamburgerButton').toggleClass('is-active');
+    $('#bodySidebar').toggleClass('sidebar-hide');
+    // if ($('#boxAlarm').hasClass('d-none')) {
+    //     $('#boxAlarm').removeClass('d-none');
+    //     // $("#boxAlarm").addClass("d-block");
+    //     $('#boxAlarm').slideDown('slow');
+    //     isShowAlarm = true;
+    //     isHoverOutAlarm = true;
+    //     isClickedOutAlarm = true;
+    // } else {
+    //     $('#boxAlarm').slideToggle('slow');
+    //     if (isShowAlarm == true) {
+    //         isShowAlarm = false;
+    //         isHoverOutAlarm = true;
+    //         isClickedOutAlarm = true;
+    //     } else {
+    //         isShowAlarm = true;
+    //         isHoverOutAlarm = true;
+    //         isClickedOutAlarm = true;
+    //     }
+    // }
 });
 
-$('#boxAlarm').on('mouseout', function (e) {
-    isHoverOutAlarm = true;
-});
-
-$('#boxAlarm').on('mouseover', function (e) {
-    isHoverOutAlarm = false;
-});
-
-contentWrap.addEventListener('click', function () {
-    if (isHoverOutAlarm == true && isShowAlarm == true) {
-        $('#boxAlarm').slideUp('slow');
-        isHoverOutAlarm = true;
-        isShowAlarm = false;
-    }
-});
+// contentWrap.addEventListener('click', function () {
+//     if (isHoverOutAlarm == true && isShowAlarm == true) {
+//         $('#boxAlarm').slideUp('slow');
+//         isHoverOutAlarm = true;
+//         isShowAlarm = false;
+//     }
+// });
 
 setInterval(() => {
     GetAlarm();
@@ -198,4 +194,8 @@ function convertDateToString(date) {
         return `${day}/${month}/${year} ${hours}:${minute}:${second}`;
     }
     return 'NO DATA';
+}
+
+function oncloseAlarmModal() {
+    $('#alarmModal').hide();
 }

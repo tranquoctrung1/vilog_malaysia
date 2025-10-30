@@ -9,7 +9,7 @@ function GetUser() {
     axios
         .get(urlGetUserByRoleStaff)
         .then((res) => {
-            createOptionsInUserNameSelectStaffBoxPermission(
+            createOptionsInUserNameSelectBoxStaffPermission(
                 res.data,
                 'staffSelect',
             );
@@ -42,7 +42,6 @@ $(document).ready(async function () {
 
     const ALL_SITE_IDS = Object.keys(ALL_SITES_MAPPED).sort();
 
-    console.log(ALL_SITE_IDS);
     let currentAssignedSites = [];
 
     function createListItem(siteId) {

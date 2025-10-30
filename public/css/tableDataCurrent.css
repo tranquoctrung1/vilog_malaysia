@@ -117,3 +117,23 @@
 .channel-group-header i {
     margin-right: 5px;
 }
+
+.fade:not(.show) {
+    opacity: 1 !important;
+}
+
+@media only screen and (max-width: 426px) {
+    .modal-body {
+        height: 400px;
+        overflow: scroll;
+    }
+}
+
+.modal-header {
+    background-color: #5873fe;
+    color: white;
+}
+.modal-footer button {
+    background-color: grey;
+    color: white;
+}
