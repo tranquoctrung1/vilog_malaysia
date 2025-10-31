@@ -1,4 +1,5 @@
 const UserModel = require('../../model/user');
+const DeviceTokenAppModel = require('../../model/DeviceTokenApp');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -26,5 +27,25 @@ module.exports.getToken = async function (req, res) {
         }
     } else {
         res.status(400).json({ error: 'username or password invalid' });
+    }
+};
+
+module.exports.InsertDeviceTokenApp = async function (req, res) {
+    let token = req.body;
+
+    let check = await DeviceTokenAppModel.find({
+        DeviceToken: token.DeviceToken,
+    });
+
+    if (check.length == 0) {
+        let result = await DeviceTokenAppModel.insertMany([token]);
+
+        if (result.length > 0) {
+            res.json(result[0]._id);
+        } else {
+            res.json(0);
+        }
+    } else {
+        res.json(0);
     }
 };

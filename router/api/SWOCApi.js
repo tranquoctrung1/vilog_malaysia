@@ -9,6 +9,8 @@ const Auth = require('../../middleware/auth');
 
 router.post('/getToken', TokenController.getToken);
 
+router.post('/insertToken', TokenController.InsertDeviceTokenApp);
+
 router.get(
     '/GetSiteSWOC',
     Auth.verifyAccessToken,
@@ -38,6 +40,5 @@ router.get(
     Auth.verifyAccessToken,
     ChannelConfigController.GetChannelsSWOC,
 );
-
 
 module.exports = router;

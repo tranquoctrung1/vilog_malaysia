@@ -199,3 +199,9 @@ function convertDateToString(date) {
 function oncloseAlarmModal() {
     $('#alarmModal').hide();
 }
+
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+    console.log(111);
+    const link = document.querySelector('a[href="/dataOnline"]');
+    if (link) link.style.display = 'none';
+}
