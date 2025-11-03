@@ -5,20 +5,20 @@ block linkcss
     link(rel="stylesheet", href="/css/permissionConsumer.css")
     link(rel="stylesheet", href="/css/pageCommon.css")
 block content
-    .container.py-5
-        h2.mb-5.text-center.text-primary
+    .container.py-2
+        h2.text-center.text-primary
             i.fas.fa-user-shield.me-2
             | Consumer Site Access Management
 
         .card.card-custom.mx-auto
-            .card-body.p-4
-                .mb-4
+            .card-body
+                div
                     label.form-label.fw-bold.text-dark(for="consumerSelect")
                         i.fas.fa-user-tie.me-2
                         | Select Consumer:
                     select.form-select#consumerSelect
                        
-                hr.my-4
+                hr
 
                 .row.transfer-container.p-3.g-0
                     .col-md-5.p-2

@@ -84,3 +84,27 @@ div.dt-buttons .buttons-pdf:hover {
     background-color: grey;
     color: white;
 }
+
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.child > ul {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    margin: 2px;
+    width: 100%;
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.child > ul > li {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.form-control {
+    height: auto;
+}
+
+#dailyDataTable th {
+    background-color: #74b9ff !important;
+    color: white !important;
+}

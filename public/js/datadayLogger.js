@@ -138,6 +138,8 @@ function fillDataTable(data) {
     createBody(data);
     createFooter(data);
 
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
     $('#dailyDataTable').DataTable({
         language: {
             search: 'Search:',
@@ -176,28 +178,41 @@ function fillDataTable(data) {
                         });
                 });
         },
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                extend: 'excel',
-                text: '<i class="fas fa-file-excel me-1"></i> Excel',
-                className: 'btn btn-sm buttons-excel',
-                filename: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv me-1"></i> CSV',
-                className: 'btn btn-sm buttons-csv',
-                filename: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
-            },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
-                className: 'btn btn-sm buttons-pdf',
-                filename: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
-            },
+        dom: isMobile ? 'frtip' : 'lBrtip',
+        buttons: isMobile
+            ? []
+            : [
+                  {
+                      extend: 'excel',
+                      text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                      className: 'btn btn-sm buttons-excel',
+                      filename: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
+                  },
+                  {
+                      extend: 'csv',
+                      text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                      className: 'btn btn-sm buttons-csv',
+                      filename: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
+                  },
+                  {
+                      extend: 'pdf',
+                      text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                      className: 'btn btn-sm buttons-pdf',
+                      filename: `Data_Vilog_Daily_From_${startDate}_To_${endDate}`,
+                  },
+              ],
+        responsive: isMobile
+            ? {
+                  details: {
+                      type: 'inline',
+                      display: $.fn.dataTable.Responsive.display.childRow,
+                  },
+              }
+            : false,
+        columnDefs: [
+            { responsivePriority: 1, targets: 0 },
+            { responsivePriority: 2, targets: 5 },
         ],
-
         footerCallback: function (row, data, start, end, display) {
             var api = this.api();
 

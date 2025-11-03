@@ -21,7 +21,6 @@ function getStatusSite() {
         .get(urlGetStatusSite)
         .then((res) => {
             if (res?.data) {
-                console.log(res.data);
                 totalSite = res.data.totalSite;
                 disconnectedSites = res.data.totalSiteDelay;
                 dataPresent = res.data.totalSiteHasValue;
@@ -283,6 +282,8 @@ function drawTable() {
         return false;
     });
 
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
     // 4. Initialize DataTable
     var table = $('#vlogTable').DataTable({
         language: {
@@ -291,29 +292,41 @@ function drawTable() {
             info: 'Showing _START_ to _END_ of _TOTAL_ entries',
             paginate: { previous: 'Previous', next: 'Next' },
         },
-        dom: 'lBrtip',
+        dom: isMobile ? 'frtip' : 'lBrtip',
         pageLength: 50,
-        buttons: [
-            {
-                extend: 'excel',
-                text: '<i class="fas fa-file-excel me-1"></i> Excel',
-                className: 'btn btn-sm buttons-excel',
-                filename: 'list_vilog',
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv me-1"></i> CSV',
-                className: 'btn btn-sm buttons-csv',
-                filename: 'list_vilog',
-            },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
-                className: 'btn btn-sm buttons-pdf',
-                filename: 'list_vilog',
-            },
-        ],
+        buttons: isMobile
+            ? []
+            : [
+                  {
+                      extend: 'excel',
+                      text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                      className: 'btn btn-sm buttons-excel',
+                      filename: 'list_vilog',
+                  },
+                  {
+                      extend: 'csv',
+                      text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                      className: 'btn btn-sm buttons-csv',
+                      filename: 'list_vilog',
+                  },
+                  {
+                      extend: 'pdf',
+                      text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                      className: 'btn btn-sm buttons-pdf',
+                      filename: 'list_vilog',
+                  },
+              ],
+        responsive: isMobile
+            ? {
+                  details: {
+                      type: 'inline',
+                      display: $.fn.dataTable.Responsive.display.childRow,
+                  },
+              }
+            : false,
         columnDefs: [
+            { responsivePriority: 1, targets: 0 },
+            { responsivePriority: 2, targets: -1 },
             { orderable: true, targets: [0, 1, 4, 6] },
             { type: 'num', targets: 3 },
         ],

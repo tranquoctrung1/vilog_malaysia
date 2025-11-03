@@ -213,7 +213,7 @@
     }
 
     .leaflet-popup-content {
-        width: 340px !important;
+        width: 320px !important;
         overflow: scroll;
         height: 500px;
     }
@@ -229,6 +229,22 @@
 
     #tableStatistic_wrapper {
         overflow: scroll;
+    }
+
+    #footerStatistic {
+        display: none;
+    }
+
+    .map {
+        height: 100% !important;
+    }
+
+    #filter {
+        display: none;
+    }
+
+    .modal-dialog {
+        width: 97% !important;
     }
 }
 

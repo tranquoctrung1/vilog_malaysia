@@ -39,6 +39,8 @@ function getDataAndDrawTable() {
 
             createBody(res.data);
 
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
             $('#userTable').DataTable({
                 language: {
                     search: 'Search:',
@@ -84,26 +86,41 @@ function getDataAndDrawTable() {
                                 });
                         });
                 },
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        extend: 'excel',
-                        text: '<i class="fas fa-file-excel me-1"></i> Excel',
-                        className: 'btn btn-sm buttons-excel',
-                        filename: `user_list`,
-                    },
-                    {
-                        extend: 'csv',
-                        text: '<i class="fas fa-file-csv me-1"></i> CSV',
-                        className: 'btn btn-sm buttons-csv',
-                        filename: `user_list`,
-                    },
-                    {
-                        extend: 'pdf',
-                        text: '<i class="fas fa-file-pdf me-1"></i> PDF',
-                        className: 'btn btn-sm buttons-pdf',
-                        filename: `user_list`,
-                    },
+                dom: isMobile ? 'frtip' : 'lBrtip',
+                buttons: isMobile
+                    ? []
+                    : [
+                          {
+                              extend: 'excel',
+                              text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                              className: 'btn btn-sm buttons-excel',
+                              filename: `user_list`,
+                          },
+                          {
+                              extend: 'csv',
+                              text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                              className: 'btn btn-sm buttons-csv',
+                              filename: `user_list`,
+                          },
+                          {
+                              extend: 'pdf',
+                              text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                              className: 'btn btn-sm buttons-pdf',
+                              filename: `user_list`,
+                          },
+                      ],
+                responsive: isMobile
+                    ? {
+                          details: {
+                              type: 'inline',
+                              display:
+                                  $.fn.dataTable.Responsive.display.childRow,
+                          },
+                      }
+                    : false,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: -1 },
                 ],
             });
         })
@@ -244,6 +261,8 @@ $('#siteListModal').on('show.bs.modal', function (event) {
                     tableBody.append(row);
                 }
 
+                const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
                 $('#siteListTable').DataTable({
                     language: {
                         search: 'Search:',
@@ -290,26 +309,42 @@ $('#siteListModal').on('show.bs.modal', function (event) {
                                     });
                             });
                     },
-                    dom: 'Bfrtip',
-                    buttons: [
-                        {
-                            extend: 'excel',
-                            text: '<i class="fas fa-file-excel me-1"></i> Excel',
-                            className: 'btn btn-sm buttons-excel',
-                            filename: `user_list`,
-                        },
-                        {
-                            extend: 'csv',
-                            text: '<i class="fas fa-file-csv me-1"></i> CSV',
-                            className: 'btn btn-sm buttons-csv',
-                            filename: `user_list`,
-                        },
-                        {
-                            extend: 'pdf',
-                            text: '<i class="fas fa-file-pdf me-1"></i> PDF',
-                            className: 'btn btn-sm buttons-pdf',
-                            filename: `user_list`,
-                        },
+                    dom: isMobile ? 'frtip' : 'lBrtip',
+                    buttons: isMobile
+                        ? []
+                        : [
+                              {
+                                  extend: 'excel',
+                                  text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                                  className: 'btn btn-sm buttons-excel',
+                                  filename: `user_list`,
+                              },
+                              {
+                                  extend: 'csv',
+                                  text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                                  className: 'btn btn-sm buttons-csv',
+                                  filename: `user_list`,
+                              },
+                              {
+                                  extend: 'pdf',
+                                  text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                                  className: 'btn btn-sm buttons-pdf',
+                                  filename: `user_list`,
+                              },
+                          ],
+                    responsive: isMobile
+                        ? {
+                              details: {
+                                  type: 'inline',
+                                  display:
+                                      $.fn.dataTable.Responsive.display
+                                          .childRow,
+                              },
+                          }
+                        : false,
+                    columnDefs: [
+                        { responsivePriority: 1, targets: 0 },
+                        { responsivePriority: 2, targets: -1 },
                     ],
                 });
             } else {

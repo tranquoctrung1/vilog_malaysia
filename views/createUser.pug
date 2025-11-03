@@ -12,25 +12,25 @@ block content
                 | Create User
             .card-body.p-4.p-lg-5
                 .row
-                    .col-md-6.mb-3
+                    .col-md-6
                         label#lbUserName.form-label.form-label-config Username
                         input.form-control#userName2.form-select( type="text" aria-label='lbUserName' aria-describedby='lbUserName' list="listUser")
                         datalist#listUser 
-                    .col-md-6.mb-3
+                    .col-md-6
                         label#lbPassword.form-label.form-label-config Password
                         input.form-control#password.form-select( type="password" aria-label='lbPassword' aria-describedby='lbPassword' )
-                    .col-md-6.mb-3
+                    .col-md-6
                         label#lbEmail.form-label.form-label-config Email
                         input.form-control#email.form-select( type="email" aria-label='lbEmail' aria-describedby='lbEmail' )
-                    .col-md-6.mb-3
+                    .col-md-6
                         label#lbRole.form-label.form-label-config Role
                         input.form-control#role.form-select( type="text" aria-label='lbRole' aria-describedby='lbRole' list="listRole")
                         datalist#listRole
-                    .col-md-6.mb-3
+                    .col-md-6
                         span#lbStaffId.form-label.form-label-config Employee Name
                         input.form-control#staffId.form-select( type="text" aria-label='lbStaffId' aria-describedby='lbStaffId' list="listStaffId")
                         datalist#listStaffId
-                    .col-md-6.mb-3
+                    .col-md-6
                         span#lbConsumerId.form-label.form-label-config Consumer Name
                         input.form-control#consumerId.form-select( type="text" aria-label='lbConsumerId' aria-describedby='lbConsumerId' list="listConsumerId")
                         datalist#listConsumerId
@@ -55,12 +55,12 @@ block content
                             button.btn-close.btn-close-white(type="button" data-bs-dismiss="modal" aria-label="Close")
                         .modal-body
                             .row#rowStaff 
-                                .col-md-6.mb-3
+                                .col-md-6
         
                                         label#lbModalFullNameStaff.form-label.form-label-config Full name employee
                                         input.form-control#modalFullNameStaff.form-select( type="text" aria-label='lbModalFullNameStaff' aria-describedby='lbModalFullNameStaff' list="listModalFullNameStaff" onchange="modalFullNameStaffChanged(this)")
                                         datalist#listModalFullNameStaff
-                                .col-md-6.mb-3
+                                .col-md-6
         
                                         label#lbModalTelephoneStaff.form-label.form-label-config Phone
                                         input.form-control#modalTelephoneStaff.form-select( type="text" aria-label='lbModalTelephoneStaff' aria-describedby='lbModalTelephoneStaff')
@@ -83,12 +83,12 @@ block content
                                         i.fas.fa-trash.me-1
                                         | Delete
                             .row#rowConsumer
-                                .col-md-6.mb-3
+                                .col-md-6
         
                                         label#lbModalFullNameConsumer.form-label.form-label-config Full name consumer 
                                         input.form-control#modalFullNameConsumer.form-select( type="text" aria-label='lbModalFullNameConsumer' aria-describedby='lbModalFullNameConsumer' list="listModalFullNameConsumer" onchange="modalFullNameConsumerChanged(this)")
                                         datalist#listModalFullNameConsumer
-                                .col-md-6.mb-3
+                                .col-md-6
         
                                         label#lbModalTelephoneConsumer.form-label.form-label-config Phone
                                         input.form-control#modalTelephoneConsumer.form-select( type="text" aria-label='lbModalTelephoneConsumer' aria-describedby='lbModalTelephoneConsumer')

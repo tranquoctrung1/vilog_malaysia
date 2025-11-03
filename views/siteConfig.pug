@@ -18,33 +18,33 @@ block content
                         i.fas.fa-info-circle.me-2
                         | General Information
                     .row
-                        .col-md-6.mb-3
+                        .col-md-6
                             label#lbDisplayGroup.form-label.form-label-config(data-bs-toggle="modal", data-bs-target="#Model")
                                 i.fas.fa-list-check.me-1
                                 | Display Group (Click View Config display group)
                             input.form-control#displayGroup.form-select( type="text" aria-label='lbDisplayGroup' aria-describedby='lbDisplayGroup' list="listDisplayGroup")
                             datalist#listDisplayGroup
-                        .col-md-6.mb-3
+                        .col-md-6
                             label#lbSite.form-label.form-label-config(for="location") Site Id
                             input.form-control#site.form-select( type="text" aria-label='lbSite' aria-describedby='lbSite' list="listSite")
                             datalist#listSite
 
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="location") Sitename
                             input#location.form-control(type="text")
-                        .col-md-6.mb-3
+                        .col-md-6
                             label#lbLoggerId.form-label.form-label-config
                                 i.fas.fa-list-check.me-1
                                 | Logger Id (Click View Config Channel)
                             input#loggerId.form-control(type="text")
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="latitude") Latitude
                             .input-group
                                 input#lat.form-control(type="number")
                                 button.btn.btn-outline-secondary(type="button", title="Get GPS from Map"  onclick="showMap()")
                                     i.fas.fa-map-pin
                            
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="longitude") Longitude
                             .input-group
                                 input#long.form-control(type="text")
@@ -53,7 +53,7 @@ block content
                         .col-12 
                             #map.show
                         .col-sm-6.d-none
-                            .input-group.mb-3
+                            .input-group
                                 span#lbId.input-group-text id
                                 input.form-control#id(type='text' placeholder='id' aria-label='lbId' aria-describedby='lbId')
                         .col-sm-2.check-box.pt-0.d-none
@@ -65,25 +65,25 @@ block content
                         i.fas.fa-cogs.me-2
                         | Vilog Parameters
                     .row
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="startDay") Day to calculate volume site
                             input#startDay.form-control(type="number", value="1", min="0", max="31")
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="startHour") Hour to calculate volume site
                             input#startHour.form-control(type="number", value="0", min="0", max="23")
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="timeDelay") Number of minutes late (Mins)
                             input#timeDelay.form-control(type="number", value="60", min="5")
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="interval") Data sending cycle (Mins)
                             input#interval.form-control(type="number", value="15", min="1")
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="IMEI") IMEI
                             input#IMEI.form-control(type="text")
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="operator") Operator
                             input#status.form-control(type="text")
-                        .col-md-12.mb-3
+                        .col-md-12
                             label.form-label.form-label-config(for="note") Notes for Vilog
                             textarea#note.form-control(rows="2")
 
@@ -91,15 +91,15 @@ block content
                         i.fas.fa-gauge-simple-max.me-2
                         | Meter Details
                     .row
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="available") Status
                             input.form-control#available(type='text' placeholder='Status' aria-label='lbAvailable' aria-describedby='lbAvailable')
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="typeMeter") Type meter
                             select#typeMeter.form-select
                                 option(value="SU") SU
                                 option(value="Kronhe") Kronhe
-                        .col-md-6.mb-3
+                        .col-md-6
                             label.form-label.form-label-config(for="pipeSize") Size meter
                             input#pipeSize.form-control(type="text")
 

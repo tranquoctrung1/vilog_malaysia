@@ -54,6 +54,8 @@ function drawTable() {
         $row.find('td:eq(5)').html(getAlarmTag(content));
     });
 
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
     // === Initialize DataTable ===
     $('#alarmTable').DataTable({
         retrieve: true,
@@ -63,30 +65,42 @@ function drawTable() {
             info: 'Showing _START_ to _END_ of _TOTAL_ entries',
             paginate: { previous: 'Previous', next: 'Next' },
         },
-        dom: 'lBrtip',
+        dom: isMobile ? 'frtip' : 'lBrtip',
         pageLength: 50,
         order: [[4, 'desc']],
-        buttons: [
-            {
-                extend: 'excel',
-                text: '<i class="fas fa-file-excel me-1"></i> Excel',
-                className: 'btn btn-sm buttons-excel',
-                filename: 'list_alarm',
-            },
-            {
-                extend: 'csv',
-                text: '<i class="fas fa-file-csv me-1"></i> CSV',
-                className: 'btn btn-sm buttons-csv',
-                filename: 'list_alarm',
-            },
-            {
-                extend: 'pdf',
-                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
-                className: 'btn btn-sm buttons-pdf',
-                filename: 'list_alarm',
-            },
-        ],
+        buttons: isMobile
+            ? []
+            : [
+                  {
+                      extend: 'excel',
+                      text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                      className: 'btn btn-sm buttons-excel',
+                      filename: 'list_alarm',
+                  },
+                  {
+                      extend: 'csv',
+                      text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                      className: 'btn btn-sm buttons-csv',
+                      filename: 'list_alarm',
+                  },
+                  {
+                      extend: 'pdf',
+                      text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                      className: 'btn btn-sm buttons-pdf',
+                      filename: 'list_alarm',
+                  },
+              ],
+        responsive: isMobile
+            ? {
+                  details: {
+                      type: 'inline',
+                      display: $.fn.dataTable.Responsive.display.childRow,
+                  },
+              }
+            : false,
         columnDefs: [
+            { responsivePriority: 1, targets: 0 },
+            { responsivePriority: 2, targets: -1 },
             {
                 targets: 5,
                 render: function (data, type) {

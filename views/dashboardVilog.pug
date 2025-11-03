@@ -4,30 +4,31 @@ block linkcss
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css")
     link(href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" rel="stylesheet")
     link(href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.bootstrap5.min.css" rel="stylesheet")
+    link(href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css" rel="stylesheet")
     link(rel="stylesheet", href="/css/dashboardVilog.css")
     link(rel="stylesheet", href="/css/pageCommon.css")
 block content
     .container-fluid
         .container-fluid.py-4
-            h2.mb-4.text-primary Vilog Site Activity Summary
-            .row.mb-5
-                .col-md-3.mb-3
+            h2.text-primary Vilog Site Activity Summary
+            .row
+                .col-6.col-md-3
                     .card.card-kpi.p-3.text-center(data-filter="Total")
                         i.fas.fa-sitemap.text-dark.kpi-icon.mb-2
                         .kpi-title TOTAL SITES
                         .kpi-value.text-dark#kpi-total 0
-                .col-md-3.mb-3
+                .col-6.col-md-3
                     .card.card-kpi.p-3.text-center.bg-info-subtle(data-filter="DataPresent")
                         i.fas.fa-database.text-info.kpi-icon.mb-2
                         .kpi-title DATA PRESENT
                         .kpi-value.text-info#kpi-data-present 0
 
-                .col-md-3.mb-3
+                .col-6.col-md-3
                     .card.card-kpi.p-3.text-center.bg-warning-subtle(data-filter="Disconnected")
                         i.fas.fa-plug-circle-xmark.text-warning.kpi-icon.mb-2
                         .kpi-title DISCONNECTED
                         .kpi-value.text-warning#kpi-disconnected 0
-                .col-md-3.mb-3
+                .col-6.col-md-3
                     .card.card-kpi.p-3.text-center.bg-danger-subtle(data-filter="Alarm")
                         i.fas.fa-triangle-exclamation.text-danger.kpi-icon.mb-2
                         .kpi-title ALARM SITES
@@ -66,5 +67,6 @@ block linkcriptbody
     script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js")
     script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js")
     script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js")
+    script(src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js")
     script(src="/js/dashboardVilog.js") 
     script(src="/js/util.js") 
