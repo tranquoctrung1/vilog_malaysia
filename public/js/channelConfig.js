@@ -45,8 +45,15 @@ function fetchAllChannel() {
             if (res.data.length > 0) {
                 createOptionsInChannelConfigSelectBox(
                     res.data,
-                    'listModalChannelId',
+                    'modalChannelId',
                 );
+                new TomSelect('#modalChannelId', {
+                    create: true, // Disallow custom entries
+                    sortField: { field: 'text', direction: 'asc' },
+                    persist: false,
+                    selectOnTab: false, // ⛔ don't select on Tab or Enter
+                    preload: false,
+                });
             }
         })
         .catch((err) => console.log(error));

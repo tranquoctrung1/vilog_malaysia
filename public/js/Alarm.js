@@ -1,4 +1,4 @@
-const hostnameAlarm = `http://localhost:3000/api`;
+const hostnameAlarm = `http://43.216.183.205:3000/api`;
 
 let tableAlarm = document.getElementById('tableAlarm');
 let amountAlarm = document.getElementById('amountAlarm');

@@ -243,6 +243,7 @@ function createOptionsInDisplayGroupSelectBox(data, idDom) {
     let content = '';
 
     if (CheckExistsData(data)) {
+        content += `<option value="">select display group</option>`;
         for (let item of data) {
             content += `<option value="${item.Group}">${item.Group}</option>`;
         }
@@ -259,6 +260,7 @@ function createOptionsInChannelConfigSelectBox(data, idDom) {
     let content = '';
 
     if (CheckExistsData(data)) {
+        content += `<option value="">select channel id</option>`;
         for (let item of data) {
             content += `<option value="${item.ChannelId}">${item.ChannelId}</option>`;
         }
@@ -275,6 +277,7 @@ function createOptionsInStaffAndConsumerSelectBox(data, idDom) {
     let content = '';
 
     if (CheckExistsData(data)) {
+        content += `<option value="">choose consumer</option>`;
         for (let item of data) {
             content += `<option value="${item.FullName}">${item.FullName}</option>`;
         }
@@ -291,6 +294,7 @@ function createOptionsInRoleSelectBox(data, idDom) {
     let content = '';
 
     if (CheckExistsData(data)) {
+        content += `<option value="">choose role</option>`;
         for (let item of data) {
             content += `<option value="${item.Role}">${item.Role}</option>`;
         }

@@ -28,7 +28,14 @@ function fetchDisplayGroupForSite() {
     axios
         .get(urlGetDisplayGroup)
         .then((res) => {
-            createOptionsInDisplayGroupSelectBox(res.data, 'listDisplayGroup');
+            createOptionsInDisplayGroupSelectBox(res.data, 'displayGroup');
+            new TomSelect('#displayGroup', {
+                create: true, // Disallow custom entries
+                sortField: { field: 'text', direction: 'asc' },
+                persist: false,
+                selectOnTab: false, // ⛔ don't select on Tab or Enter
+                preload: false,
+            });
         })
         .catch((err) => console.log(err));
 }
@@ -41,7 +48,14 @@ function fetchSiteForDisplayGroup(displayGroup) {
     axios
         .get(url)
         .then((res) => {
-            createOptionsInSelectBox(res.data, 'listSite');
+            createOptionsInSelectBox(res.data, 'site');
+            new TomSelect('#site', {
+                create: true, // Disallow custom entries
+                sortField: { field: 'text', direction: 'asc' },
+                persist: false,
+                selectOnTab: false, // ⛔ don't select on Tab or Enter
+                preload: false,
+            });
         })
         .catch((err) => console.log(err));
 }

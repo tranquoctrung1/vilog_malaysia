@@ -22,10 +22,14 @@ function fetchDisplayGroup() {
     axios
         .get(urlGetDisplayGroup)
         .then((res) => {
-            createOptionsInDisplayGroupSelectBox(
-                res.data,
-                'listModalDisplayGroup',
-            );
+            createOptionsInDisplayGroupSelectBox(res.data, 'modalDisplayGroup');
+            new TomSelect('#modalDisplayGroup', {
+                create: true, // Disallow custom entries
+                sortField: { field: 'text', direction: 'asc' },
+                persist: false,
+                selectOnTab: false, // ⛔ don't select on Tab or Enter
+                preload: false,
+            });
         })
         .catch((err) => console.log(err));
 }
@@ -36,7 +40,6 @@ function modalDisplayGroupChanged(e) {
         .get(url)
         .then((res) => {
             if (CheckExistsData(res.data)) {
-                console.log(res.data);
                 modalNoteDisplayGroup.value = fillDataIntoInputTag(
                     res.data[0].Description,
                 );

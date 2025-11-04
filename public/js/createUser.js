@@ -23,7 +23,14 @@ function GetRole() {
     axios
         .get(urlGetRole)
         .then((res) => {
-            createOptionsInRoleSelectBox(res.data, 'listRole');
+            createOptionsInRoleSelectBox(res.data, 'role');
+            new TomSelect('#role', {
+                create: false, // Disallow custom entries
+                sortField: { field: 'text', direction: 'asc' },
+                persist: false,
+                selectOnTab: false, // ⛔ don't select on Tab or Enter
+                preload: false,
+            });
         })
         .catch((err) => console.log(err));
 }
@@ -32,7 +39,14 @@ function GetUser() {
     axios
         .get(urlGetUser)
         .then((res) => {
-            createOptionsInUserNameSelectBox(res.data, 'listUser');
+            createOptionsInUserNameSelectBox(res.data, 'userName2');
+            new TomSelect('#userName2', {
+                create: true, // Disallow custom entries
+                sortField: { field: 'text', direction: 'asc' },
+                persist: false,
+                selectOnTab: false, // ⛔ don't select on Tab or Enter
+                preload: false,
+            });
         })
         .catch((err) => console.log(err));
 }
