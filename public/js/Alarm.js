@@ -32,6 +32,92 @@ async function GetAlarm() {
         let headAlarm = createHeaderAlarm(res.data);
         amountAlarm.innerHTML = res.data.length;
         tableAlarm.innerHTML = headAlarm + '<tbody>' + bodyAlarm + '</tbody>';
+
+        const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+        $('#tableAlarm').DataTable({
+            language: {
+                search: 'Search:',
+                lengthMenu: 'Show _MENU_ entries',
+                info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+                paginate: { previous: 'Previous', next: 'Next' },
+            },
+            pageLength: 10,
+            order: [[0, 'desc']],
+            initComplete: function () {
+                this.api()
+                    .columns([])
+                    .every(function () {
+                        var column = this;
+                        var select = $(
+                            '<select><option value=""></option></select>',
+                        )
+                            .appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val(),
+                                );
+                                column
+                                    .search(
+                                        val ? '^' + val + '$' : '',
+                                        true,
+                                        false,
+                                    )
+                                    .draw();
+                            });
+                        column
+                            .data()
+                            .unique()
+                            .sort()
+                            .each(function (d, j) {
+                                select.append(
+                                    '<option value="' +
+                                        d +
+                                        '">' +
+                                        d +
+                                        '</option>',
+                                );
+                            });
+                    });
+            },
+            dom: isMobile ? 'frtip' : 'lBrtip',
+            buttons: isMobile
+                ? []
+                : [
+                      {
+                          extend: 'excel',
+                          text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                          className: 'btn btn-sm buttons-excel',
+                          filename: 'list_latest_alarm',
+                      },
+                      {
+                          extend: 'csv',
+                          text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                          className: 'btn btn-sm buttons-csv',
+                          filename: 'list_latest_alarm',
+                      },
+                      {
+                          extend: 'pdf',
+                          text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                          className: 'btn btn-sm buttons-pdf',
+                          filename: 'list_latest_alarm',
+                      },
+                  ],
+            responsive: isMobile
+                ? {
+                      details: {
+                          type: 'inline',
+                          display:
+                              DataTable.Responsive.display.childRowImmediate,
+                      },
+                  }
+                : false,
+            columnDefs: [
+                { responsivePriority: 1, targets: 0 },
+                { responsivePriority: 2, targets: -1 },
+                { responsivePriority: 10000, targets: [3, 4, 5] },
+            ],
+        });
     });
 }
 
@@ -133,9 +219,9 @@ hideAlarm.addEventListener('click', function (e) {
 //     }
 // });
 
-setInterval(() => {
-    GetAlarm();
-}, 1000 * 60 * 2);
+// setInterval(() => {
+//     GetAlarm();
+// }, 1000 * 60 * 2);
 
 let sidebar = document.getElementById('sidebar');
 let bodySidebar = document.getElementById('bodySidebar');

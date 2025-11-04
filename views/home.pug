@@ -1,6 +1,9 @@
 extends ./partial/layout.pug
 block linkcss
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css")
+    link(href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" rel="stylesheet")
+    link(href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.bootstrap5.min.css" rel="stylesheet")
+    link(href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css" rel="stylesheet")
     link(rel="stylesheet", href="/css/leaflet/leaflet.1.6.0.css")
     link(rel="stylesheet", href="/css/leaflet/context-menu.min.css")
     link(rel="stylesheet", href="/assets/css/lib/listtree/listree.min.css")
@@ -127,6 +130,8 @@ block content
 
 
 block linkcriptbody
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js")
     script(src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js")
     script(src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js")
     script(src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js")
@@ -136,6 +141,7 @@ block linkcriptbody
     script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js")
     script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js")
     script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js")
+    script(src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js")
     script(src='/js/leaflet/leaflet.1.6.0.js')
     script(src='/js/leaflet/context-menu.js')
     script(src='/axios/axios.min.js')
