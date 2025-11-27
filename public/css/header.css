@@ -68,3 +68,7 @@
 #alarmModal {
     z-index: 9990;
 }
+
+#tableAlarm {
+    width: 100% !important;
+}

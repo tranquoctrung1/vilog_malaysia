@@ -50,12 +50,12 @@ block content
                 .modal-header.bg-primary.text-white
                     h5#siteListModalLabel.modal-title
                         i.fas.fa-sitemap.me-2
-                        | Managed Sites for 
+                        | Managed Sites for
                         span#modalUsername
                         |  (
                         span#modalSiteCount
                         |  sites)
-                    button.btn-close.btn-close-white(type="button" data-bs-dismiss="modal" aria-label="Close")
+                    button.btn-close.btn-close-white(type="button" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()")
                 .modal-body
                     .table-responsive
                         table#siteListTable.table.table-sm.table-hover
@@ -68,7 +68,7 @@ block content
                                     th Alarm
                             tbody#siteListContainer
                 .modal-footer
-                    button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
+                    button.btn.btn-secondary(type="button" data-bs-dismiss="modal" onclick="closeModal()") Close
 
 block linkcriptbody
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
@@ -80,9 +80,9 @@ block linkcriptbody
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js")
-    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js")
-    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js")
+    //script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js")
+    //script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js")
     script(src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js")
     script(src="/js/hostname.js")
     script(src="/js/viewUser.js")
-    script(src="/js/util.js") 
+    script(src="/js/util.js")

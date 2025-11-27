@@ -6,7 +6,7 @@ function convertDateFromApi(date) {
         date != 'NO DATA'
     ) {
         let result = new Date(date);
-        result.setHours(result.getHours() - 7);
+        result.setHours(result.getHours() - 8);
 
         return result;
     }
@@ -311,6 +311,7 @@ function createOptionsInUserNameSelectBox(data, idDom) {
     let content = '';
 
     if (CheckExistsData(data)) {
+        content += `<option value="">choose username</option>`;
         for (let item of data) {
             content += `<option value="${item.Username}">${item.Username}</option>`;
         }

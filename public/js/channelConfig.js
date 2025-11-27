@@ -36,6 +36,8 @@ lbLoggerId.addEventListener('click', function (e) {
     fetchAllChannel();
 });
 
+let channelSelect = null;
+
 function fetchAllChannel() {
     let url = `${urlGetAllChannel}/${modalLoggerId.value}`;
 
@@ -43,11 +45,14 @@ function fetchAllChannel() {
         .get(url)
         .then((res) => {
             if (res.data.length > 0) {
+                if (channelSelect !== null) {
+                    channelSelect.destroy();
+                }
                 createOptionsInChannelConfigSelectBox(
                     res.data,
                     'modalChannelId',
                 );
-                new TomSelect('#modalChannelId', {
+                channelSelect = new TomSelect('#modalChannelId', {
                     create: true, // Disallow custom entries
                     sortField: { field: 'text', direction: 'asc' },
                     persist: false,

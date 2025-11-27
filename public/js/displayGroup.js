@@ -18,12 +18,17 @@ lbDisplayGroup.addEventListener('click', function (e) {
     fetchDisplayGroup();
 });
 
+let dispalyGroupSelect = null;
+
 function fetchDisplayGroup() {
     axios
         .get(urlGetDisplayGroup)
         .then((res) => {
+            if (dispalyGroupSelect !== null) {
+                dispalyGroupSelect.destroy();
+            }
             createOptionsInDisplayGroupSelectBox(res.data, 'modalDisplayGroup');
-            new TomSelect('#modalDisplayGroup', {
+            dispalyGroupSelect = new TomSelect('#modalDisplayGroup', {
                 create: true, // Disallow custom entries
                 sortField: { field: 'text', direction: 'asc' },
                 persist: false,

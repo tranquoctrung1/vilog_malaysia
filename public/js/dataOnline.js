@@ -508,7 +508,7 @@ function CreateDataTable() {
                                 <tr>${header}</tr>
                             </thead>
                             <tbody>${body}</tbody>
-                            
+
                         </table>
                     `;
 

@@ -41,7 +41,7 @@ function GetStaff() {
                 preload: false,
             });
             createOptionsInStaffAndConsumerSelectBox(res.data, 'staffId');
-            new TomSelect('#staffId', {
+            staffSelect = new TomSelect('#staffId', {
                 create: false, // Disallow custom entries
                 sortField: { field: 'text', direction: 'asc' },
                 persist: false,

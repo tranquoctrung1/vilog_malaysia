@@ -24,6 +24,8 @@ let urlInsertSite = `${hostname}/InsertSite`;
 let urlUpdateSite = `${hostname}/UpdateSite`;
 let urlDeleteSite = `${hostname}/DeleteSite`;
 
+let siteidSelect = null;
+
 function fetchDisplayGroupForSite() {
     axios
         .get(urlGetDisplayGroup)
@@ -48,8 +50,11 @@ function fetchSiteForDisplayGroup(displayGroup) {
     axios
         .get(url)
         .then((res) => {
+            if (siteidSelect !== null) {
+                siteidSelect.destroy();
+            }
             createOptionsInSelectBox(res.data, 'site');
-            new TomSelect('#site', {
+            siteidSelect = new TomSelect('#site', {
                 create: true, // Disallow custom entries
                 sortField: { field: 'text', direction: 'asc' },
                 persist: false,

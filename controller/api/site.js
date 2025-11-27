@@ -10,7 +10,8 @@ module.exports.GetSiteForSWOC = async function (req, res) {
 
     for (const item of data) {
         const obj = {};
-        obj.Name = item.SiteId;
+        obj.SiteId = item.SiteId;
+        obj.SiteName = item.Location;
         obj.LoggerId = item.LoggerId;
         obj.Model = null;
         obj.localInstall = item.Location;

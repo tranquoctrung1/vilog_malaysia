@@ -96,9 +96,13 @@ module.exports.GetStatusSite = async function (req, res) {
                             channel.TimeStamp !== null &&
                             channel.TimeStamp !== undefined
                         ) {
+                            const now = new Date(Date.now());
+                            now.setHours(now.getHours() + 8);
+
                             if (
                                 Math.round(
-                                    (Date.now() - channel.TimeStamp.getTime()) /
+                                    (now.getTime() -
+                                        channel.TimeStamp.getTime()) /
                                         1000 /
                                         60,
                                 ) > timeDelay

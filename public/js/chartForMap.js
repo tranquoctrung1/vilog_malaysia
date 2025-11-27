@@ -61,8 +61,8 @@ function openChart(channelId, location, channelName, units) {
                     endDate.value = convertDateToDateTimeLocalInputTag(date);
                     startDate.value = convertDateToDateTimeLocalInputTag(tDate);
 
-                    date.setHours(date.getHours() + 7);
-                    tDate.setHours(tDate.getHours() + 7);
+                    date.setHours(date.getHours() + 8);
+                    tDate.setHours(tDate.getHours() + 8);
 
                     let totalMilisecondStart = tDate.getTime();
                     let totalMilisecondEnd = date.getTime();
@@ -253,7 +253,10 @@ function drawChart(channelId, location, channelname, units, data) {
     }
 
     const trace = {
-        x: data.map((d) => new Date(d.TimeStamp)),
+        x: data.map((d) => {
+            const date = new Date(d.TimeStamp);
+            return date.setHours(date.getHours() - 8);
+        }),
         y: data.map((d) => d.Value),
         mode: 'lines+markers',
         type: 'scatter',
@@ -261,7 +264,11 @@ function drawChart(channelId, location, channelname, units, data) {
         marker: { size: 5 },
         name: `${location} | ${channelname}`,
         hovertemplate: `%{customdata}: %{y}<extra></extra> ${units}`, // 👈 custom tooltip
-        customdata: data.map((d) => convertDateToString(new Date(d.TimeStamp))), // 👈 formatted timestamp
+        customdata: data.map((d) => {
+            const date = new Date(d.TimeStamp);
+            date.setHours(date.getHours() - 8);
+            return convertDateToString(date);
+        }), // 👈 formatted timestamp
     };
 
     const layout = {
@@ -341,8 +348,8 @@ btnViewMutipleChannel.addEventListener('click', async function () {
                 endDate.value = convertDateToDateTimeLocalInputTag(date);
                 startDate.value = convertDateToDateTimeLocalInputTag(tDate);
 
-                date.setHours(date.getHours() + 7);
-                tDate.setHours(tDate.getHours() + 7);
+                date.setHours(date.getHours() + 8);
+                tDate.setHours(tDate.getHours() + 8);
 
                 let totalMilisecondStart = tDate.getTime();
                 let totalMilisecondEnd = date.getTime();
@@ -355,8 +362,8 @@ btnViewMutipleChannel.addEventListener('click', async function () {
         let start = new Date(startDate.value);
         let end = new Date(endDate.value);
 
-        start.setHours(start.getHours() + 7);
-        end.setHours(end.getHours() + 7);
+        start.setHours(start.getHours() + 8);
+        end.setHours(end.getHours() + 8);
 
         let totalMilisecondStart = start.getTime();
         let totalMilisecondEnd = end.getTime();
@@ -512,7 +519,10 @@ function drawChartMultiple(data) {
     if (dataForChart.length > 0) {
         const traces = dataForChart.map((group) => {
             return {
-                x: group.map((d) => new Date(d.TimeStamp)),
+                x: group.map((d) => {
+                    const date = new Date(d.TimeStamp);
+                    return date.setHours(date.getHours() - 8);
+                }),
                 y: group.map((d) => d.Value),
                 mode: 'lines+markers',
                 type: 'scatter',
@@ -520,9 +530,11 @@ function drawChartMultiple(data) {
                 line: { shape: 'spline', width: 2 },
                 marker: { size: 6 },
                 hovertemplate: `%{customdata}: %{y}<extra></extra>`,
-                customdata: group.map((d) =>
-                    convertDateToString(new Date(d.TimeStamp)),
-                ),
+                customdata: group.map((d) => {
+                    const date = new Date(d.TimeStamp);
+                    date.setHours(date.getHours() - 8);
+                    return convertDateToString(date);
+                }), // 👈 formatted timestamp
             };
         });
 
@@ -553,8 +565,6 @@ function drawChartMultiple(data) {
         Plotly.newPlot('chartDataLogger', traces, layout, config);
     }
 
-    console.log(data);
-
     createTableMultiple(data);
 }
 
@@ -571,11 +581,11 @@ function createTableSingle(data, channelName, channelid) {
 
     talbeChart.innerHTML = '';
 
-    talbeChart.innerHTML = `<table class="table table-bordered dataTable no-footer" id="dataTable2" cellspacing="0" style="width: 100%;overflow-y:auto" role="grid" aria-describedby="dataTable_info"> 
-        <thead> ${header} 
-        </thead> 
-        <tbody>  ${body} 
-        </tbody> 
+    talbeChart.innerHTML = `<table class="table table-bordered dataTable no-footer" id="dataTable2" cellspacing="0" style="width: 100%;overflow-y:auto" role="grid" aria-describedby="dataTable_info">
+        <thead> ${header}
+        </thead>
+        <tbody>  ${body}
+        </tbody>
         </table > `;
     $('#dataTable2').DataTable({
         pageLength: 5,
@@ -688,8 +698,6 @@ function convertData(data) {
 function createTableMultiple(data) {
     let convertDataTable = convertData(data);
 
-    console.log(convertDataTable);
-
     if (CheckExistsData(convertDataTable)) {
         let header = '';
         header += `<tr>`;
@@ -721,11 +729,11 @@ function createTableMultiple(data) {
 
         talbeChart.innerHTML = '';
 
-        talbeChart.innerHTML = `<table class="table table-bordered dataTable no-footer" id="dataTable2" cellspacing="0" style="width: 100%;overflow-y:auto" role="grid" aria-describedby="dataTable_info"> 
-        <thead> ${header} 
-        </thead> 
-        <tbody>  ${body} 
-        </tbody> 
+        talbeChart.innerHTML = `<table class="table table-bordered dataTable no-footer" id="dataTable2" cellspacing="0" style="width: 100%;overflow-y:auto" role="grid" aria-describedby="dataTable_info">
+        <thead> ${header}
+        </thead>
+        <tbody>  ${body}
+        </tbody>
         </table > `;
         $('#dataTable2').DataTable({
             pageLength: 5,
@@ -770,15 +778,15 @@ function createTableMultiple(data) {
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    title: `Du_Lieu_Lich_Su`,
+                    title: `Data_History`,
                 },
                 {
                     extend: 'csvHtml5',
-                    title: `Du_Lieu_Lich_Su`,
+                    title: `Data_History`,
                 },
                 {
                     extend: 'pdfHtml5',
-                    title: `Du_Lieu_Lich_Su`,
+                    title: `Data_History`,
                 },
             ],
         });
@@ -808,3 +816,7 @@ function resetState() {
         talbeChart.classList.add('d-none');
     }
 }
+
+const closeChart = () => {
+    $('#chart').modal('hide');
+};

@@ -21,9 +21,11 @@ function createBody(data) {
             content += `<td>${ConvertDataIntoTable(item.Role)}</td>`;
             content += `<td>${ConvertDataIntoTable(item.StaffId)}</td>`;
             content += `<td>${ConvertDataIntoTable(item.ConsumerId)}</td>`;
-            content += `<td class="text-center"><span class="site-count-link" data-bs-toggle="modal" data-bs-target="#siteListModal" data-username="${item.Username}" data-site-count="${item.sites}" data-id="${item._id}"><span class="site-count-badge">${item.sites}</span></span></td>`;
+            content += `<td class="text-center"><span class="site-count-link" data-username="${item.Username}" data-site_count="${item.sites}" data-id="${item._id}" onclick="onSiteCountClicked(this)"><span class="site-count-badge">${item.sites}</span></span></td>`;
             content += `<td> <button class="btn btn-danger btn-sm" data-id="${item._id}" onclick="onBtnDeleteClicked(this)"><i class="fa fa-trash"></i> Delete</button></td>`;
             content += `</tr>`;
+
+            //  data-bs-toggle="modal" data-bs-target="#siteListModal"
         }
     }
     bodyTable.innerHTML = content;
@@ -155,22 +157,21 @@ function onBtnDeleteClicked(e) {
 }
 getData();
 
-$('#siteListModal').on('show.bs.modal', function (event) {
+const onSiteCountClicked = (e) => {
+    $('#siteListModal').show();
+
     if ($.fn.DataTable.isDataTable('#siteListTable')) {
         $('#siteListTable').DataTable().clear().destroy();
     }
 
-    const button = $(event.relatedTarget);
-    const username = button.data('username');
-    const siteCount = button.data('site-count');
-    const sitesJson = button.closest('tr').attr('data-sites-details');
+    const username = e.dataset.username;
+    const siteCount = e.dataset.site_count;
 
-    const modal = $(this);
-    modal.find('#modalUsername').text(username);
-    modal.find('#modalSiteCount').text(siteCount);
+    document.getElementById('modalUsername').innerHTML = username;
+    document.getElementById('modalSiteCount').innerHTML = siteCount;
 
-    const tableBody = modal.find('#siteListContainer');
-    tableBody.empty();
+    const tableBody = document.getElementById('siteListContainer');
+    tableBody.innerHTML = '';
 
     let url = `${urlGetStatusSite}/${username}`;
 
@@ -179,6 +180,7 @@ $('#siteListModal').on('show.bs.modal', function (event) {
         .then((res) => {
             let data = [];
             let temp = [];
+            console.log(res.data);
 
             for (const item of res.data.siteDelay) {
                 const obj = {};
@@ -245,21 +247,23 @@ $('#siteListModal').on('show.bs.modal', function (event) {
             data.sort((a, b) => a.Location.localeCompare(b.Location));
 
             if (data.length > 0) {
+                let content = ``;
                 for (const item of data) {
                     const statusHtml = renderStatusTag(item.Status);
                     const alarmHtml = renderAlarmTag(item.Alarm);
-                    const row = `
-                    <tr>
-                        <td>${item.SiteId}</td>
-                        <td>${item.Location}</td>
-                        <td>${statusHtml}</td>
-                        <td>${convertDateToString(
-                            convertDateFromApi(item.LastData),
-                        )}</td>
-                        <td>${alarmHtml}</td>
-                    </tr>`;
-                    tableBody.append(row);
+                    content += `
+                <tr>
+                    <td>${item.SiteId}</td>
+                    <td>${item.Location}</td>
+                    <td>${statusHtml}</td>
+                    <td>${convertDateToString(
+                        convertDateFromApi(item.LastData),
+                    )}</td>
+                    <td>${alarmHtml}</td>
+                </tr>`;
                 }
+
+                tableBody.innerHTML = content;
 
                 const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
@@ -270,7 +274,7 @@ $('#siteListModal').on('show.bs.modal', function (event) {
                         info: 'Showing _START_ to _END_ of _TOTAL_ entries',
                         paginate: { previous: 'Previous', next: 'Next' },
                     },
-                    pageLength: 20,
+                    pageLength: 10,
                     order: [[0, 'desc']],
                     initComplete: function () {
                         this.api()
@@ -348,19 +352,22 @@ $('#siteListModal').on('show.bs.modal', function (event) {
                     ],
                 });
             } else {
-                tableBody.append(`
-                <tr>
-                    <td colspan="5" class="text-center text-muted">
-                        This user currently manages 0 sites.
-                    </td>
-                </tr>
-            `);
+                tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center text-muted">
+                    This user currently manages 0 sites.
+                </td>
+            </tr>`;
             }
         })
         .catch((err) => {
             console.error(err);
         });
-});
+};
+
+const closeModal = () => {
+    $('#siteListModal').hide();
+};
 
 function renderStatusTag(status) {
     if (status === 'Connected') {

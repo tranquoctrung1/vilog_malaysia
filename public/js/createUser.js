@@ -19,12 +19,17 @@ let urlInsertUser = `${hostname}/InsertUser`;
 let urlUpdateUser = `${hostname}/UpdateUser`;
 let urlDeleteUser = `${hostname}/DeleteUser`;
 
+let roleSelect = null;
+let staffSelect = null;
+let consumerSelect = null;
+let usernameSelect = null;
+
 function GetRole() {
     axios
         .get(urlGetRole)
         .then((res) => {
             createOptionsInRoleSelectBox(res.data, 'role');
-            new TomSelect('#role', {
+            roleSelect = new TomSelect('#role', {
                 create: false, // Disallow custom entries
                 sortField: { field: 'text', direction: 'asc' },
                 persist: false,
@@ -39,8 +44,12 @@ function GetUser() {
     axios
         .get(urlGetUser)
         .then((res) => {
+            if (usernameSelect !== null) {
+                usernameSelect.destroy();
+            }
+
             createOptionsInUserNameSelectBox(res.data, 'userName2');
-            new TomSelect('#userName2', {
+            usernameSelect = new TomSelect('#userName2', {
                 create: true, // Disallow custom entries
                 sortField: { field: 'text', direction: 'asc' },
                 persist: false,
@@ -62,8 +71,11 @@ function GetUserNameById(name) {
                 //password.value = fillDataIntoInputTag(res.data[0].Password);
                 email.value = fillDataIntoInputTag(res.data[0].Email);
                 role.value = fillDataIntoInputTag(res.data[0].Role);
+                roleSelect.setValue(res.data[0].Role);
                 staffId.value = fillDataIntoInputTag(res.data[0].StaffId);
+                staffSelect.setValue(res.data[0].StaffId);
                 consumerId.value = fillDataIntoInputTag(res.data[0].ConsumerId);
+                consumerSelect.setValue(res.data[0].ConsumerId);
                 id.value = fillDataIntoInputTag(res.data[0]._id);
             }
         })

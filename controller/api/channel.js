@@ -81,9 +81,13 @@ module.exports.GetChannelByLoggerId = async function (req, res) {
         let status;
         if (isError == false) {
             if (channel.TimeStamp != null) {
+                const now = new Date(Date.now());
+                now.setHours(now.getHours() + 8);
+
                 let diff = Math.round(
-                    (Date.now() - channel.TimeStamp.getTime()) / 1000 / 60,
+                    (now.getTime() - channel.TimeStamp.getTime()) / 1000 / 60,
                 );
+
                 if (diff > timeDelay) {
                     status = 2;
                     isError = true;

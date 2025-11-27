@@ -9,21 +9,21 @@ block linkcss
     link(rel="stylesheet", href="/assets/css/lib/listtree/listree.min.css")
     link(rel="stylesheet", href="/css/map.css")
     link(rel="stylesheet", href="/css/pageCommon.css")
-block content 
+block content
     .container-fluid.map
         .row
             .col.p-0
                 .map#map
                 .legend#legend
-                    div 
+                    div
                         div.p-2
-                            img(src="/images/green.png", alt="icon blue") 	
+                            img(src="/images/green.png", alt="icon blue")
                             span.ml-2 Normal/Data Present
                         div.p-2
-                            img(src="/images/yellow.png", alt="icon yellow") 	
-                            span.ml-2 Disconnected	
+                            img(src="/images/yellow.png", alt="icon yellow")
+                            span.ml-2 Disconnected
                         div.p-2
-                            img(src="/images/red.png", alt="icon red") 	
+                            img(src="/images/red.png", alt="icon red")
                             span.ml-2 Alarm
                 .icon-setting
                     .box-icon#config.config
@@ -35,7 +35,7 @@ block content
                 #panel.panel.d-none
                     #treeViewSite
                         .box-expan
-                            .row 
+                            .row
                                 .col-12
                                     .input-group.input-group-sm
                                         input.form-control(type='text' placeholder="Search site" aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm' id="searchSite")
@@ -43,7 +43,7 @@ block content
                                 //-     img(src="/images/expan-icon.png", alt="expan", srcset="" id="expan")
 
                         .box-listtree#listSite.mt-3
-                        .box-view-mutiple-channel 
+                        .box-view-mutiple-channel
                             button.btn.btn-info.btn-sm#viewMutipleChannel(type="button") View
 
                     #filterSite
@@ -54,13 +54,13 @@ block content
                     .modal-content
                         .modal-header
                             h5#chartLabel.modal-title Data history
-                            span.close-button(data-dismiss='modal') x
+                            span.close-button(data-dismiss='modal' onclick="closeChart()") x
                         .modal-body
                             .row
                                 .col-lg-5
                                     span.ml-2.mr-3 Start date
                                     input#startDate(type='datetime-local' name='startDate' value='' min='1970-01-01T00:00' max='')
-                                .col-lg-5 
+                                .col-lg-5
                                     span.ml-2.mr-3 End date
                                     input#endDate(type='datetime-local' name='endDate' value='' min='1970-01-01T00:00' max='')
                                 .col-lg-2.col-button-view
@@ -68,8 +68,8 @@ block content
                                 .col-sm-12.col-button-view
                                     button.btn.btn-info#viewOnChart(onclick="viewOnChart()") Graph
                                     button.btn.btn-info.ml-2#viewTable(onclick="viewTable()") Table
-                            .row 
-                                .col-12 
+                            .row
+                                .col-12
                                     #chartDataLogger(ondrop="drop(event)" ondragover="allowDrop(event)")
                                     #talbeChart.d-none
                                 .col-12
@@ -88,7 +88,7 @@ block content
                                     #modalMinBatteryMeter.text-battery
                                     #modalMaxBatteryMeter.text-battery
                         .modal-footer
-                            button.btn.btn-default#closeChart(type='button' data-dismiss='modal') Close
+                            button.btn.btn-default#closeChart(type='button' data-dismiss='modal' onclick="closeChart()") Close
             #staictis.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='staictis' aria-hidden='true')
                 .modal-dialog.modal-lg(role='document')
                     .modal-content
@@ -99,31 +99,31 @@ block content
                                 thead
                                     tr
                                         th SiteId
-                                        th Sitename 
-                                        th Connection 
+                                        th Sitename
+                                        th Connection
                                         th Data Status
                                 tbody#tbodyStatistic
                         .modal-footer
                             button.btn.btn-default#closeStatistic(type='button' data-dismiss='modal' onclick="closeStatisticModal()") Close
     .container-fluid#footerStatistic
         .row.text-center
-            .col-sm-3 
+            .col-sm-3
                 div.text-uppercase.border-right.text-success(data-status="sites" onclick="showStatistic(this)")
-                    i.fas.fa-users.text-total.kpi-icon-sm 
+                    i.fas.fa-users.text-total.kpi-icon-sm
                     | Total sites
                     div#totalSite.text-success.fw-bold
-            .col-sm-3 
-                div.text-uppercase.border-right.text-info(data-status="siteHasValue" onclick="showStatistic(this)") 
-                    i.fas.fa-database.text-total.kpi-icon-sm 
+            .col-sm-3
+                div.text-uppercase.border-right.text-info(data-status="siteHasValue" onclick="showStatistic(this)")
+                    i.fas.fa-database.text-total.kpi-icon-sm
                     | Data present
                     div#totalSiteHasValue.text-info.fw-bold
-            .col-sm-3 
-                div.text-uppercase.border-right.text-warning(data-status="siteDelay" onclick="showStatistic(this)") 
+            .col-sm-3
+                div.text-uppercase.border-right.text-warning(data-status="siteDelay" onclick="showStatistic(this)")
                     i.fas.fa-plug-circle-xmark.text-disconnected.kpi-icon-sm
                     | Disconnected
                     div#totalSiteDelay.text-warning.fw-bold
-            .col-sm-3 
-                div.text-uppercase.border-right.text-danger(data-status="siteAlarm" onclick="showStatistic(this)") 
+            .col-sm-3
+                div.text-uppercase.border-right.text-danger(data-status="siteAlarm" onclick="showStatistic(this)")
                     i.fas.fa-triangle-exclamation.text-alarm.kpi-icon-sm
                     | Alarm
                     div#totalSiteAlarm.text-danger.fw-bold
@@ -145,11 +145,10 @@ block linkcriptbody
     script(src='/js/leaflet/leaflet.1.6.0.js')
     script(src='/js/leaflet/context-menu.js')
     script(src='/axios/axios.min.js')
-    script(src="/assets/js/lib/listtree/listree.umd.min.js") 
+    script(src="/assets/js/lib/listtree/listree.umd.min.js")
     script(src='/js/plotly.min.js')
     script(src='/js/hostname.js')
     script(src='/js/map.js')
     script(src='/js/chartForMap.js')
     script(src='/js/settingForMap.js')
     script(src='/js/util.js')
-    

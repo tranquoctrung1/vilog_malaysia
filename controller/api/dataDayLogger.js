@@ -163,7 +163,7 @@ module.exports.GetDataDayLogger = async function (req, res) {
                                     valueIndexAfter[0].Value.toFixed(2);
                             }
                         }
-                    } else if (site.TypeMeter === 'SU') {
+                    } else if (site[0].TypeMeter === 'SU') {
                         let channelSplit = channel.ChannelId.split('_');
 
                         if (channelSplit[channelSplit.length - 1] === '110') {
@@ -177,7 +177,7 @@ module.exports.GetDataDayLogger = async function (req, res) {
                                     minValue[0].Value.toFixed(2);
                             }
                         }
-                    } else if (site.TypeMeter === 'Kronhe') {
+                    } else if (site[0].TypeMeter === 'Kronhe') {
                         if (channelSplit[channelSplit.length - 1] === '06') {
                             if (maxValue.length > 0) {
                                 obj.MaxBatteryLogger =
