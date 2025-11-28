@@ -109,7 +109,7 @@ function initMap() {
                         let isErrorDelay = false;
                         let contentError = '';
                         labelHtml =
-                            '<table cellspacing="0" cellpadding="0" style="min-width: 300px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:blue;background-color:white; "><span>' +
+                            '<table cellspacing="0" cellpadding="0" style="min-width: 300px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:black;background-color:white; "><span>' +
                             site.Location +
                             '</span></td></tr>' +
                             `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
@@ -280,11 +280,11 @@ function initMap() {
                             }
 
                             dLabelHtml +=
-                                '<tr style="background-color:#ff7675"><td style="font-weight:bold;color:white;"><span>' +
+                                '<tr style="background-color:#fff"><td style="font-weight:500;color:#636e72;"><span>' +
                                 channel.ChannelName +
                                 ': ' +
                                 '</span></td>' +
-                                '<td style="font-weight:bold;color:white;">' +
+                                '<td style="font-weight:500;color:#636e72;">' +
                                 val +
                                 ' (' +
                                 channel.Unit +
@@ -414,7 +414,7 @@ function updateMap() {
                 let isErrorDelay = false;
                 let contentError = '';
                 labelHtml =
-                    '<table cellspacing="0" cellpadding="0" style="min-width: 300px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:blue;background-color:white; "><span>' +
+                    '<table cellspacing="0" cellpadding="0" style="min-width: 300px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:black;background-color:white; "><span>' +
                     site.Location +
                     '</span></td></tr>' +
                     `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
@@ -588,11 +588,11 @@ function updateMap() {
                     }
 
                     dLabelHtml +=
-                        '<tr style="background-color:#ff7675"><td style="font-weight:bold;color:white;"><span>' +
+                        '<tr style="background-color:#fff"><td style="font-weight:500;color:#636e72;"><span>' +
                         channel.ChannelName +
                         ': ' +
                         '</span></td>' +
-                        '<td style="font-weight:bold;color:white;">' +
+                        '<td style="font-weight:500;color:#636e72;">' +
                         val +
                         ' (' +
                         channel.Unit +

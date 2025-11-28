@@ -1,6 +1,13 @@
 doctype html
 html.h-100
   head
+    // --- META TAGS ---
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    title #{title}
+
+    // --- FAVICONS (Giữ nguyên từ file cũ của bạn) ---
     link(rel='apple-touch-icon' sizes='57x57' href='/favicon/apple-icon-57x57.png')
     link(rel='apple-touch-icon' sizes='60x60' href='/favicon/apple-icon-60x60.png')
     link(rel='apple-touch-icon' sizes='72x72' href='/favicon/apple-icon-72x72.png')
@@ -18,42 +25,72 @@ html.h-100
     meta(name='msapplication-TileColor' content='#ffffff')
     meta(name='msapplication-TileImage' content='/favicon/ms-icon-144x144.png')
     meta(name='theme-color' content='#ffffff')
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible' content='IE=edge')
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    title #{title}
-    // Styles
+
+    // --- STYLES ---
+    // Các thư viện icon và bootstrap gốc
     link(href='/assets/css/lib/font-awesome.min.css' rel='stylesheet')
     link(href='/assets/css/lib/themify-icons.css' rel='stylesheet')
     link(href='/assets/css/lib/bootstrap.min.css' rel='stylesheet')
     link(href='/assets/css/lib/helper.css' rel='stylesheet')
     link(href='/assets/css/style.css' rel='stylesheet')
+
+    // File CSS tùy chỉnh cho trang Login (Cái này quan trọng nhất để lên giao diện mới)
     link(rel="stylesheet" href="/css/login.css")
+
   body.h-100
-    .unix-login.h-100
-      .container-fluid.h-100
-        .row.justify-content-center.h-100
-          .col-lg-6.justify-content-center.mt-auto.mb-auto
+    // Container bao ngoài cùng - Chứa Background số 1 (Đỏ/Đen)
+    .unix-login
+      .container
+        .row.justify-content-center
+          .col-lg-6.col-md-8
+            .login-content
+              // Khung Form - Chứa Background số 2 (Line xám)
               .login-form
-                h4 #{title}
-                .box-image
+
+                // 1. Tiêu đề hệ thống
+                h3.text-center.mb-4 WATER METER SYSTEM
+
+                // 2. Logo Premier Water Services
+                .box-image.text-center.mb-4
                   img(src="/images/logo.png" alt="logo lawaco")
-                small.form-text.text-danger(id="errorLogin") #{errorLogin}
+
+                // 3. Hiển thị thông báo lỗi (nếu có)
+                if errorLogin
+                  .alert.alert-danger.text-center(role="alert") #{errorLogin}
+
+                // 4. Form nhập liệu
                 form(action='/login' name='login-form' method="post" onsubmit='return(validate());')
-                  .form-group
-                    label Username
-                    input.form-control(type='text' placeholder='Username' name='username' id='username')
-                    small.form-text.text-danger(id='errorUsername')
-                  .form-group
-                    label Password
-                    input.form-control(type='password' placeholder='Password' name='password' id='password')
-                    small.form-text.text-danger(id='errorPassword')
-                  .checkbox
-                    label
-                      input(type='checkbox')
-                      |  Remember Me
-                    label.pull-right
-                      a(href='#') Forgotten Password?
-                  button.btn.btn-primary.btn-flat.m-b-30.m-t-30(type='submit') Sign in
+
+                  // Dòng Username (Label trái - Input phải)
+                  .form-group.row.align-items-center
+                    label.col-sm-4.col-form-label(for='username') Username:
+                    .col-sm-8
+                      input.form-control(type='text' placeholder='username' name='username' id='username')
+                      small.text-danger.d-block(id='errorUsername')
+
+                  // Dòng Password (Label trái - Input phải)
+                  .form-group.row.align-items-center.mt-3
+                    label.col-sm-4.col-form-label(for='password') Password:
+                    .col-sm-8
+                      input.form-control(type='password' placeholder='*********' name='password' id='password')
+                      small.text-danger.d-block(id='errorPassword')
+
+                  // Dòng Remember Me (Thụt vào khớp với Input)
+                  .form-group.row.mt-2
+                    .col-sm-8.offset-sm-4
+                      .checkbox
+                        label
+                          input(type='checkbox' style="margin-right: 5px;")
+                          |  Remember Me
+
+                  // Nút Login màu đỏ
+                  .row.mt-4
+                    .col-12
+                        button.btn.btn-custom.btn-block(type='submit') Login
+
+                  // Link quên mật khẩu
+                  .login-footer.text-center.mt-4
+                    a(href='#') Forgotten Password
+
+    // Script validate form
     script(src='/js/validateFormLogin.js')
-                

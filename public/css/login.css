@@ -1,21 +1,128 @@
+/* 1. NỀN NGOÀI (OUTER) - Hình khối đỏ đen đậm */
 .unix-login {
-    background: url('/images/background-login.png') center center no-repeat;
-}
-
-.login-form 
-{
-    border-radius: 5px;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
-}
-
-.login-form .box-image {
+    background: url('/images/bg-outer.png') center center no-repeat;
+    background-size: cover;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-
+    justify-content: center;
 }
 
+/* 2. NỀN FORM (INNER) - Giống thiết kế bạn gửi */
+.login-form {
+    /* Mẹo: Dùng linear-gradient để phủ một lớp trắng mờ lên trên hình bg-inner
+       giúp chữ dễ đọc hơn nhưng vẫn thấy hoa văn */
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+        url('/images/bg-inner.png') center center no-repeat;
+    background-size: cover;
+
+    /* Hiệu ứng làm mờ (nếu trình duyệt hỗ trợ) giúp form nổi bật và mượt hơn */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    padding: 40px 50px;
+    border-radius: 12px; /* Bo góc mềm mại hơn */
+
+    /* Đổ bóng nhẹ nhàng nhưng sâu */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+    width: 100%;
+    max-width: 550px; /* Độ rộng chuẩn */
+}
+
+/* Tiêu đề */
+.login-form h3 {
+    color: #111;
+    text-transform: uppercase;
+    font-size: 24px;
+    font-weight: 800; /* Chữ đậm */
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
+}
+
+/* Logo */
 .login-form .box-image img {
-    width: 100px;
-    margin-bottom: 10px;
+    max-width: 160px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Label bên trái */
+.col-form-label {
+    color: #444;
+    font-weight: 500;
+    font-size: 15px;
+    padding-right: 0; /* Để sát vào input hơn */
+}
+
+/* Input form */
+.form-control {
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    height: 42px;
+    padding-left: 15px;
+    font-size: 14px;
+}
+
+.form-control:focus {
+    border-color: #cc0000;
+    box-shadow: 0 0 0 0.2rem rgba(204, 0, 0, 0.15);
+}
+
+/* Nút Login màu đỏ */
+.btn-custom {
+    background-color: #cc0000; /* Màu đỏ tiêu chuẩn */
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(204, 0, 0, 0.3); /* Bóng đỏ nhẹ dưới nút */
+    transition: all 0.3s;
+}
+
+.btn-custom:hover {
+    background-color: #aa0000; /* Đậm hơn khi hover */
+    transform: translateY(-1px); /* Nút nảy lên nhẹ */
+}
+
+/* Checkbox */
+.checkbox label {
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    margin-top: 0;
+}
+
+/* Link Forgotten Password */
+.login-footer a {
+    color: #cc0000;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Alert Error */
+.alert-danger {
+    background-color: #fff5f5;
+    border-color: #fc8181;
+    color: #c53030;
+    font-size: 14px;
 }

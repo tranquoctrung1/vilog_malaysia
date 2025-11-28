@@ -53,7 +53,7 @@ module.exports.GetChannelByLoggerId = async function (req, res) {
         if (
             site[0].TimeDelay != 'null' &&
             site[0].TimeDelay != null &&
-            site[0].timeDelay != undefined
+            site[0].TimeDelay != undefined
         ) {
             timeDelay = site[0].TimeDelay;
         }
