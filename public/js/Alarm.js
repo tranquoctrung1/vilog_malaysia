@@ -42,7 +42,7 @@ async function GetAlarm() {
                 info: 'Showing _START_ to _END_ of _TOTAL_ entries',
                 paginate: { previous: 'Previous', next: 'Next' },
             },
-            pageLength: 10,
+            pageLength: 5,
             order: [[0, 'desc']],
             initComplete: function () {
                 this.api()
@@ -128,12 +128,12 @@ function createHeaderAlarm(data) {
 
     if (data.length > 0) {
         content += `<thead>
-            <th class="bg-primary" style="color: white">SiteId</th>
-            <th class="bg-primary" style="color: white">Sitename</th>
-            <th class="bg-primary" style="color: white">Channel</th>
-            <th class="bg-primary" style="color: white">TimeStamp Data</th>
-            <th class="bg-primary" style="color: white">TimeStamp Alarm</th>
-            <th class="bg-primary" style="color: white">Status</th>
+            <th class="">SiteId</th>
+            <th class="">Sitename</th>
+            <th class="">Channel</th>
+            <th class="">TimeStamp Data</th>
+            <th class="">TimeStamp Alarm</th>
+            <th class="">Status</th>
         </thead>`;
     }
 
@@ -156,17 +156,17 @@ function createTd(data, siteid, status, statusColor) {
             <td class="${color}" style="font-size: .9rem;">${data.SiteId}</td>
             <td class="${color}" style="font-size: .9rem;">${data.Location}</td>
             <td class="${color}" style="font-size: .9rem;">${
-        data.ChannelName
-    }</td>
+                data.ChannelName
+            }</td>
             <td class="${color}" style="font-size: .9rem;">${convertDateToString(
-        convertDateFromApi(data.TimeStampHasValue),
-    )}</td>
+                convertDateFromApi(data.TimeStampHasValue),
+            )}</td>
      <td class="${color}" style="font-size: .9rem;">${convertDateToString(
-        convertDateFromApi(data.TimeStampAlarm),
-    )}</td>
+         convertDateFromApi(data.TimeStampAlarm),
+     )}</td>
               <td class="${color}" style="font-size: .9rem;">${
-        data.Content
-    }</td>
+                  data.Content
+              }</td>
         </tr>`;
 
     return content;

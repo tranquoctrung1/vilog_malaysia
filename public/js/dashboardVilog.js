@@ -52,6 +52,7 @@ function findValueChannel(data, siteid) {
         flow: null,
         reverse: null,
         battery: null,
+        net: null,
     };
 
     const find = data.find((s) => s.SiteId === siteid);
@@ -65,6 +66,7 @@ function findValueChannel(data, siteid) {
 
         let batteryChannel = null;
         let signalChannel = null;
+        let netChannel = null;
 
         if (find.TypeMeter === 'SU') {
             batteryChannel = find.ListChannel.find(
@@ -73,12 +75,18 @@ function findValueChannel(data, siteid) {
             signalChannel = find.ListChannel.find(
                 (c) => c.ChannelId === `${find.LoggerId}_109`,
             );
+            netChannel = find.ListChannel.find(
+                (c) => c.ChannelId === `${find.LoggerId}_108`,
+            );
         } else if (find.TypeMeter === 'Kronhe') {
             batteryChannel = find.ListChannel.find(
                 (c) => c.ChannelId === `${find.LoggerId}_06`,
             );
             signalChannel = find.ListChannel.find(
                 (c) => c.ChannelId === `${find.LoggerId}_07`,
+            );
+            netChannel = find.ListChannel.find(
+                (c) => c.ChannelId === `${find.LoggerId}_100`,
             );
         }
 
@@ -94,12 +102,17 @@ function findValueChannel(data, siteid) {
         if (signalChannel !== undefined && signalChannel !== null) {
             obj.signal = signalChannel.LastValue;
         }
+        if (netChannel !== undefined && netChannel !== null) {
+            obj.net = netChannel.LastValue;
+        }
         return obj;
     }
 }
 
 function renderVilogTable(data) {
     let content = ``;
+
+    console.log(data);
 
     let temp = [];
 
@@ -118,6 +131,7 @@ function renderVilogTable(data) {
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
                         <td>Yes</td>
                     </tr>`;
@@ -140,6 +154,7 @@ function renderVilogTable(data) {
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
                         <td>Yes</td>
                     </tr>`;
@@ -163,6 +178,7 @@ function renderVilogTable(data) {
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
                         <td>No</td>
                     </tr>`;
@@ -224,7 +240,7 @@ function drawTable() {
         var signalCell = $row.find('td:eq(3)');
         var signalText = signalCell.attr('data-signal');
         var signal = parseInt(signalText);
-        var alarm = $row.find('td:eq(7)').text();
+        var alarm = $row.find('td:eq(8)').text();
 
         totalSites++;
 
@@ -242,12 +258,12 @@ function drawTable() {
         }
         // Alarm Tagging (Cột 7)
         if (alarm === 'Yes') {
-            $row.find('td:eq(7)').html(
+            $row.find('td:eq(8)').html(
                 '<span class="status-tag tag-danger">ALARM</span>',
             );
             //alarmSites++;
         } else {
-            $row.find('td:eq(7)').html(
+            $row.find('td:eq(8)').html(
                 '<span class="status-tag tag-success">NORMAL</span>',
             );
         }
@@ -257,30 +273,26 @@ function drawTable() {
     });
 
     // 3. Custom DataTables filter
-    $.fn.dataTable.ext.search.push(function (
-        settings,
-        searchData,
-        index,
-        rowData,
-        counter,
-    ) {
-        var $row = $('#vlogTable').DataTable().row(index).node();
-        var rowStatus = $($row).data('status');
-        var rowFlow = $($row).data('flow');
-        var rowAlarm = $($row).data('alarm');
+    $.fn.dataTable.ext.search.push(
+        function (settings, searchData, index, rowData, counter) {
+            var $row = $('#vlogTable').DataTable().row(index).node();
+            var rowStatus = $($row).data('status');
+            var rowFlow = $($row).data('flow');
+            var rowAlarm = $($row).data('alarm');
 
-        if (currentStatusFilter === 'Total') {
-            return true;
-        } else if (currentStatusFilter === 'DataPresent') {
-            return rowStatus === 'DataPresent';
-        } else if (currentStatusFilter === 'Disconnected') {
-            return rowStatus === 'Disconnected';
-        } else if (currentStatusFilter === 'Alarm') {
-            return rowAlarm === 'Yes';
-        }
+            if (currentStatusFilter === 'Total') {
+                return true;
+            } else if (currentStatusFilter === 'DataPresent') {
+                return rowStatus === 'DataPresent';
+            } else if (currentStatusFilter === 'Disconnected') {
+                return rowStatus === 'Disconnected';
+            } else if (currentStatusFilter === 'Alarm') {
+                return rowAlarm === 'Yes';
+            }
 
-        return false;
-    });
+            return false;
+        },
+    );
 
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 

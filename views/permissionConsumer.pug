@@ -13,16 +13,16 @@ block content
         .card.card-custom.mx-auto
             .card-body
                 div
-                    label.form-label.fw-bold.text-dark(for="consumerSelect")
+                    label.form-label.fw-bold.text-primary(for="consumerSelect")
                         i.fas.fa-user-tie.me-2
                         | Select Consumer:
                     select.form-select#consumerSelect
-                       
+
                 hr
 
                 .row.transfer-container.p-3.g-0
                     .col-md-5.p-2
-                        h6.text-secondary.fw-bold.text-center.mb-2 Available Sites (Sites not yet assigned)
+                        h6.text-primary.fw-bold.text-center.mb-2 Available Sites (Sites not yet assigned)
                         .input-group.mb-2
                             span.input-group-text
                                 i.fas.fa-search
@@ -36,7 +36,7 @@ block content
                             i.fas.fa-chevron-left
 
                     .col-md-5.p-2
-                        h6.text-primary.fw-bold.text-center.mb-2 Assigned Sites (Sites managed by staff)
+                        h6.text-primary.fw-bold.text-center.mb-2 Assigned Sites (Sites managed by consumer)
                         .input-group.mb-2
                             span.input-group-text
                                 i.fas.fa-search
@@ -65,4 +65,4 @@ block linkcriptbody
     script(src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js")
     script(src="/js/hostname.js")
     script(src="/js/permissionConsumer.js")
-    script(src="/js/util.js") 
+    script(src="/js/util.js")

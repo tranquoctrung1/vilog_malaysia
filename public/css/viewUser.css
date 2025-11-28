@@ -1,112 +1,206 @@
-/* Card & General Styles */
+/* =========================================
+   1. GLOBAL THEME (RED/WHITE/GLASS)
+   ========================================= */
+:root {
+    --primary-red: #cc0000;
+    --hover-red: #a30000;
+}
+
+body {
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)),
+        url('/images/bg-outer.png') center center fixed no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+/* Typography */
+h2,
+h5,
+.text-primary {
+    color: var(--primary-red) !important;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
+}
+
+/* =========================================
+   2. CARD STYLES
+   ========================================= */
 .card-custom {
     border: none;
-    border-radius: 15px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    padding: 25px;
 }
 
-/* Status Tag Styles */
-.status-tag {
-    padding: 0.25rem 0.75rem;
-    border-radius: 50px;
-    font-weight: 600;
+/* =========================================
+   3. TABLE STYLES
+   ========================================= */
+/* Header bảng: Gạch chân đỏ */
+.table thead th {
+    background-color: #fff;
+    border-bottom: 2px solid var(--primary-red);
+    color: #333;
+    font-weight: 700;
+    text-transform: uppercase;
     font-size: 0.8rem;
-    display: inline-block;
-}
-.tag-danger {
-    background-color: #fcebeb;
-    color: #dc3545;
+    padding: 12px;
+    white-space: nowrap;
 }
 
-.tag-warning {
-    background-color: #fff3cd;
-    color: #bea963;
+/* Icon trong header */
+.table thead th i {
+    color: var(--primary-red);
+    margin-right: 5px;
 }
 
-.tag-success {
-    background-color: #e6ffed;
-    color: #198754;
+/* Thân bảng */
+.table tbody td {
+    border-bottom: 1px solid #f1f1f1;
+    padding: 12px;
+    vertical-align: middle;
+    color: #444;
 }
 
-/* Site Count Badge */
+/* Hover dòng */
+.table tbody tr:hover {
+    background-color: #fff5f5; /* Hover đỏ phấn */
+}
+
+/* Cột giữa (Managed Sites) */
+.dt-center {
+    text-align: center !important;
+}
+
+/* =========================================
+   4. SITE COUNT BADGE (Số lượng Site)
+   ========================================= */
 .site-count-link {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
 }
+
 .site-count-badge {
-    background-color: #0d6efd;
+    background-color: var(--primary-red); /* Đổi từ xanh sang Đỏ */
     color: white;
     font-weight: 700;
     font-size: 0.85rem;
     border-radius: 50%;
-    min-width: 30px;
-    height: 30px;
-    box-shadow: 0 0 0 rgba(13, 110, 253, 0.4);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(204, 0, 0, 0.3);
     transition: all 0.3s ease-in-out;
 }
+
 .site-count-link:hover .site-count-badge {
-    background-color: #0a58ca;
+    background-color: var(--hover-red);
     transform: scale(1.1);
-    box-shadow: 0 0 0 8px rgba(13, 110, 253, 0.2);
+    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
 }
 
-/* Delete Button */
+/* =========================================
+   5. BUTTONS & ACTIONS
+   ========================================= */
+/* Nút xóa (Delete) */
 .btn-delete {
+    background-color: #fff;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-delete:hover {
     background-color: #dc3545;
     color: white;
-    border-radius: 5px;
-    padding: 5px 10px;
-    font-size: 0.8rem;
 }
-.btn-delete:hover {
-    background-color: #c82333;
+
+/* Nút Export (DataTables) */
+div.dt-buttons .btn {
+    background-color: var(--primary-red) !important;
+    color: #fff !important;
+    border: none !important;
+    margin-left: 5px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    padding: 6px 15px;
+}
+
+div.dt-buttons .btn i {
+    color: #fff !important;
+}
+
+div.dt-buttons .btn:hover {
+    background-color: var(--hover-red) !important;
+}
+
+/* =========================================
+   6. STATUS TAGS (Cho bảng danh sách site trong Modal)
+   ========================================= */
+.status-tag {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+/* High Contrast colors */
+.tag-danger {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+.tag-warning {
+    background-color: #fff3e0;
+    color: #ef6c00;
+    border: 1px solid #ffe0b2;
+}
+.tag-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+/* =========================================
+   7. MODAL STYLES
+   ========================================= */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: var(--primary-red) !important;
+    color: white;
+    border-bottom: none;
+}
+
+.modal-title {
+    color: white !important;
+    text-shadow: none !important;
+}
+.modal-footer button {
+    background-color: grey;
     color: white;
 }
 
-/* Modal Table */
-#siteListTable th {
-    font-size: 0.85rem;
-    color: #6c757d;
-}
-
-/* Center column */
-.dt-center {
-    text-align: center !important;
-}
-
-div.dt-buttons .btn {
-    background-color: #f8f9fa !important;
-    color: #495057 !important;
-    border: 1px solid #ced4da;
-    margin-left: 5px !important;
-    font-size: 0.85rem;
-    transition: background-color 0.2s;
-}
-div.dt-buttons .buttons-excel i {
-    color: #198754; /* Xanh lá cho Excel */
-}
-div.dt-buttons .buttons-csv i {
-    color: #0d6efd; /* Xanh dương cho CSV */
-}
-div.dt-buttons .buttons-pdf i {
-    color: #dc3545; /* Đỏ cho PDF */
-}
-div.dt-buttons .buttons-excel:hover {
-    background-color: #e6ffed !important;
-    border-color: #c3e6cb !important;
-}
-div.dt-buttons .buttons-csv:hover {
-    background-color: #e8f5ff !important;
-    border-color: #bee5eb !important;
-}
-div.dt-buttons .buttons-pdf:hover {
-    background-color: #fcebeb !important;
-    border-color: #f5c6cb !important;
-}
-
-#siteListTable {
-    width: 100% !important;
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
 }
 
 .fade:not(.show) {
@@ -119,36 +213,29 @@ div.dt-buttons .buttons-pdf:hover {
         overflow: scroll;
     }
 }
-
-.modal-header {
-    background-color: #5873fe;
-    color: white;
-}
-.modal-footer button {
-    background-color: grey;
-    color: white;
-}
-
-table.dataTable.dtr-inline.collapsed > tbody > tr > td.child > ul {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    padding: 10px;
-    margin: 2px;
-    width: 100%;
+div.dt-buttons .btn {
+    background-color: #cc0000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    margin-left: 8px !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 15px !important;
+    box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
 }
 
-table.dataTable.dtr-inline.collapsed > tbody > tr > td.child > ul > li {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+div.dt-buttons .btn i {
+    color: #fff !important;
+    margin-right: 5px;
 }
 
-.form-control {
-    height: auto;
+div.dt-buttons .btn:hover {
+    background-color: #a30000 !important; /* Đỏ đậm hơn */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
 }
 
-#userTable th {
-    background-color: #74b9ff !important;
-    color: white !important;
+div.dt-buttons {
+    float: right;
 }

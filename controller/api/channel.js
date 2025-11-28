@@ -14,9 +14,7 @@ module.exports.GetChannelConfigSWOC = async function (req, res) {
         obj.Name = item.ChannelName;
         obj.Meansure = item.Unit;
         obj.HHAlarmCfg = item.BaseMax;
-        obj.HAlarmCfg = null;
         obj.LLAlarmCfg = item.BaseMin;
-        obj.LAlarmCfg = null;
 
         result.push(obj);
     }

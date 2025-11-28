@@ -1,17 +1,83 @@
+body {
+    /* Hiệu ứng nền ẩn nhẹ nhàng giống Dashboard */
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)),
+        url('/images/bg-outer.png') center center fixed no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+/* --- Typography Colors --- */
+/* Ép toàn bộ màu xanh mặc định (text-primary) thành màu Đỏ */
+h2,
+h5,
+.text-primary {
+    color: #cc0000 !important;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
+}
+
 /* === Card Styles === */
 .card-custom {
     border: none;
+    background-color: #ffffff; /* Nền trắng sạch */
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Bóng nhẹ sang trọng */
+    margin-bottom: 25px;
+}
+
+.card-title {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Icon trong tiêu đề */
+.card-title i {
+    color: #cc0000 !important;
+}
+
+/* Đổi màu viền focus từ xanh sang Đỏ */
+.form-control:focus,
+.form-control-datetime:focus {
+    border-color: #cc0000;
+    box-shadow: 0 0 0 0.2rem rgba(204, 0, 0, 0.15);
+}
+
+/* Nút VIEW màu Đỏ */
+.btn-primary {
+    background-color: #cc0000;
+    border-color: #cc0000;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 6px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 6px rgba(204, 0, 0, 0.2);
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
+    background-color: #a30000 !important;
+    border-color: #900000 !important;
+    transform: translateY(-2px);
 }
 
 /* === Alarm Tag Styles === */
 .alarm-tag {
-    padding: 0.25rem 0.75rem;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
     display: inline-block;
+    min-width: 90px;
+    text-align: center;
 }
 .tag-danger {
     background-color: #fcebeb;
@@ -37,24 +103,6 @@
     border: 1px solid #ced4da;
 }
 
-/* === DataTable Export Buttons === */
-.dt-buttons .btn {
-    background-color: #f8f9fa !important;
-    color: #495057 !important;
-    border: 1px solid #ced4da;
-    margin-right: 5px;
-    font-size: 0.85rem;
-}
-.dt-buttons .buttons-excel i {
-    color: #198754;
-}
-.dt-buttons .buttons-csv i {
-    color: #0d6efd;
-}
-.dt-buttons .buttons-pdf i {
-    color: #dc3545;
-}
-
 .fade:not(.show) {
     opacity: 1 !important;
 }
@@ -67,9 +115,14 @@
 }
 
 .modal-header {
-    background-color: #5873fe;
-    color: white;
+    background-color: #ff7675;
 }
+
+.modal-title {
+    color: white !important;
+    text-shadow: none !important;
+}
+
 .modal-footer button {
     background-color: grey;
     color: white;
@@ -94,7 +147,29 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.child > ul > li {
     height: auto;
 }
 
-#alarmTable th {
+/*#alarmTable th {
     background-color: #74b9ff !important;
     color: white !important;
+}*/
+div.dt-buttons .btn {
+    background-color: #cc0000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    margin-left: 8px !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 15px !important;
+    box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
+}
+
+div.dt-buttons .btn i {
+    color: #fff !important;
+    margin-right: 5px;
+}
+
+div.dt-buttons .btn:hover {
+    background-color: #a30000 !important; /* Đỏ đậm hơn */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
 }

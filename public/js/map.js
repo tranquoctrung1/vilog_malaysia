@@ -280,7 +280,7 @@ function initMap() {
                             }
 
                             dLabelHtml +=
-                                '<tr style="background-color:#3498db"><td style="font-weight:bold;color:white;"><span>' +
+                                '<tr style="background-color:#ff7675"><td style="font-weight:bold;color:white;"><span>' +
                                 channel.ChannelName +
                                 ': ' +
                                 '</span></td>' +
@@ -588,7 +588,7 @@ function updateMap() {
                     }
 
                     dLabelHtml +=
-                        '<tr style="background-color:#3498db"><td style="font-weight:bold;color:white;"><span>' +
+                        '<tr style="background-color:#ff7675"><td style="font-weight:bold;color:white;"><span>' +
                         channel.ChannelName +
                         ': ' +
                         '</span></td>' +

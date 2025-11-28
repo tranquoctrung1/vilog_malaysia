@@ -1,69 +1,169 @@
+/* =========================================
+   1. GLOBAL THEME (RED/WHITE/GLASS)
+   ========================================= */
+:root {
+    --primary-red: #cc0000;
+    --hover-red: #a30000;
+    --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)),
+        url('/images/bg-outer.png') center center fixed no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+/* Typography */
+h2,
+h5,
+.text-primary {
+    color: var(--primary-red) !important;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
+}
+
+/* =========================================
+   2. CARD STYLES
+   ========================================= */
 .card-config {
     border: none;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
 }
 
-.config-header {
-    background-color: #0d6efd;
-    color: white;
-    padding: 15px 25px;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-/* Section Headers */
+/* Header trong card (User Information...) */
 .section-header {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: #0d6efd;
-    border-bottom: 2px solid #e9ecef;
+    color: var(--primary-red);
+    border-bottom: 2px solid #ffebee;
     padding-bottom: 10px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-}
-.section-header:first-child {
-    margin-top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 }
 
-/* Labels & Inputs */
-.form-label-config {
-    font-weight: 500;
-    color: #495057;
-    margin-bottom: 4px;
+.section-header i {
+    background-color: #ffebee;
+    padding: 8px;
+    border-radius: 50%;
+    margin-right: 10px;
+    font-size: 0.9rem;
 }
+
+/* =========================================
+   3. INPUTS & LABELS
+   ========================================= */
+.form-label-config {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 6px;
+}
+
 .form-control,
 .form-select {
-    border-radius: 8px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
 }
 
-/* Clickable LoggerId label */
-#lbConsumerId,
-#lbStaffId {
+/* Focus màu đỏ */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 0.2rem rgba(204, 0, 0, 0.15);
+    outline: none;
+}
+
+/* Các nhãn Click được (Staff, Consumer) */
+#lbStaffId,
+#lbConsumerId {
     cursor: pointer;
-    color: #0d6efd;
-    transition: color 0.2s;
-}
-#loggerIdLabel:hover {
-    text-decoration: underline;
-}
-
-/* Input groups */
-.input-group-append button {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-.input-group .form-control {
-    border-right: none;
+    color: var(--primary-red);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-bottom: 1px dashed var(--primary-red); /* Gạch chân nét đứt để báo hiệu click được */
+    display: inline-block;
 }
 
-/* Actions */
+#lbStaffId:hover,
+#lbConsumerId:hover {
+    color: var(--hover-red);
+    border-bottom-style: solid;
+}
+
+/* =========================================
+   4. BUTTONS
+   ========================================= */
 .config-actions {
-    border-top: 1px solid #e9ecef;
-    padding-top: 20px;
-    margin-top: 30px;
+    border-top: 1px solid #f1f1f1;
+    padding-top: 25px;
+    margin-top: 20px;
+}
+
+.btn {
+    border-radius: 6px;
+    font-weight: 600;
+    padding: 8px 20px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-success {
+    background-color: #2e7d32;
+    border: none;
+}
+.btn-info {
+    background-color: #0288d1;
+    border: none;
+    color: white !important;
+}
+.btn-danger {
+    background-color: #c62828;
+    border: none;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
+}
+
+/* =========================================
+   5. MODAL STYLES
+   ========================================= */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: var(--primary-red) !important;
+    color: white;
+    border-bottom: none;
+}
+
+.modal-title {
+    color: white !important;
+    text-shadow: none !important;
+}
+.modal-footer button {
+    background-color: grey;
+    color: white;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
 }
 
 .fade:not(.show) {
@@ -76,18 +176,29 @@
         overflow: scroll;
     }
 }
-
-.modal-header {
-    background-color: #5873fe;
-    color: white;
+div.dt-buttons .btn {
+    background-color: #cc0000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    margin-left: 8px !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 15px !important;
+    box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
 }
-.modal-footer button {
-    background-color: grey;
-    color: white;
+
+div.dt-buttons .btn i {
+    color: #fff !important;
+    margin-right: 5px;
 }
 
-.config-actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+div.dt-buttons .btn:hover {
+    background-color: #a30000 !important; /* Đỏ đậm hơn */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
+}
+
+div.dt-buttons {
+    float: right;
 }

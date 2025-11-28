@@ -9,7 +9,7 @@ block content
         h2.text-primary Vilog Site Current Snapshot
 
         .card.p-3
-            h5.card-title.text-dark
+            h5.card-title.text-primary
                 i.fas.fa-filter.me-2.text-primary
                 | Filter Sites
             .row
@@ -22,10 +22,20 @@ block content
                 .col-md-3
                     input.form-control#searchSite(type="text", placeholder="Search by Site ID or Location")
         #siteCardsContainer.row
-            
+
 block linkcriptbody
-    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+   script(src="https://code.jquery.com/jquery-3.7.1.min.js")
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js")
-    script(src="/js/hostname.js") 
-    script(src="/js/tableDataCurrent.js") 
-    script(src="/js/util.js") 
+    script(src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js")
+    script(src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.bootstrap5.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js")
+    script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js")
+    script(src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js")
+    script(src="/js/hostname.js")
+    script(src="/js/tableDataCurrent.js")
+    script(src="/js/util.js")

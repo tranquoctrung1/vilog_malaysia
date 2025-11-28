@@ -49,7 +49,7 @@
     height: 400px;
 }
 #panel {
-    background: #0984e3;
+    background: #cc0000;
     height: 100%;
     width: 20%;
     position: absolute;
@@ -249,12 +249,12 @@
 }
 
 .text-flow {
-    color: #0984e3;
+    color: #cc0000;
     font-weight: 500;
 }
 
 .value-flow {
-    color: #0984e3;
+    color: #cc0000;
 }
 
 .text-battery {
@@ -312,7 +312,7 @@
 }
 
 .modal-header {
-    background-color: #2980b9;
+    background-color: #cc0000;
 }
 
 .modal-header h5 {

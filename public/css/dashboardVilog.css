@@ -1,9 +1,40 @@
+body {
+    /* Tạo lớp phủ trắng mờ 85% lên trên hình nền gốc để tạo hiệu ứng "ẩn" nhẹ nhàng */
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)),
+        url('/images/bg-outer.png') center center fixed no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+/* --- Typography Colors --- */
+/* Đổi tất cả tiêu đề chính sang màu Đỏ thương hiệu */
+h2,
+h4,
+h5,
+.text-primary {
+    color: #cc0000 !important;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 1); /* Bóng trắng giúp chữ tách nền */
+}
+
 /* Card Styles: Khôi phục lại màu nền ban đầu (Subtle) */
 .card-kpi {
     border: none;
-    border-radius: 12px;
-    transition: transform 0.2s;
+    border-radius: 16px; /* Bo góc mềm mại hơn */
+    background-color: rgba(255, 255, 255, 0.9); /* Nền trắng đục */
     cursor: pointer;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    /* Đổ bóng 2 lớp tạo độ sâu */
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.04),
+        0 1px 3px rgba(0, 0, 0, 0.08);
+
+    /* Viền sáng nhẹ bên trên tạo cảm giác ánh sáng chiếu vào */
+    border-top: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .b-none {
@@ -11,7 +42,9 @@
 }
 
 .card-kpi:hover {
-    transform: translateY(-3px);
+    border: 2px solid #cc0000 !important;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(204, 0, 0, 0.1); /* Hiệu ứng tỏa sáng nhẹ quanh viền */
 }
 /* CSS cho Thẻ Đang Được Chọn (Highlight) */
 .card-kpi.active-filter {
@@ -20,16 +53,24 @@
 }
 
 .kpi-title {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 10px;
 }
 .kpi-value {
-    font-size: 1.8rem;
-    font-weight: 700;
+    font-size: 2.4rem; /* Số to rõ ràng */
+    font-weight: 800;
+    color: #222;
+    margin-top: 5px;
+    line-height: 1.2;
 }
 .kpi-icon {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    opacity: 0.8;
 }
 
 /* Status Tag Styles */
@@ -73,35 +114,6 @@
 /* Export Buttons Styling - Màu Icon Cố Định */
 div.dt-buttons {
     float: right;
-}
-div.dt-buttons .btn {
-    background-color: #f8f9fa !important;
-    color: #495057 !important;
-    border: 1px solid #ced4da;
-    margin-left: 5px !important;
-    font-size: 0.85rem;
-    transition: background-color 0.2s;
-}
-div.dt-buttons .buttons-excel i {
-    color: #198754; /* Xanh lá cho Excel */
-}
-div.dt-buttons .buttons-csv i {
-    color: #0d6efd; /* Xanh dương cho CSV */
-}
-div.dt-buttons .buttons-pdf i {
-    color: #dc3545; /* Đỏ cho PDF */
-}
-div.dt-buttons .buttons-excel:hover {
-    background-color: #e6ffed !important;
-    border-color: #c3e6cb !important;
-}
-div.dt-buttons .buttons-csv:hover {
-    background-color: #e8f5ff !important;
-    border-color: #bee5eb !important;
-}
-div.dt-buttons .buttons-pdf:hover {
-    background-color: #fcebeb !important;
-    border-color: #f5c6cb !important;
 }
 
 /* Progress bar gradient suggestions (kept neutral so not forcing colors) */
@@ -153,9 +165,14 @@ div.dt-buttons .buttons-pdf:hover {
 }
 
 .modal-header {
-    background-color: #5873fe;
-    color: white;
+    background-color: #ff7675;
 }
+
+.modal-title {
+    color: white !important;
+    text-shadow: none !important;
+}
+
 .modal-footer button {
     background-color: grey;
     color: white;
@@ -180,7 +197,31 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.child > ul > li {
     height: auto;
 }
 
-#vlogTable th {
+/*#vlogTable th {
     background-color: #74b9ff !important;
     color: white !important;
+}*/
+
+/* Nút Export (DataTables) - Màu Đỏ */
+div.dt-buttons .btn {
+    background-color: #cc0000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    margin-left: 8px !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 15px !important;
+    box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
+}
+
+div.dt-buttons .btn i {
+    color: #fff !important;
+    margin-right: 5px;
+}
+
+div.dt-buttons .btn:hover {
+    background-color: #a30000 !important; /* Đỏ đậm hơn */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
 }

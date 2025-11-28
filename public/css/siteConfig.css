@@ -1,78 +1,223 @@
+/* =========================================
+   1. GLOBAL THEME (RED/WHITE/GLASS)
+   ========================================= */
+:root {
+    --primary-red: #cc0000;
+    --hover-red: #a30000;
+    --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)),
+        url('/images/bg-outer.png') center center fixed no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+/* Typography */
+h2,
+h5,
+.text-primary {
+    color: var(--primary-red) !important;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
+}
+
+/* =========================================
+   2. CARD STYLES
+   ========================================= */
 .card-config {
     border: none;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
 }
 
+/* Header cũ màu xanh -> Xóa bỏ hoặc chuyển thành trong suốt */
 .config-header {
-    background-color: #0d6efd;
-    color: white;
-    padding: 15px 25px;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    font-size: 1.5rem;
+    background-color: transparent;
+    color: var(--primary-red);
+    padding: 20px 25px 0 25px; /* Padding trên */
+    font-size: 1.1rem;
     font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: none;
 }
 
-/* Section Headers */
+/* =========================================
+   3. SECTION HEADERS (Phân cách các phần)
+   ========================================= */
 .section-header {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 700;
-    color: #0d6efd;
-    border-bottom: 2px solid #e9ecef;
-    padding-bottom: 10px;
+    color: var(--primary-red); /* Đổi từ xanh sang đỏ */
+    border-bottom: 2px solid #ffebee; /* Gạch chân đỏ nhạt */
+    padding-bottom: 8px;
     margin-top: 25px;
-    margin-bottom: 25px;
-}
-.section-header:first-child {
-    margin-top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 }
 
-/* Labels & Inputs */
-.form-label-config {
-    font-weight: 500;
-    color: #495057;
-    margin-bottom: 4px;
+.section-header i {
+    background-color: #ffebee;
+    color: var(--primary-red);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 10px;
+    font-size: 0.9rem;
 }
+
+/* =========================================
+   4. INPUTS & LABELS
+   ========================================= */
+.form-label-config {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 6px;
+}
+
 .form-control,
 .form-select {
-    border-radius: 8px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
 }
 
-/* Clickable LoggerId label */
+/* Focus màu đỏ */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 0.2rem rgba(204, 0, 0, 0.15);
+    outline: none;
+}
+
+/* Các nhãn Click được (LoggerId...) */
 #lbLoggerId,
 #lbDisplayGroup {
     cursor: pointer;
-    color: #0d6efd;
-    transition: color 0.2s;
+    color: var(--primary-red); /* Đổi màu xanh cũ sang đỏ */
+    text-decoration: none;
+    transition: all 0.2s;
 }
-#loggerIdLabel:hover {
+
+#lbLoggerId:hover,
+#lbDisplayGroup:hover {
     text-decoration: underline;
+    color: var(--hover-red);
 }
 
-/* Input groups */
-.input-group-append button {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-.input-group .form-control {
-    border-right: none;
+/* Textarea */
+textarea.form-control {
+    resize: none;
 }
 
-/* Actions */
-.config-actions {
-    border-top: 1px solid #e9ecef;
-    padding-top: 20px;
-    margin-top: 30px;
-}
-
+/* =========================================
+   5. MAP & LOCATION INPUTS
+   ========================================= */
 #map {
     width: 100%;
-    height: 300px;
+    height: 350px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    margin-top: 10px;
 }
 
 #map.hide {
     display: none;
+}
+
+/* Nút lấy GPS */
+.input-group .btn-outline-secondary {
+    border-color: #ced4da;
+    color: #666;
+}
+.input-group .btn-outline-secondary:hover {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+    color: white;
+}
+
+/* =========================================
+   6. ACTION BUTTONS (CRUD)
+   ========================================= */
+.config-actions {
+    border-top: 1px solid #f1f1f1;
+    padding-top: 25px;
+    margin-top: 20px;
+}
+
+.btn {
+    border-radius: 6px;
+    font-weight: 600;
+    padding: 8px 20px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Tùy chỉnh màu sắc cho các nút */
+.btn-success {
+    background-color: #2e7d32; /* Xanh lá đậm hơn chút cho sang */
+    border: none;
+}
+.btn-info {
+    background-color: #0288d1; /* Xanh dương đậm */
+    border: none;
+    color: white !important;
+}
+.btn-danger {
+    background-color: #c62828;
+    border: none;
+}
+
+/* Hiệu ứng hover chung */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
+}
+
+/* =========================================
+   7. MODAL STYLES (Đồng bộ Đỏ)
+   ========================================= */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: var(--primary-red) !important; /* Header đỏ */
+    color: white;
+    border-bottom: none;
+}
+
+.modal-title {
+    font-weight: 700;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.check-box {
+    margin-top: 15px;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
 }
 
 .fade:not(.show) {
@@ -87,16 +232,42 @@
 }
 
 .modal-header {
-    background-color: #5873fe;
-    color: white;
+    background-color: #ff7675;
 }
+
+.modal-title {
+    color: white !important;
+    text-shadow: none !important;
+}
+
 .modal-footer button {
     background-color: grey;
     color: white;
 }
 
-.config-actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+div.dt-buttons .btn {
+    background-color: #cc0000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    margin-left: 8px !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 15px !important;
+    box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
+}
+
+div.dt-buttons .btn i {
+    color: #fff !important;
+    margin-right: 5px;
+}
+
+div.dt-buttons .btn:hover {
+    background-color: #a30000 !important; /* Đỏ đậm hơn */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
+}
+
+div.dt-buttons {
+    float: right;
 }

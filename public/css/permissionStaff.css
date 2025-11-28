@@ -1,5 +1,24 @@
+:root {
+    --primary-red: #cc0000;
+    --hover-red: #a30000;
+}
+
 body {
-    background-color: #f8f9fa;
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)),
+        url('/images/bg-outer.png') center center fixed no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+/* Typography */
+h2,
+h5,
+.text-primary {
+    color: var(--primary-red) !important;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
 }
 
 .card-custom {
@@ -73,6 +92,31 @@ body {
     align-items: center;
 }
 
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: var(--primary-red) !important;
+    color: white;
+    border-bottom: none;
+}
+
+.modal-title {
+    color: white !important;
+    text-shadow: none !important;
+}
+.modal-footer button {
+    background-color: grey;
+    color: white;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
 .fade:not(.show) {
     opacity: 1 !important;
 }
@@ -83,12 +127,29 @@ body {
         overflow: scroll;
     }
 }
-
-.modal-header {
-    background-color: #5873fe;
-    color: white;
+div.dt-buttons .btn {
+    background-color: #cc0000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    margin-left: 8px !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 15px !important;
+    box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
 }
-.modal-footer button {
-    background-color: grey;
-    color: white;
+
+div.dt-buttons .btn i {
+    color: #fff !important;
+    margin-right: 5px;
+}
+
+div.dt-buttons .btn:hover {
+    background-color: #a30000 !important; /* Đỏ đậm hơn */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
+}
+
+div.dt-buttons {
+    float: right;
 }
