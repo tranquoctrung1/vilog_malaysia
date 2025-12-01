@@ -1,3 +1,7 @@
+body {
+    height: 99vh;
+}
+
 .content-wrap {
     height: 99.9vh;
 }
@@ -364,4 +368,9 @@ div.dt-buttons .buttons-pdf:hover {
 
 #tableStatistic_wrapper {
     width: 100%;
+}
+
+#talbeChart {
+    width: 100%;
+    overflow-y: scroll;
 }

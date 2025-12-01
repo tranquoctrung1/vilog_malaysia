@@ -1,0 +1,38 @@
+//- Cập nhật links trong Pug để có query params mặc định
+.mobile-nav#mobileNav
+  .nav-background
+  nav.nav-container
+    a.nav-item(href="/dashboardVilog?app=true" data-tooltip="Dashboard Vilog")
+      .nav-icon-wrapper
+        i.nav-icon
+            i.ti-dashboard
+        .nav-indicator
+      span.nav-text Dashboard Vilog
+
+    a.nav-item(href="/historyAlarm?app=true" data-tooltip="History ")
+      .nav-icon-wrapper
+        i.nav-icon
+            i.ti-bell
+        .nav-indicator
+      span.nav-text History Alarm
+
+    a.nav-item(href="/?app=true" data-tooltip="Map")
+      .nav-icon-wrapper
+        i.nav-icon
+            i.ti-map
+        .nav-indicator
+      span.nav-text Map
+
+    a.nav-item(href="/tableDataCurrent?app=true" data-tooltip="Data Vilog Current")
+      .nav-icon-wrapper
+        i.nav-icon
+            i.ti-view-grid
+        .nav-indicator
+      span.nav-text Data Vilog Current
+
+    a.nav-item(href="/dataDayLogger?app=true" data-tooltip="Data Vilog Daily")
+      .nav-icon-wrapper
+        i.nav-icon
+            i.ti-view-list-alt
+        .nav-indicator
+      span.nav-text Data Vilog Daily

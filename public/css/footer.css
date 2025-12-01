@@ -1,0 +1,172 @@
+/* Modern Mobile Navigation - Red Gradient Theme */
+.mobile-nav {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(0); /* Sửa từ translateY(100px) */
+    width: 92%;
+    max-width: 400px;
+    background: linear-gradient(to right, #cc0000, #cc0000, #dfe6e9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    box-shadow:
+        0 10px 30px rgba(204, 0, 0, 0.2),
+        0 1px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 1; /* Đổi từ 0 thành 1 */
+    display: block; /* Đổi từ none thành block */
+    z-index: 1000; /* Thêm z-index để chắc chắn */
+}
+
+/* Nếu bạn vẫn muốn ẩn ban đầu và hiện khi có app=true */
+.mobile-nav:not(.show) {
+    display: none;
+}
+
+.mobile-nav.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.nav-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to right, #cc0000, #cc0000, #dfe6e9);
+    border-radius: 25px;
+    z-index: -1;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    min-width: 56px;
+    text-align: center;
+}
+
+.nav-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 6px;
+}
+
+.nav-icon {
+    font-size: 22px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+}
+
+.nav-indicator {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+    border: 1px solid #cc0000;
+}
+
+/* Active State */
+.nav-item.active {
+    color: #ffffff;
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-item.active .nav-icon {
+    filter: brightness(0) invert(1);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.nav-item.active .nav-indicator {
+    opacity: 1;
+    transform: scale(1);
+    background: #ffffff;
+}
+
+.nav-item:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.nav-item:hover .nav-icon {
+    filter: brightness(0) invert(1);
+    opacity: 1;
+}
+
+.nav-text {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    color: #ffffff;
+    opacity: 0.9;
+    text-align: center;
+    width: 100%;
+}
+
+.nav-item.active .nav-text {
+    opacity: 1;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .mobile-nav {
+        width: 100%;
+        bottom: 15px;
+    }
+
+    .nav-icon-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+
+    .nav-item:nth-child(3) .nav-icon-wrapper {
+        width: 50px;
+        height: 50px;
+    }
+
+    .nav-text {
+        font-size: 10px;
+    }
+}
+
+/* Đảm bảo body có đủ không gian */
+body {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 100px; /* Thêm padding để content không bị che */
+}
