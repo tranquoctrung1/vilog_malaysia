@@ -1,7 +1,7 @@
 /* Modern Mobile Navigation - Red Gradient Theme */
 .mobile-nav {
     position: fixed;
-    bottom: 20px;
+    bottom: 0px;
     left: 50%;
     transform: translateX(-50%) translateY(0); /* Sửa từ translateY(100px) */
     width: 92%;
@@ -10,7 +10,7 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 25px;
+    border-radius: 15px;
     box-shadow:
         0 10px 30px rgba(204, 0, 0, 0.2),
         0 1px 8px rgba(0, 0, 0, 0.1),
@@ -56,11 +56,11 @@
     align-items: center;
     text-decoration: none;
     color: #ffffff;
-    padding: 8px 12px;
+    padding: 5px 8px;
     border-radius: 16px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    min-width: 56px;
+    min-width: 30px;
     text-align: center;
 }
 
@@ -69,13 +69,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
-    margin-bottom: 6px;
+    width: 30px;
+    height: 30px;
 }
 
 .nav-icon {
-    font-size: 22px;
+    font-size: 17px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     filter: brightness(0) invert(1);
     opacity: 0.9;
@@ -116,8 +115,13 @@
 
 .nav-item:hover {
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
+    background: #e17055;
+    transform: translateY(-5px);
+}
+.nav-item.active {
+    color: #ffffff;
+    background: #d63031;
+    transform: translateY(-5px);
 }
 
 .nav-item:hover .nav-icon {
@@ -126,7 +130,7 @@
 }
 
 .nav-text {
-    font-size: 11px;
+    font-size: 7px;
     font-weight: 600;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
@@ -146,21 +150,20 @@
 @media (max-width: 480px) {
     .mobile-nav {
         width: 100%;
-        bottom: 15px;
     }
 
     .nav-icon-wrapper {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
     }
 
     .nav-item:nth-child(3) .nav-icon-wrapper {
-        width: 50px;
-        height: 50px;
+        width: 30px;
+        height: 30px;
     }
 
     .nav-text {
-        font-size: 10px;
+        font-size: 7px;
     }
 }
 

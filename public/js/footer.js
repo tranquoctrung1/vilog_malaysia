@@ -8,6 +8,7 @@ class ModernNavigation {
         this.checkAppParameter();
         this.setupEventListeners();
         this.setupIntersectionObserver();
+        this.setActiveNavItem();
         //this.modifyNavLinks(); // Thêm hàm xử lý links
     }
 
@@ -68,6 +69,49 @@ class ModernNavigation {
         }
     }
 
+    setActiveNavItem() {
+        const currentPath = window.location.pathname;
+        const navItems = this.nav.querySelectorAll('.nav-item');
+
+        console.log('Current path:', currentPath); // Debug
+
+        navItems.forEach((item) => {
+            // Xóa class active cũ
+            item.classList.remove('active');
+
+            // Lấy href từ item (đã được modify bởi modifyNavLinks)
+            const href = item.getAttribute('href');
+
+            // Lấy pathname từ href (loại bỏ query parameters)
+            let itemPath = '';
+            try {
+                // Tạo URL object từ href
+                const url = new URL(href, window.location.origin);
+                itemPath = url.pathname;
+            } catch (e) {
+                // Nếu href là relative path
+                itemPath = href.split('?')[0].split('#')[0];
+            }
+
+            console.log('Item path:', itemPath, 'Href:', href); // Debug
+
+            // Kiểm tra xem currentPath có khớp với itemPath không
+            // Loại bỏ trailing slash để so sánh chính xác
+            const cleanCurrentPath = currentPath.replace(/\/$/, '');
+            const cleanItemPath = itemPath.replace(/\/$/, '');
+
+            if (
+                cleanCurrentPath === cleanItemPath ||
+                (cleanItemPath !== '' &&
+                    cleanCurrentPath.startsWith(cleanItemPath)) ||
+                (cleanCurrentPath === '/' && cleanItemPath === '/')
+            ) {
+                item.classList.add('active');
+                console.log('Active item set:', itemPath); // Debug
+            }
+        });
+    }
+
     showNavigation() {
         this.nav.classList.add('show');
         document.body.style.paddingBottom = '100px';
@@ -82,7 +126,7 @@ class ModernNavigation {
             header.style.display = 'none';
         });
 
-        document.getElementById('contentWrap').style.height = 'initial';
+        document.getElementById('contentWrap').style.height = 'inherit';
     }
 
     hideNavigation() {
