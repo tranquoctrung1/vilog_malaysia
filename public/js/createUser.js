@@ -35,6 +35,7 @@ function GetRole() {
                 persist: false,
                 selectOnTab: false, // ⛔ don't select on Tab or Enter
                 preload: false,
+                maxOptions: null,
             });
         })
         .catch((err) => console.log(err));
@@ -55,6 +56,7 @@ function GetUser() {
                 persist: false,
                 selectOnTab: false, // ⛔ don't select on Tab or Enter
                 preload: false,
+                maxOptions: null,
             });
         })
         .catch((err) => console.log(err));

@@ -5,6 +5,7 @@ class ModernNavigation {
     }
 
     init() {
+        this.setUpFooter();
         this.checkAppParameter();
         this.setupEventListeners();
         this.setupIntersectionObserver();
@@ -153,41 +154,41 @@ class ModernNavigation {
                 }
 
                 // Đảm bảo app=true được thêm ngay cả khi click vào các phần tử con
-                const href = navItem.getAttribute('href');
-                if (href && !href.includes('app=true')) {
-                    e.preventDefault();
-                    const newHref = this.addAppParameterToUrl(href);
-                    window.location.href = newHref;
-                }
+                // const href = navItem.getAttribute('href');
+                // if (href && !href.includes('app=true')) {
+                //     e.preventDefault();
+                //     const newHref = this.addAppParameterToUrl(href);
+                //     window.location.href = newHref;
+                // }
             }
         });
 
         // Intercept all navigation clicks on the page to maintain app mode
-        document.addEventListener('click', (e) => {
-            const link = e.target.closest('a[href]');
-            if (link && !link.closest('#mobileNav')) {
-                this.handleExternalLinkClick(link, e);
-            }
-        });
+        // document.addEventListener('click', (e) => {
+        //     const link = e.target.closest('a[href]');
+        //     if (link && !link.closest('#mobileNav')) {
+        //         this.handleExternalLinkClick(link, e);
+        //     }
+        // });
     }
 
     // Hàm xử lý click trên các link bên ngoài navigation
-    handleExternalLinkClick(link, event) {
-        const href = link.getAttribute('href');
+    // handleExternalLinkClick(link, event) {
+    //     const href = link.getAttribute('href');
 
-        // Chỉ xử lý internal links
-        if (href && this.isInternalLink(href)) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const isAppMode = urlParams.get('app') === 'true';
+    //     // Chỉ xử lý internal links
+    //     if (href && this.isInternalLink(href)) {
+    //         const urlParams = new URLSearchParams(window.location.search);
+    //         const isAppMode = urlParams.get('app') === 'true';
 
-            // Nếu đang ở chế độ app, giữ lại tham số
-            if (isAppMode && !href.includes('app=true')) {
-                event.preventDefault();
-                const newUrl = this.addAppParameterToUrl(href);
-                window.location.href = newUrl;
-            }
-        }
-    }
+    //         // Nếu đang ở chế độ app, giữ lại tham số
+    //         if (isAppMode && !href.includes('app=true')) {
+    //             event.preventDefault();
+    //             const newUrl = this.addAppParameterToUrl(href);
+    //             window.location.href = newUrl;
+    //         }
+    //     }
+    // }
 
     // Kiểm tra link có phải internal không
     isInternalLink(href) {
@@ -254,7 +255,28 @@ class ModernNavigation {
 
         window.history.pushState({}, '', url);
         this.checkAppParameter();
-        this.modifyNavLinks(); // Cập nhật lại links khi toggle mode
+        //this.modifyNavLinks(); // Cập nhật lại links khi toggle mode
+    }
+
+    setUpFooter() {
+        const username = document.getElementById('userName').innerHTML;
+        fetch(`http://43.216.183.205:3000/api/GetUserByUserName/${username}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.length > 0) {
+                    const role = data[0].Role;
+                    if (role === 'consumer' || role === 'staff') {
+                        const config = document.getElementById('configNav');
+                        config.style.display = 'none';
+                    }
+                }
+            })
+            .catch((err) => console.error(err));
     }
 
     // Hàm tiện ích để thêm app=true vào bất kỳ URL nào

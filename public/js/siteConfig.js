@@ -37,6 +37,7 @@ function fetchDisplayGroupForSite() {
                 persist: false,
                 selectOnTab: false, // ⛔ don't select on Tab or Enter
                 preload: false,
+                maxOptions: null,
             });
         })
         .catch((err) => console.log(err));
@@ -60,6 +61,7 @@ function fetchSiteForDisplayGroup(displayGroup) {
                 persist: false,
                 selectOnTab: false, // ⛔ don't select on Tab or Enter
                 preload: false,
+                maxOptions: null,
             });
         })
         .catch((err) => console.log(err));

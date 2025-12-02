@@ -112,8 +112,6 @@ function findValueChannel(data, siteid) {
 function renderVilogTable(data) {
     let content = ``;
 
-    console.log(data);
-
     let temp = [];
 
     for (const item of data.siteDelay) {
