@@ -29,9 +29,7 @@ function openChart(channelId, location, channelName, units) {
         locationForChart = location;
         unitForChart = units;
         channelNameForChart = channelName;
-
         isMultipleViewChart = false;
-
         for (let item of mutipleChannels) {
             document.getElementById(`${item}`).checked = false;
         }
@@ -39,17 +37,13 @@ function openChart(channelId, location, channelName, units) {
         channelForCheckView.checked = true;
         mutipleChannels = [];
         mutipleChannels.push(channelId);
-
         // show chart
         $('#chart').modal('show');
-
         // get Data
         let startDate = document.getElementById('startDate');
         let endDate = document.getElementById('endDate');
-
         // get timestamp from api
         let url = `${urlGetCurrentTimeStamp}/${channelId}`;
-
         axios
             .get(url)
             .then((res) => {
@@ -57,18 +51,13 @@ function openChart(channelId, location, channelName, units) {
                     let date = convertDateFromApi(res.data[0].TimeStamp);
                     let tDate = convertDateFromApi(res.data[0].TimeStamp);
                     tDate.setDate(tDate.getDate() - 1);
-
                     endDate.value = convertDateToDateTimeLocalInputTag(date);
                     startDate.value = convertDateToDateTimeLocalInputTag(tDate);
-
                     date.setHours(date.getHours() + 8);
                     tDate.setHours(tDate.getHours() + 8);
-
                     let totalMilisecondStart = tDate.getTime();
                     let totalMilisecondEnd = date.getTime();
-
                     let urlDataLogger = `${urlGetDataLogger}/${channelIdForViewChart}/${totalMilisecondStart}/${totalMilisecondEnd}/0`;
-
                     axios
                         .get(urlDataLogger)
                         .then((response) => {
@@ -79,7 +68,6 @@ function openChart(channelId, location, channelName, units) {
                                 unitForChart,
                                 response.data.DataLogger,
                             );
-
                             fillDataChannel(response.data);
                         })
                         .catch((err) => console.log(err));
@@ -294,6 +282,7 @@ function drawChart(channelId, location, channelname, units, data) {
     };
 
     Plotly.newPlot('chartDataLogger', [trace], layout, config);
+    Plotly.Plots.resize('chartDataLogger');
 
     createTableSingle(dataForChart, channelname, channelId);
 }
@@ -526,7 +515,7 @@ function drawChartMultiple(data) {
                 y: group.map((d) => d.Value),
                 mode: 'lines+markers',
                 type: 'scatter',
-                name: `${dataNameChart[count].location} | ${dataNameChart[count].channelname}`,
+                name: `${dataNameChart[count].location} | ${dataNameChart[count++].channelname}`,
                 line: { shape: 'spline', width: 2 },
                 marker: { size: 6 },
                 hovertemplate: `%{customdata}: %{y}<extra></extra>`,
@@ -563,6 +552,7 @@ function drawChartMultiple(data) {
 
         // ✅ Draw chart
         Plotly.newPlot('chartDataLogger', traces, layout, config);
+        Plotly.Plots.resize('chartDataLogger');
     }
 
     createTableMultiple(data);
@@ -636,63 +626,42 @@ function createTableSingle(data, channelName, channelid) {
     });
 }
 
-function convertData(data) {
-    if (CheckExistsData(data)) {
-        let max = data[0].length;
-        let index = 0;
-        let listChannelMutiple = [];
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].length > 0) {
-                if (max < data[i].length) {
-                    max = data[i].length;
-                    index = i;
-                }
-                listChannelMutiple.push(
-                    `${data[i][data[i].length - 1].location}|${
-                        data[i][data[i].length - 1].channelname
-                    }`,
-                );
+function convertData(input) {
+    // Lấy danh sách cột (mỗi channel = 1 cột)
+    const channelKeys = input.map((group) => {
+        const info = group[group.length - 1];
+        return `${info.location}|${info.channelname}`;
+    });
+
+    // Dùng Map để gom dữ liệu theo TimeStamp
+    const timeMap = {};
+
+    input.forEach((group) => {
+        const info = group[group.length - 1];
+        const colKey = `${info.location}|${info.channelname}`;
+
+        group.slice(0, -1).forEach((item) => {
+            const ts = item.TimeStamp;
+
+            // Nếu timestamp chưa tồn tại → tạo dòng mới
+            if (!timeMap[ts]) {
+                timeMap[ts] = { TimeStamp: ts };
+
+                // Gán tất cả channel = "" trước
+                channelKeys.forEach((key) => {
+                    timeMap[ts][key] = '';
+                });
             }
-        }
-        let listData = [];
 
-        for (let i = 0; i < data[index].length - 1; i++) {
-            let obj = {};
-            obj.TimeStamp = data[index][i].TimeStamp;
-            obj[`${listChannelMutiple[index]}`] = ConvertDataIntoTable(
-                data[index][i].Value,
-            );
+            // Gán giá trị vào đúng channel
+            timeMap[ts][colKey] = Number(item.Value).toFixed(2);
+        });
+    });
 
-            listData.push(obj);
-        }
-
-        for (let item of listData) {
-            for (let i = 0; i < data.length; i++) {
-                if (i != index && data[i].length > 1) {
-                    try {
-                        let value = data[i].find((e) => {
-                            return (
-                                new Date(e.TimeStamp).getTime() ==
-                                new Date(item.TimeStamp).getTime()
-                            );
-                        });
-                        if (value == null || value == undefined) {
-                            item[`${listChannelMutiple[i]}`] = '';
-                        } else {
-                            item[`${listChannelMutiple[i]}`] =
-                                ConvertDataIntoTable(value.Value);
-                        }
-                    } catch (err) {
-                        item[`${listChannelMutiple[i]}`] = '';
-                    }
-                }
-            }
-        }
-
-        return listData;
-    } else {
-        return [];
-    }
+    // Convert sang array và sort theo thời gian
+    return Object.values(timeMap).sort(
+        (a, b) => new Date(a.TimeStamp) - new Date(b.TimeStamp),
+    );
 }
 
 function createTableMultiple(data) {

@@ -12,9 +12,9 @@
     --transition-speed: 0.3s;
 }
 
-body {
+/*body {
     height: 99vh;
-}
+}*/
 
 .content-wrap {
     height: 99.9vh;
@@ -216,11 +216,11 @@ body {
 
 @media only screen and (max-width: 769px) {
     #panel {
-        width: 40%;
+        width: 80%;
     }
 
     .icon-setting .box-icon.expanse {
-        right: 40%;
+        right: 80%;
     }
 }
 
@@ -598,4 +598,8 @@ div.dt-buttons .buttons-pdf:hover {
 /* For the empty spans (spacing) */
 .listree-submenu-items li span {
     opacity: 0.5;
+}
+
+.mobile-nav {
+    bottom: 15px !important;
 }

@@ -5,20 +5,66 @@ const StaffSiteModel = require('../../model/staffSite');
 
 module.exports.GetSiteForSWOC = async function (req, res) {
     const result = [];
+    const username = req.username;
+    let user = await UserModel.findOne({ Username: username });
 
-    const data = await SiteModel.find({}).sort({ SiteId: 1 });
+    let listSite;
 
-    for (const item of data) {
+    if (user.Role == 'admin') {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    } else if (user.Role == 'consumer') {
+        let listIdSite = await ConsumerSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+
+        //listSite = await SiteModel.find({ ConsumerId: user.ConsumerId });
+    } else if (user.Role == 'staff') {
+        let listIdSite = await StaffSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+        //listSite = await SiteModel.find({ StaffId: user.StaffId });
+    } else {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    }
+
+    for (const item of listSite) {
         const obj = {};
         obj.SiteId = item.SiteId;
         obj.SiteName = item.Location;
         obj.LoggerId = item.LoggerId;
-        obj.Model = null;
         obj.localInstall = item.Location;
         obj.Latitude = item.Latitude;
         obj.Longitude = item.Longitude;
-        obj.roleOfLogger = null;
-        obj.Status = null;
 
         result.push(obj);
     }

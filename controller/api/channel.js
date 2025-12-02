@@ -1,22 +1,80 @@
 const ChannelModel = require('../../model/Channel.js');
 const SiteModel = require('../../model/site');
+const UserModel = require('../../model/user');
+const ConsumerSiteModel = require('../../model/consumerSite');
+const StaffSiteModel = require('../../model/staffSite');
 const mongoose = require('mongoose');
 
 module.exports.GetChannelConfigSWOC = async function (req, res) {
     const result = [];
 
-    const data = await ChannelModel.find({}).sort({ ChannelId: 1 });
+    const username = req.username;
+    let user = await UserModel.findOne({ Username: username });
 
-    for (const item of data) {
-        const obj = {};
-        obj.LoggerId = item.LoggerId;
-        obj.channelId = item.ChannelId;
-        obj.Name = item.ChannelName;
-        obj.Meansure = item.Unit;
-        obj.HHAlarmCfg = item.BaseMax;
-        obj.LLAlarmCfg = item.BaseMin;
+    let listSite;
 
-        result.push(obj);
+    if (user.Role == 'admin') {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    } else if (user.Role == 'consumer') {
+        let listIdSite = await ConsumerSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+
+        //listSite = await SiteModel.find({ ConsumerId: user.ConsumerId });
+    } else if (user.Role == 'staff') {
+        let listIdSite = await StaffSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+        //listSite = await SiteModel.find({ StaffId: user.StaffId });
+    } else {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    }
+
+    for (const item of listSite) {
+        const data = await ChannelModel.find({ LoggerId: item.LoggerId }).sort({
+            ChannelId: 1,
+        });
+        for (const item of data) {
+            const obj = {};
+            obj.LoggerId = item.LoggerId;
+            obj.channelId = item.ChannelId;
+            obj.Name = item.ChannelName;
+            obj.Meansure = item.Unit;
+            obj.HHAlarmCfg = item.BaseMax;
+            obj.LLAlarmCfg = item.BaseMin;
+
+            result.push(obj);
+        }
     }
 
     res.status(200).json(result);
@@ -25,16 +83,71 @@ module.exports.GetChannelConfigSWOC = async function (req, res) {
 module.exports.GetLastDataChannelConfigSWOC = async function (req, res) {
     const result = [];
 
-    const data = await ChannelModel.find({}).sort({ ChannelId: 1 });
+    const username = req.username;
+    let user = await UserModel.findOne({ Username: username });
 
-    for (const item of data) {
-        const obj = {};
-        obj.LoggerId = item.LoggerId;
-        obj.channelId = item.ChannelId;
-        obj.LastValue = item.LastValue;
-        obj.TimeStamp = item.TimeStamp;
+    let listSite;
 
-        result.push(obj);
+    if (user.Role == 'admin') {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    } else if (user.Role == 'consumer') {
+        let listIdSite = await ConsumerSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+
+        //listSite = await SiteModel.find({ ConsumerId: user.ConsumerId });
+    } else if (user.Role == 'staff') {
+        let listIdSite = await StaffSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+        //listSite = await SiteModel.find({ StaffId: user.StaffId });
+    } else {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    }
+
+    for (const item of listSite) {
+        const data = await ChannelModel.find({ LoggerId: item.LoggerId }).sort({
+            ChannelId: 1,
+        });
+        for (const item of data) {
+            const obj = {};
+            obj.LoggerId = item.LoggerId;
+            obj.channelId = item.ChannelId;
+            obj.LastValue = item.LastValue;
+            obj.TimeStamp = item.TimeStamp;
+
+            result.push(obj);
+        }
     }
 
     res.status(200).json(result);
@@ -1078,5 +1191,68 @@ async function CheckPerformanceWithMinValue(channelid) {
 }
 
 module.exports.GetChannelsSWOC = async function (req, res) {
-    res.json(await ChannelModel.find({}));
+    let result = [];
+
+    const username = req.username;
+    let user = await UserModel.findOne({ Username: username });
+
+    let listSite;
+
+    if (user.Role == 'admin') {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    } else if (user.Role == 'consumer') {
+        let listIdSite = await ConsumerSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+
+        //listSite = await SiteModel.find({ ConsumerId: user.ConsumerId });
+    } else if (user.Role == 'staff') {
+        let listIdSite = await StaffSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+        //listSite = await SiteModel.find({ StaffId: user.StaffId });
+    } else {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    }
+
+    for (const item of listSite) {
+        const data = await ChannelModel.find({ LoggerId: item.LoggerId }).sort({
+            ChannelId: 1,
+        });
+        for (const channel of data) {
+            result.push(channel);
+        }
+    }
+
+    res.status(200).json(result);
 };

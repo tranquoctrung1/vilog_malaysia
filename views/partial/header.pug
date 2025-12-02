@@ -24,7 +24,7 @@ header.header
           //-                   | 02:34
           //-                   | PM
           //-                 .notification-heading Mr. John
-          //-                 .notification-text 5 members joined today 
+          //-                 .notification-text 5 members joined today
           //-           li
           //-             a(href='#')
           //-               img.pull-left.m-r-10.avatar-img(src='assets/images/avatar/3.jpg' alt='')
@@ -117,17 +117,20 @@ header.header
           //- .dropdown.dib
           //-   .header-icon
               //- .ti-bell.btn.btn-primary.position-relative#hideAlarm
-              //-   span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger#amountAlarm 
+              //-   span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger#amountAlarm
           //- .box-alarm#boxAlarm.d-none
           #alarmModal.modal.fade.bd-example-modal-lg
             .modal-dialog.modal-lg(role='document')
                 .modal-content
                     .modal-header
                         h5.modal-title Data Alarm
+                        //- button.btn.btn-default#minimize(type='button' onclick="onMinimizeAlarmModal()") —
+                        //- button.btn.btn-default#maximize(type='button' onclick="onMaximizeAlarmModal()") ⛶
                     .modal-body
                       table.table.table-striped.table-hover#tableAlarm
                     .modal-footer
                       button.btn.btn-default#closeAlarmModal(type='button' onclick="oncloseAlarmModal()") Close
+
 
 
           //- .dropdown.dib
@@ -135,11 +138,11 @@ header.header
           //-     span.user-avatar#userName
           //-       | #{username}
           //- .dropdown.dib
-          //-   .header-icon 
+          //-   .header-icon
           //-     a(href="/logout")
           //-       i.ti-power-off
           //- .dropdown.dib
-          //-   .header-icon 
+          //-   .header-icon
           //-     a(href="#")
           //-       i.ti-pencil-alt.pull-right
               //- .drop-down.dropdown-profile.dropdown-menu.dropdown-menu-right
@@ -168,4 +171,3 @@ header.header
                 //-       a(href='/logout')
                 //-         i.ti-power-off
                 //-         span Logout
-                 

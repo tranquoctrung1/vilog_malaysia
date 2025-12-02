@@ -69,6 +69,35 @@
     z-index: 9990;
 }
 
+/* Maximize */
+#alarmModal.modal-maximized {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+}
+
+#alarmModal.modal-maximized .modal-content {
+    height: 100vh;
+    border-radius: 0;
+}
+
+/* Minimized (thu nhỏ xuống góc phải) */
+#alarmModal.modal-minimized {
+    width: 300px !important;
+    height: 50px !important;
+    position: fixed !important;
+    bottom: 10px;
+    right: 10px;
+    margin: 0;
+    cursor: pointer;
+}
+
+#alarmModal.modal-minimized .modal-content {
+    height: 100%;
+    overflow: hidden;
+}
+
 #tableAlarm {
     width: 100% !important;
 }

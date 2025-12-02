@@ -73,8 +73,6 @@ class ModernNavigation {
         const currentPath = window.location.pathname;
         const navItems = this.nav.querySelectorAll('.nav-item');
 
-        console.log('Current path:', currentPath); // Debug
-
         navItems.forEach((item) => {
             // Xóa class active cũ
             item.classList.remove('active');
@@ -93,8 +91,6 @@ class ModernNavigation {
                 itemPath = href.split('?')[0].split('#')[0];
             }
 
-            console.log('Item path:', itemPath, 'Href:', href); // Debug
-
             // Kiểm tra xem currentPath có khớp với itemPath không
             // Loại bỏ trailing slash để so sánh chính xác
             const cleanCurrentPath = currentPath.replace(/\/$/, '');
@@ -107,14 +103,13 @@ class ModernNavigation {
                 (cleanCurrentPath === '/' && cleanItemPath === '/')
             ) {
                 item.classList.add('active');
-                console.log('Active item set:', itemPath); // Debug
             }
         });
     }
 
     showNavigation() {
         this.nav.classList.add('show');
-        document.body.style.paddingBottom = '100px';
+        //document.body.style.paddingBottom = '100px';
 
         // Add entrance animation delay for each item
         const navItems = this.nav.querySelectorAll('.nav-item');
@@ -127,6 +122,7 @@ class ModernNavigation {
         });
 
         document.getElementById('contentWrap').style.height = 'inherit';
+        document.getElementsByTagName('body')[0].style.height = 'inherit';
     }
 
     hideNavigation() {

@@ -257,11 +257,12 @@ function initMap() {
                                     '<td>' +
                                     strDate +
                                     '</td>' +
-                                    `<td><a href="#"  style="
+                                    `<td><span   style="
                 padding: 3px;
                 color: #30a0c1;
                 box-shadow: 0 0 5px 0 rgb(0 0 0 / 20%);
-                border-radius: 3px;" onclick="openChart('${channel.ChannelId}','${site.Location} ',' ${channel.ChannelName}','${channel.Unit}');"> <i class="fa fa-bar-chart" aria-hidden="true"></i> </a></td></tr>`;
+                cursor: pointer;
+                border-radius: 3px;" onclick="openChart('${channel.ChannelId}','${site.Location} ',' ${channel.ChannelName}','${channel.Unit}');"> <i class="fa fa-bar-chart" aria-hidden="true"></i> </span></td></tr>`;
                             } else {
                                 dInfoHtml +=
                                     '<tr><td> ' +
@@ -565,11 +566,12 @@ function updateMap() {
                             '<td>' +
                             strDate +
                             '</td>' +
-                            `<td><a href="#"  style="
+                            `<td><span  style="
             padding: 3px;
             color: #30a0c1;
+            cursor: pointer;
             box-shadow: 0 0 5px 0 rgb(0 0 0 / 20%);
-            border-radius: 3px;" onclick="openChart('${channel.ChannelId}','${site.Location} ',' ${channel.ChannelName}','${channel.Unit}');"> <i class="fa fa-bar-chart" aria-hidden="true"></i> </a></td></tr>`;
+            border-radius: 3px;" onclick="openChart('${channel.ChannelId}','${site.Location} ',' ${channel.ChannelName}','${channel.Unit}');"> <i class="fa fa-bar-chart" aria-hidden="true"></i> </span></td></tr>`;
                     } else {
                         dInfoHtml +=
                             '<tr><td> ' +

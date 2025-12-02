@@ -286,6 +286,16 @@ function oncloseAlarmModal() {
     $('#alarmModal').hide();
 }
 
+// function onMinimizeAlarmModal() {
+//     $('#alarmModal').removeClass('modal-maximized');
+//     $('#alarmModal').addClass('modal-minimized');
+// }
+
+// function onMaximizeAlarmModal() {
+//     $('#alarmModal').removeClass('modal-minimized');
+//     $('#alarmModal').addClass('modal-maximized');
+// }
+
 if (/Mobi|Android/i.test(navigator.userAgent)) {
     const link = document.querySelector('a[href="/dataOnline"]');
     if (link) link.style.display = 'none';
