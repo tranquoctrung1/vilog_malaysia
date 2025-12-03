@@ -121,6 +121,7 @@ class ModernNavigation {
         document.getElementsByClassName('header').forEach((header) => {
             header.style.display = 'none';
         });
+        document.getElementById('sidebar').style.display = 'none';
 
         document.getElementById('contentWrap').style.height = 'inherit';
         document.getElementsByTagName('body')[0].style.height = 'inherit';
@@ -210,12 +211,12 @@ class ModernNavigation {
 
             if (scrollTop > lastScrollTop && scrollTop > 100) {
                 // Scrolling down
-                this.nav.style.transform = 'translateX(-50%) translateY(100px)';
-                this.nav.style.opacity = '0';
+                //this.nav.style.transform = 'translateX(-50%) translateY(100px)';
+                //this.nav.style.opacity = '0';
             } else {
                 // Scrolling up
-                this.nav.style.transform = 'translateX(-50%) translateY(0)';
-                this.nav.style.opacity = '1';
+                //this.nav.style.transform = 'translateX(-50%) translateY(0)';
+                //this.nav.style.opacity = '1';
             }
 
             lastScrollTop = scrollTop;

@@ -1,12 +1,12 @@
 /* Modern Mobile Navigation - Red Gradient Theme */
 .mobile-nav {
     position: fixed;
-    bottom: 0px;
-    left: 50%;
+    bottom: 7px;
+    left: 49%;
     transform: translateX(-50%) translateY(0); /* Sửa từ translateY(100px) */
-    width: 92%;
-    max-width: 400px;
-    background: linear-gradient(to right, #cc0000, #cc0000, #dfe6e9);
+    width: 100vw;
+    max-width: 100vw;
+    background-color: #cc0000;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -38,7 +38,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to right, #cc0000, #cc0000, #dfe6e9);
+    background-color: #cc0000;
     border-radius: 25px;
     z-index: -1;
 }

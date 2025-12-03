@@ -35,7 +35,7 @@ module.exports.loginValidation = async function (req, res, next) {
                 ua.includes('mobile');
 
             if (isMobile) {
-                return res.redirect('/?' + 'app=true');
+                return res.redirect('/dashboardVilog?' + 'app=true');
             }
 
             next();
