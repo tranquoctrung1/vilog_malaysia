@@ -21,7 +21,6 @@ if (
 }
 
 const urlGetLatestAlarmData = `${hostnameAlarm}/GetLatestHistoryAlarm/${userNameByAlarm}`;
-console.log(urlGetLatestAlarmData);
 
 async function GetAlarm() {
     axios.get(urlGetLatestAlarmData).then(async function (res) {
