@@ -20,7 +20,8 @@ if (
     userNameByAlarm = 'admin';
 }
 
-const urlGetLatestAlarmData = `${hostnameAlarm}/GetLatestHistoryAlarm`;
+const urlGetLatestAlarmData = `${hostnameAlarm}/GetLatestHistoryAlarm/${userNameByAlarm}`;
+console.log(urlGetLatestAlarmData);
 
 async function GetAlarm() {
     axios.get(urlGetLatestAlarmData).then(async function (res) {

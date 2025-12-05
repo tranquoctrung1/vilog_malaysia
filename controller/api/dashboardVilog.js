@@ -302,7 +302,7 @@ async function checkBatSolarNoCharge(channelid, fromHour, toHour) {
         now.getFullYear(),
         now.getMonth(),
         now.getDate(),
-        fromHour + 7,
+        fromHour + 8,
         0,
         0,
     );
@@ -310,7 +310,7 @@ async function checkBatSolarNoCharge(channelid, fromHour, toHour) {
         now.getFullYear(),
         now.getMonth(),
         now.getDate(),
-        toHour + 7,
+        toHour + 8,
         0,
         0,
     );
@@ -318,7 +318,7 @@ async function checkBatSolarNoCharge(channelid, fromHour, toHour) {
         now.getFullYear(),
         now.getMonth(),
         now.getDate() - 1,
-        fromHour + 7,
+        fromHour + 8,
         0,
         0,
     );
@@ -326,7 +326,7 @@ async function checkBatSolarNoCharge(channelid, fromHour, toHour) {
         now.getFullYear(),
         now.getMonth(),
         now.getDate() - 1,
-        toHour + 7,
+        toHour + 8,
         0,
         0,
     );
@@ -334,7 +334,7 @@ async function checkBatSolarNoCharge(channelid, fromHour, toHour) {
         now.getFullYear(),
         now.getMonth(),
         now.getDate() - 1,
-        17 + 7,
+        17 + 8,
         0,
         0,
     );
@@ -342,7 +342,7 @@ async function checkBatSolarNoCharge(channelid, fromHour, toHour) {
         now.getFullYear(),
         now.getMonth(),
         now.getDate(),
-        7 + 7,
+        7 + 8,
         0,
         0,
     );
@@ -350,7 +350,7 @@ async function checkBatSolarNoCharge(channelid, fromHour, toHour) {
         now.getFullYear(),
         now.getMonth(),
         now.getDate() - 2,
-        17 + 7,
+        17 + 8,
         0,
         0,
     );
@@ -358,7 +358,7 @@ async function checkBatSolarNoCharge(channelid, fromHour, toHour) {
         now.getFullYear(),
         now.getMonth(),
         now.getDate() - 1,
-        7 + 7,
+        7 + 8,
         0,
         0,
     );

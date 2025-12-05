@@ -302,7 +302,10 @@ router.get(
     DataLoggerDashboardVilogApi.GetDataLoggerAVG3DayVACC,
 );
 
-router.get('/GetHistoryAlarmData/:start/:end', HistoryAlarmAPI.GetHistoryAlarm);
+router.get(
+    '/GetHistoryAlarmData/:start/:end/:username',
+    HistoryAlarmAPI.GetHistoryAlarm,
+);
 
 // test funtion via api
 router.get(
@@ -314,7 +317,10 @@ router.get(
     ChannelApi.CheckPerformanceWithMinValueTest,
 );
 
-router.get('/GetLatestHistoryAlarm', HistoryAlarmAPI.GetLatestHistoryAlarm);
+router.get(
+    '/GetLatestHistoryAlarm/:username',
+    HistoryAlarmAPI.GetLatestHistoryAlarm,
+);
 
 router.post('/login', LoginAPI.Login);
 

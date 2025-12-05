@@ -1,9 +1,13 @@
 let urlGetHistoryAlarm = `${hostname}/gethistoryalarmdata`;
-
 let alarmTableBody = document.getElementById('alarmTableBody');
 
+let userName = document.getElementById('userName').innerHTML;
+if (userName == null || userName == undefined || userName.trim() == '') {
+    userName = 'admin';
+}
+
 function getDataHistoryAlarm(start, end) {
-    let url = `${urlGetHistoryAlarm}/${start}/${end}`;
+    let url = `${urlGetHistoryAlarm}/${start}/${end}/${userName}`;
 
     axios
         .get(url)

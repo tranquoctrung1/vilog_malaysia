@@ -27,7 +27,7 @@ module.exports.GetTableDataCurrent = async function (req, res) {
         }
 
         if (listIdSite.length > 0) {
-            listSites = await SiteModel.find({ _id: { $in: list } });
+            listSite = await SiteModel.find({ _id: { $in: list } });
         } else {
             listSite = [];
         }
