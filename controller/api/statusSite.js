@@ -63,21 +63,16 @@ module.exports.GetStatusSite = async function (req, res) {
     result.siteAlarm = [];
     result.siteHasValue = [];
 
-    let timeDelay = 60;
-
     if (listSite.length > 0) {
         result.totalSite = listSite.length;
 
         for (let site of listSite) {
+            let timeDelay = 60;
             let channels = await ChannelModel.find({ LoggerId: site.LoggerId });
             const objSite = { ...site._doc, ListChannel: [...channels] };
             result.sites.push(objSite);
 
-            if (
-                site.TimeDelay != 'null' &&
-                site.TimeDelay != null &&
-                site.TimeDelay != undefined
-            ) {
+            if (site.TimeDelay !== null && site.TimeDelay !== undefined) {
                 timeDelay = site.TimeDelay;
             }
 

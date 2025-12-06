@@ -180,8 +180,8 @@ function renderCard(data) {
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="site-header ${text}">${
-                item.SiteId
-            }</div>
+                                item.SiteId
+                            }</div>
                             <div class="site-subheader">Sitename: ${
                                 item.Location
                             } </div>
@@ -189,17 +189,17 @@ function renderCard(data) {
                         </div>
                         <span class="status-tag ${tag}">${status}</span>
                     </div>
-                    
+
                     <hr class="my-3">
-                    
+
                     <div class="channel-group-header text-danger"><i class="fas fa-triangle-exclamation"></i> 1. Status & Alarm</div>
-                    
+
                     ${renderStatusChannelSU(item.ListChannel)}
-                    
+
                     <div class="channel-group-header text-primary"><i class="fas fa-chart-line"></i> 2. Flow & System</div>
 
                    ${renderValueChannelSU(item.ListChannel)}
-                    
+
                 </div>
             </div>`;
         } else if (item.TypeMeter === 'Kronhe') {
@@ -208,8 +208,8 @@ function renderCard(data) {
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="site-header ${text}">${
-                item.SiteId
-            }</div>
+                                item.SiteId
+                            }</div>
                             <div class="site-subheader">Sitename: ${
                                 item.Location
                             } </div>
@@ -217,12 +217,12 @@ function renderCard(data) {
                         </div>
                         <span class="status-tag ${tag}">${status}</span>
                     </div>
-                    
+
                     <hr class="my-3">
                     <div class="channel-group-header text-primary"><i class="fas fa-chart-line"></i>Flow & System</div>
 
                    ${renderValueChannelKronhe(item.ListChannel)}
-                    
+
                 </div>
             </div>`;
         }
