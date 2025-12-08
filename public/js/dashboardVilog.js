@@ -53,6 +53,7 @@ function findValueChannel(data, siteid) {
         reverse: null,
         battery: null,
         net: null,
+        time: null,
     };
 
     const find = data.find((s) => s.SiteId === siteid);
@@ -92,18 +93,23 @@ function findValueChannel(data, siteid) {
 
         if (flowChannel !== undefined && flowChannel !== null) {
             obj.flow = flowChannel.LastValue;
+            obj.time = flowChannel.TimeStamp;
         }
         if (reverseChannel !== undefined && reverseChannel !== null) {
             obj.reverse = reverseChannel.LastValue;
+            obj.time = reverseChannel.TimeStamp;
         }
         if (batteryChannel !== undefined && batteryChannel !== null) {
             obj.battery = batteryChannel.LastValue;
+            obj.time = batteryChannel.TimeStamp;
         }
         if (signalChannel !== undefined && signalChannel !== null) {
             obj.signal = signalChannel.LastValue;
+            obj.time = signalChannel.TimeStamp;
         }
         if (netChannel !== undefined && netChannel !== null) {
             obj.net = netChannel.LastValue;
+            obj.time = netChannel.TimeStamp;
         }
         return obj;
     }
@@ -124,6 +130,7 @@ function renderVilogTable(data) {
                         <td>${item.SiteId}</td>
                         <td>${item.Location}</td>
                         <td>Disconnected</td>
+                        <td>${convertDateToString(convertDateFromApi(valueChannel.time))}</td>
                         <td data-signal="${ConvertDataIntoTable(
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
@@ -147,6 +154,7 @@ function renderVilogTable(data) {
                         <td>${item.SiteId}</td>
                         <td>${item.Location}</td>
                         <td>DataPresent</td>
+                         <td>${convertDateToString(convertDateFromApi(valueChannel.time))}</td>
                         <td data-signal="${ConvertDataIntoTable(
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
@@ -171,6 +179,7 @@ function renderVilogTable(data) {
                         <td>${item.SiteId}</td>
                         <td>${item.Location}</td>
                         <td>DataPresent</td>
+                         <td>${convertDateToString(convertDateFromApi(valueChannel.time))}</td>
                         <td data-signal="${ConvertDataIntoTable(
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
@@ -235,7 +244,7 @@ function drawTable() {
         var $row = $(this);
         var status = $row.data('status');
         var flow = $row.data('flow');
-        var signalCell = $row.find('td:eq(3)');
+        var signalCell = $row.find('td:eq(4)');
         var signalText = signalCell.attr('data-signal');
         var signal = parseInt(signalText);
         var alarm = $row.find('td:eq(8)').text();
@@ -256,12 +265,12 @@ function drawTable() {
         }
         // Alarm Tagging (Cột 7)
         if (alarm === 'Yes') {
-            $row.find('td:eq(8)').html(
+            $row.find('td:eq(9)').html(
                 '<span class="status-tag tag-danger">ALARM</span>',
             );
             //alarmSites++;
         } else {
-            $row.find('td:eq(8)').html(
+            $row.find('td:eq(9)').html(
                 '<span class="status-tag tag-success">NORMAL</span>',
             );
         }
