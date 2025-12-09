@@ -303,11 +303,11 @@ function ensureAppMode(url) {
 }
 
 // Export for global use
-window.NavigationManager = {
-    toggleAppMode: (enable) => window.modernNav?.toggleAppMode(enable),
-    ensureAppMode,
-    addAppParam: ModernNavigation.addAppParam,
-};
+// window.NavigationManager = {
+//     toggleAppMode: (enable) => window.modernNav?.toggleAppMode(enable),
+//     ensureAppMode,
+//     addAppParam: ModernNavigation.addAppParam,
+// };
 
 // // Intercept browser navigation
 // window.addEventListener('beforeunload', () => {
