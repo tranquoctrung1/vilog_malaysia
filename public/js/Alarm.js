@@ -152,6 +152,10 @@ function createTd(data, siteid, status, statusColor) {
         text = `Alarm`;
     }
 
+    if (data.Content.toLowerCase().includes('waring')) {
+        data.Content = data.Content.replace('waring', 'warning');
+    }
+
     content += `<tr>
             <td class="${color}" style="font-size: .9rem;">${data.SiteId}</td>
             <td class="${color}" style="font-size: .9rem;">${data.Location}</td>

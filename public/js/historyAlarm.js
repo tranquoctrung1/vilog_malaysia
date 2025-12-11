@@ -23,6 +23,10 @@ function renderDataTable(data) {
     let content = ``;
 
     for (const item of data) {
+        if (item.Content.toLowerCase().includes('waring')) {
+            item.Content = item.Content.replace('waring', 'warning');
+        }
+
         content += `<tr data-alarm-type="${item.Content}">
                             <td>${item.SiteId}</td>
                             <td>${item.Location}</td>
