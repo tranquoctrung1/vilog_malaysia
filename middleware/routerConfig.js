@@ -54,7 +54,7 @@ module.exports.RouterConfig = async function (req, res) {
                     parent = 'Points';
                 } else if (item.Parent == 'UserManager') {
                     icon = 'ti-user';
-                    parent = 'Management User';
+                    parent = 'User Management';
                 } else if (item.Parent == 'Permission') {
                     icon = 'ti-layout-media-center-alt';
                     parent = 'Permission';
@@ -88,7 +88,7 @@ module.exports.RouterConfig = async function (req, res) {
             <li><a href="/quantityReport/year">Consumption Yearly</a></li>
         </ul>
     </li>
-    
+
     <li><a class="sidebar-sub-toggle"><i class="ti-layout-grid4-alt"></i>Data<span class="sidebar-collapse-icon ti-angle-down"></span></a>
         <ul>
             <li><a href="/tableDataCurrent">Data table view</a></li>
@@ -109,18 +109,18 @@ module.exports.RouterConfig = async function (req, res) {
             <li><a href="/logger">Logger</a></li>
         </ul>
     </li>
-    
+
     <li><a class="sidebar-sub-toggle"><i class="ti-desktop"></i> Points<span class="sidebar-collapse-icon ti-angle-down"></span></a>
         <ul>
             <li><a href="/siteConfig">Points Config</a></li>
         </ul>
     </li>
-    
+
     <li><a class="sidebar-sub-toggle"><i class="ti-user"></i> Management User<span class="sidebar-collapse-icon ti-angle-down"></span></a>
         <ul>
             <li><a href="/createUser">Create User</a></li>
             <li><a href="/viewUser">View User</a></li>
-            
+
         </ul>
     </li>
 

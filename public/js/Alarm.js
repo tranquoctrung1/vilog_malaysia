@@ -154,6 +154,10 @@ function createTd(data, siteid, status, statusColor) {
 
     if (data.Content.toLowerCase().includes('waring')) {
         data.Content = data.Content.replace('waring', 'warning');
+    } else if (data.Content.toLowerCase().includes('comunication')) {
+        data.Content = data.Content.replace('Comunication', 'Communication');
+    } else if (data.Content.toLowerCase().includes('lower')) {
+        data.Content = data.Content.replace('Lower', 'Low');
     }
 
     content += `<tr>

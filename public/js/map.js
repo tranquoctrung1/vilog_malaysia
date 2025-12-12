@@ -201,7 +201,7 @@ function initMap() {
                             if (channel.allowChart == true) {
                                 if (site.TypeMeter === 'SU') {
                                     if (checkStatusChannel === true) {
-                                        dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Status Flow Meter</td></tr>`;
+                                        dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Flow Meter Status</td></tr>`;
                                         checkStatusChannel = false;
                                     }
 
@@ -210,7 +210,7 @@ function initMap() {
                                         checkStatusValue === true
                                     ) {
                                         if (channel.ChannelName[0] === '2') {
-                                            dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Mesurement Value</td></tr>`;
+                                            dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Measurement Value</td></tr>`;
                                             checkStatusValue = false;
                                         }
                                     }
@@ -510,7 +510,7 @@ function updateMap() {
                     if (channel.allowChart == true) {
                         if (site.TypeMeter === 'SU') {
                             if (checkStatusChannel === true) {
-                                dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Status Flow Meter</td></tr>`;
+                                dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Flow Meter Status</td></tr>`;
                                 checkStatusChannel = false;
                             }
 
@@ -519,7 +519,7 @@ function updateMap() {
                                 checkStatusValue === true
                             ) {
                                 if (channel.ChannelName[0] === '2') {
-                                    dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Mesurement Value</td></tr>`;
+                                    dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Measurement Value</td></tr>`;
                                     checkStatusValue = false;
                                 }
                             }

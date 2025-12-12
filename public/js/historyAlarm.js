@@ -25,6 +25,13 @@ function renderDataTable(data) {
     for (const item of data) {
         if (item.Content.toLowerCase().includes('waring')) {
             item.Content = item.Content.replace('waring', 'warning');
+        } else if (item.Content.toLowerCase().includes('comunication')) {
+            item.Content = item.Content.replace(
+                'Comunication',
+                'Communication',
+            );
+        } else if (item.Content.toLowerCase().includes('lower')) {
+            item.Content = item.Content.replace('Lower', 'Low');
         }
 
         content += `<tr data-alarm-type="${item.Content}">
