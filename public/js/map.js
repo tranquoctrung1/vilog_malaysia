@@ -127,6 +127,27 @@ function initMap() {
                         let checkStatusChannel = true;
                         let checkStatusValue = true;
                         for (let channel of res.data) {
+                            if (channel.ChannelName.includes('Mem')) {
+                                channel.ChannelName =
+                                    channel.ChannelName.replace(
+                                        'Mem',
+                                        'Memory',
+                                    );
+                            } else if (channel.ChannelName.includes('Com')) {
+                                channel.ChannelName =
+                                    channel.ChannelName.replace('Com', 'Comm');
+                            }
+                            if (
+                                channel.ChannelName.length > 3 &&
+                                channel.ChannelName.charAt(3) === '.'
+                            ) {
+                                channel.ChannelName =
+                                    channel.ChannelName.substring(0, 3) +
+                                    channel.ChannelName.substring(4);
+                            }
+                            channel.ChannelName = capitalizeWords(
+                                channel.ChannelName,
+                            );
                             if (channel.Status != null) {
                                 switch (channel.Status) {
                                     case 1:
@@ -201,7 +222,7 @@ function initMap() {
                             if (channel.allowChart == true) {
                                 if (site.TypeMeter === 'SU') {
                                     if (checkStatusChannel === true) {
-                                        dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Status Flow Meter</td></tr>`;
+                                        dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Flow Meter Status</td></tr>`;
                                         checkStatusChannel = false;
                                     }
 
@@ -210,7 +231,7 @@ function initMap() {
                                         checkStatusValue === true
                                     ) {
                                         if (channel.ChannelName[0] === '2') {
-                                            dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Mesurement Value</td></tr>`;
+                                            dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Measurement Value</td></tr>`;
                                             checkStatusValue = false;
                                         }
                                     }
@@ -433,6 +454,26 @@ function updateMap() {
                 let checkStatusChannel = true;
                 let checkStatusValue = true;
                 for (let channel of res.data) {
+                    if (channel.ChannelName.includes('Mem')) {
+                        channel.ChannelName = channel.ChannelName.replace(
+                            'Mem',
+                            'Memory',
+                        );
+                    } else if (channel.ChannelName.includes('Com')) {
+                        channel.ChannelName = channel.ChannelName.replace(
+                            'Com',
+                            'Comm',
+                        );
+                    }
+                    if (
+                        channel.ChannelName.length > 3 &&
+                        channel.ChannelName.charAt(3) === '.'
+                    ) {
+                        channel.ChannelName =
+                            channel.ChannelName.substring(0, 3) +
+                            channel.ChannelName.substring(4);
+                    }
+                    channel.ChannelName = capitalizeWords(channel.ChannelName);
                     if (channel.Status != null) {
                         switch (channel.Status) {
                             case 1:
@@ -510,7 +551,7 @@ function updateMap() {
                     if (channel.allowChart == true) {
                         if (site.TypeMeter === 'SU') {
                             if (checkStatusChannel === true) {
-                                dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Status Flow Meter</td></tr>`;
+                                dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Flow Meter Status</td></tr>`;
                                 checkStatusChannel = false;
                             }
 
@@ -519,7 +560,7 @@ function updateMap() {
                                 checkStatusValue === true
                             ) {
                                 if (channel.ChannelName[0] === '2') {
-                                    dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Mesurement Value</td></tr>`;
+                                    dInfoHtml += `<tr><td colspan="4"  style="color:red; text-align: center">Measurement Value</td></tr>`;
                                     checkStatusValue = false;
                                 }
                             }
@@ -849,6 +890,16 @@ function showStatistic(e) {
 
 function closeStatisticModal() {
     $('#staictis').hide();
+}
+
+function capitalizeWords(str) {
+    return str
+        .trim()
+        .split(' ')
+        .map((word) => {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        })
+        .join(' ');
 }
 
 setTimeout(() => {

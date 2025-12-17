@@ -5,6 +5,16 @@ const jwt = require('jsonwebtoken');
 
 const UserModel = require('../model/user');
 
+const isBrowser = () => {
+    // Check multiple browser-specific APIs
+    return (
+        typeof window !== 'undefined' &&
+        typeof document !== 'undefined' &&
+        typeof navigator !== 'undefined' &&
+        window.document === document
+    );
+};
+
 module.exports.loginValidation = async function (req, res, next) {
     let username = req.body.username;
     let password = req.body.password;
@@ -28,15 +38,39 @@ module.exports.loginValidation = async function (req, res, next) {
             res.locals.role = result[0].Role;
 
             const ua = req.headers['user-agent']?.toLowerCase() || '';
+            const sechua = req.headers['sec-ch-ua']?.toLowerCase() || '';
+            const sechuaPlatform =
+                req.headers['sec-ch-ua-platform']?.toLowerCase() || '';
             const isMobile =
                 ua.includes('android') ||
                 ua.includes('iphone') ||
                 ua.includes('ipad') ||
-                ua.includes('mobile');
+                ua.includes('mobile') ||
+                ua.includes('macintosh') ||
+                ua.includes('intel mac os');
+            const requested =
+                req.headers['x-requested-with']?.toLowerCase() || '';
 
-            if (isMobile) {
+            if (requested) {
                 return res.redirect('/dashboardVilog?' + 'app=true');
+            } else if (isMobile) {
+                if (sechua && sechuaPlatform) {
+                    return res.redirect('/dashboardVilog');
+                } else if (!sechua && !sechuaPlatform) {
+                    if (ua.includes('safari')) {
+                        return res.redirect('/dashboardVilog');
+                    } else {
+                        return res.redirect('/dashboardVilog?' + 'app=true');
+                    }
+                } else {
+                    return res.redirect('/dashboardVilog?' + 'app=true');
+                }
             }
+            // if (isMobile && isBrowser()) {
+            //     return res.redirect('/dashboardVilog');
+            // } else if (isMobile && !isBrowser()) {
+            //     return res.redirect('/dashboardVilog?' + 'app=true');
+            // }
 
             next();
         } else {

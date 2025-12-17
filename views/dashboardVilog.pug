@@ -31,7 +31,7 @@ block content
                 .col-6.col-md-3
                     .card.card-kpi.p-3.text-center.bg-danger-subtle(data-filter="Alarm")
                         i.fas.fa-triangle-exclamation.text-danger.kpi-icon.mb-2
-                        .kpi-title ALARM SITES
+                        .kpi-title ALARM
                         .kpi-value.text-danger#kpi-alarm 0
 
             .card.b-none.p-4
@@ -48,10 +48,11 @@ block content
                                 th SiteId
                                 th Sitename
                                 th Status
+                                th Latest Time
                                 th.w-150 Signal (dB)
                                 th Forward Flow (m3/h)
                                 th Reverse Flow (m3/h)
-                                th Net Totalize (m3/h)
+                                th Net Totalizer (m3/h)
                                 th Battery Logger (V)
                                 th Alarm
                         tbody#vlogTableBody

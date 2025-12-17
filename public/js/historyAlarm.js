@@ -1,9 +1,13 @@
 let urlGetHistoryAlarm = `${hostname}/gethistoryalarmdata`;
-
 let alarmTableBody = document.getElementById('alarmTableBody');
 
+let userName = document.getElementById('userName').innerHTML;
+if (userName == null || userName == undefined || userName.trim() == '') {
+    userName = 'admin';
+}
+
 function getDataHistoryAlarm(start, end) {
-    let url = `${urlGetHistoryAlarm}/${start}/${end}`;
+    let url = `${urlGetHistoryAlarm}/${start}/${end}/${userName}`;
 
     axios
         .get(url)
@@ -19,6 +23,17 @@ function renderDataTable(data) {
     let content = ``;
 
     for (const item of data) {
+        if (item.Content.toLowerCase().includes('waring')) {
+            item.Content = item.Content.replace('waring', 'warning');
+        } else if (item.Content.toLowerCase().includes('comunication')) {
+            item.Content = item.Content.replace(
+                'Comunication',
+                'Communication',
+            );
+        } else if (item.Content.toLowerCase().includes('lower')) {
+            item.Content = item.Content.replace('Lower', 'Low');
+        }
+
         content += `<tr data-alarm-type="${item.Content}">
                             <td>${item.SiteId}</td>
                             <td>${item.Location}</td>

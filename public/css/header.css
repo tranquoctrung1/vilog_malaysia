@@ -101,3 +101,8 @@
 #tableAlarm {
     width: 100% !important;
 }
+
+#tableAlarm_wrapper {
+    height: 500px;
+    overflow: scroll;
+}

@@ -27,7 +27,7 @@ module.exports.GetTableDataCurrent = async function (req, res) {
         }
 
         if (listIdSite.length > 0) {
-            listSites = await SiteModel.find({ _id: { $in: list } });
+            listSite = await SiteModel.find({ _id: { $in: list } });
         } else {
             listSite = [];
         }
@@ -71,7 +71,10 @@ module.exports.GetTableDataCurrent = async function (req, res) {
         obj.isDelay = false;
         obj.TypeMeter = site.TypeMeter;
 
-        let timeDelay = site.TimeDelay;
+        let timeDelay = 60;
+        if (site.TimeDelay !== null && site.TimeDelay !== undefined) {
+            timeDelay = site.TimeDelay;
+        }
 
         for (let channel of listChannels) {
             let obj2 = {};
@@ -84,8 +87,11 @@ module.exports.GetTableDataCurrent = async function (req, res) {
             obj2.isDelay = false;
 
             if (channel.TimeStamp != null) {
+                const now = new Date(Date.now());
+                now.setHours(now.getHours() + 8);
+
                 let diff = Math.round(
-                    (Date.now() - channel.TimeStamp.getTime()) / 1000 / 60,
+                    (now.getTime() - channel.TimeStamp.getTime()) / 1000 / 60,
                 );
                 if (diff > timeDelay) {
                     obj2.isDelay = true;

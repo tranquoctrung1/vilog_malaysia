@@ -20,7 +20,7 @@ if (
     userNameByAlarm = 'admin';
 }
 
-const urlGetLatestAlarmData = `${hostnameAlarm}/GetLatestHistoryAlarm`;
+const urlGetLatestAlarmData = `${hostnameAlarm}/GetLatestHistoryAlarm/${userNameByAlarm}`;
 
 async function GetAlarm() {
     axios.get(urlGetLatestAlarmData).then(async function (res) {
@@ -150,6 +150,14 @@ function createTd(data, siteid, status, statusColor) {
     } else {
         color = `text-danger`;
         text = `Alarm`;
+    }
+
+    if (data.Content.toLowerCase().includes('waring')) {
+        data.Content = data.Content.replace('waring', 'warning');
+    } else if (data.Content.toLowerCase().includes('comunication')) {
+        data.Content = data.Content.replace('Comunication', 'Communication');
+    } else if (data.Content.toLowerCase().includes('lower')) {
+        data.Content = data.Content.replace('Lower', 'Low');
     }
 
     content += `<tr>
