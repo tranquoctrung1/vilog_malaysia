@@ -121,7 +121,7 @@ class ModernNavigation {
         document.getElementsByClassName('header').forEach((header) => {
             header.style.display = 'none';
         });
-        document.getElementById('sidebar').style.display = 'none';
+        //document.getElementById('sidebar').style.display = 'none';
 
         document.getElementById('contentWrap').style.height = 'inherit';
         document.getElementsByTagName('body')[0].style.height = 'inherit';
