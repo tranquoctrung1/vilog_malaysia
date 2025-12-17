@@ -160,24 +160,36 @@ function createTd(data, siteid, status, statusColor) {
         data.Content = data.Content.replace('Lower', 'Low');
     }
 
+    data.Content = capitalizeWords(data.Content);
+
     content += `<tr>
             <td class="${color}" style="font-size: .9rem;">${data.SiteId}</td>
             <td class="${color}" style="font-size: .9rem;">${data.Location}</td>
             <td class="${color}" style="font-size: .9rem;">${
-                data.ChannelName
-            }</td>
+        data.ChannelName
+    }</td>
             <td class="${color}" style="font-size: .9rem;">${convertDateToString(
-                convertDateFromApi(data.TimeStampHasValue),
-            )}</td>
+        convertDateFromApi(data.TimeStampHasValue),
+    )}</td>
      <td class="${color}" style="font-size: .9rem;">${convertDateToString(
-         convertDateFromApi(data.TimeStampAlarm),
-     )}</td>
+        convertDateFromApi(data.TimeStampAlarm),
+    )}</td>
               <td class="${color}" style="font-size: .9rem;">${
-                  data.Content
-              }</td>
+        data.Content
+    }</td>
         </tr>`;
 
     return content;
+}
+
+function capitalizeWords(str) {
+    return str
+        .trim()
+        .split(' ')
+        .map((word) => {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        })
+        .join(' ');
 }
 
 function createTdLostWater(data) {
