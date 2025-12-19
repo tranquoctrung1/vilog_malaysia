@@ -250,7 +250,7 @@ function drawChart(channelId, location, channelname, units, data) {
         type: 'scatter',
         line: { shape: 'spline', width: 2 },
         marker: { size: 5 },
-        name: `${location} | ${channelname}`,
+        name: `${location} | ${capitalizeWords(channelname)}`,
         hovertemplate: `%{customdata}: %{y}<extra></extra> ${units}`, // 👈 custom tooltip
         customdata: data.map((d) => {
             const date = new Date(d.TimeStamp);
@@ -515,7 +515,9 @@ function drawChartMultiple(data) {
                 y: group.map((d) => d.Value),
                 mode: 'lines+markers',
                 type: 'scatter',
-                name: `${dataNameChart[count].location} | ${dataNameChart[count++].channelname}`,
+                name: `${dataNameChart[count].location} | ${capitalizeWords(
+                    dataNameChart[count++].channelname,
+                )}`,
                 line: { shape: 'spline', width: 2 },
                 marker: { size: 6 },
                 hovertemplate: `%{customdata}: %{y}<extra></extra>`,
@@ -559,7 +561,9 @@ function drawChartMultiple(data) {
 }
 
 function createTableSingle(data, channelName, channelid) {
-    let header = `<tr><th>TimeStamp</th><th>${channelName}</th></tr>`;
+    let header = `<tr><th>TimeStamp</th><th>${capitalizeWords(
+        channelName,
+    )}</th></tr>`;
 
     let body = '';
 
@@ -630,7 +634,7 @@ function convertData(input) {
     // Lấy danh sách cột (mỗi channel = 1 cột)
     const channelKeys = input.map((group) => {
         const info = group[group.length - 1];
-        return `${info.location}|${info.channelname}`;
+        return `${info.location}|${capitalizeWords(info.channelname)}`;
     });
 
     // Dùng Map để gom dữ liệu theo TimeStamp
@@ -638,7 +642,7 @@ function convertData(input) {
 
     input.forEach((group) => {
         const info = group[group.length - 1];
-        const colKey = `${info.location}|${info.channelname}`;
+        const colKey = `${info.location}|${capitalizeWords(info.channelname)}`;
 
         group.slice(0, -1).forEach((item) => {
             const ts = item.TimeStamp;
