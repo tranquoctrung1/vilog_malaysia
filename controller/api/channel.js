@@ -621,7 +621,7 @@ module.exports.GetChannelCard = async function (req, res) {
             obj.ChannelId = channel.ChannelId || null;
             obj.Unit = channel.Unit || null;
             obj.TimeStamp = channel.TimeStamp || null;
-            obj.LastValue = channel.LastValue || null;
+            obj.LastValue = channel.LastValue;
 
             const DataLoggerSchema = new mongoose.Schema({
                 TimeStamp: Date,

@@ -459,6 +459,7 @@ function CreateDataTable() {
             if (CheckExistsData(res.data)) {
                 let header = '';
                 let body = '';
+                console.log(res.data);
 
                 let dataConvert = convertData(res.data);
 
@@ -519,37 +520,34 @@ function CreateDataTable() {
                         dom: 'Bfrtip',
                         buttons: [
                             {
-                                extend: 'excelHtml5',
-                                title: `Data_Detail_From_${convertDateToString(
+                                extend: 'excel',
+                                text: '<i class="fas fa-file-excel me-1"></i> Excel',
+                                className: 'btn btn-sm buttons-excel',
+                                filename: `Data_Detail_From_${convertDateToString(
                                     new Date(startDateTime),
                                 )}_To_${convertDateToString(
                                     new Date(endDateTime),
                                 )}`,
-                                exportOptions: {
-                                    columns: ':visible',
-                                },
                             },
                             {
-                                extend: 'csvHtml5',
-                                title: `Data_Detail_From_${convertDateToString(
+                                extend: 'csv',
+                                text: '<i class="fas fa-file-csv me-1"></i> CSV',
+                                className: 'btn btn-sm buttons-csv',
+                                filename: `Data_Detail_From_${convertDateToString(
                                     new Date(startDateTime),
                                 )}_To_${convertDateToString(
                                     new Date(endDateTime),
                                 )}`,
-                                exportOptions: {
-                                    columns: ':visible',
-                                },
                             },
                             {
-                                extend: 'pdfHtml5',
-                                title: `Data_Detail_From_${convertDateToString(
+                                extend: 'pdf',
+                                text: '<i class="fas fa-file-pdf me-1"></i> PDF',
+                                className: 'btn btn-sm buttons-pdf',
+                                filename: `Data_Detail_From_${convertDateToString(
                                     new Date(startDateTime),
                                 )}_To_${convertDateToString(
                                     new Date(endDateTime),
                                 )}`,
-                                exportOptions: {
-                                    columns: ':visible',
-                                },
                             },
                         ],
                         language: {
@@ -642,61 +640,42 @@ function CreateDataTable() {
 }
 
 function convertData(data) {
-    let result = [];
-    channels = []; // Reset channels array
+    const timeMap = {};
+    channels = [];
 
-    if (data && data.length > 0) {
-        // Find the dataset with the most data points
-        let maxLength = 0;
-        let referenceIndex = 0;
-
-        for (let i = 0; i < data.length; i++) {
-            if (data[i] && data[i].length > maxLength) {
-                maxLength = data[i].length;
-                referenceIndex = i;
-            }
-            // Collect channel names
-            if (data[i] && data[i][0]) {
-                channels.push(data[i][0].ChannelName);
-            }
+    // 1. Lấy danh sách channel
+    data.forEach((arr) => {
+        if (arr && arr[0]) {
+            channels.push(arr[0].ChannelName);
         }
+    });
 
-        // Create result array based on the reference dataset
-        for (let i = 0; i < maxLength; i++) {
-            let obj = {};
+    // 2. Gom toàn bộ TimeStamp
+    data.forEach((channelArr) => {
+        channelArr.forEach((item) => {
+            const ts = convertDateFromApi(item.TimeStamp);
 
-            // Start with timestamp from reference dataset
-            if (data[referenceIndex] && data[referenceIndex][i]) {
-                obj.TimeStamp = convertDateFromApi(
-                    data[referenceIndex][i].TimeStamp,
-                );
+            if (!timeMap[ts]) {
+                timeMap[ts] = { TimeStamp: ts };
             }
 
-            // Add values from all datasets
-            for (let j = 0; j < data.length; j++) {
-                if (data[j] && data[j][i]) {
-                    const channelData = data[j][i];
-                    if (
-                        channelData &&
-                        channelData.ChannelName &&
-                        channelData.Value !== undefined
-                    ) {
-                        obj[channelData.ChannelName] = channelData.Value;
-                    }
-                }
-            }
+            timeMap[ts][item.ChannelName] = item.Value;
+        });
+    });
 
-            // Only add row if it has at least one value besides timestamp
-            const hasData = Object.keys(obj).some(
-                (key) => key !== 'TimeStamp' && obj[key] !== undefined,
-            );
-            if (hasData) {
-                result.push(obj);
+    // 3. Fill null cho các channel thiếu
+    Object.values(timeMap).forEach((row) => {
+        channels.forEach((ch) => {
+            if (!(ch in row)) {
+                row[ch] = null;
             }
-        }
-    }
+        });
+    });
 
-    return result;
+    // 4. Sort theo TimeStamp
+    return Object.values(timeMap).sort(
+        (a, b) => new Date(a.TimeStamp) - new Date(b.TimeStamp),
+    );
 }
 
 let viewDataOnline = document.getElementById('viewDataOnline');
