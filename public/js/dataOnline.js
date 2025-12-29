@@ -459,7 +459,6 @@ function CreateDataTable() {
             if (CheckExistsData(res.data)) {
                 let header = '';
                 let body = '';
-                console.log(res.data);
 
                 let dataConvert = convertData(res.data);
 
