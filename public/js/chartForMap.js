@@ -581,6 +581,9 @@ function createTableSingle(data, channelName, channelid) {
         <tbody>  ${body}
         </tbody>
         </table > `;
+
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
     $('#dataTable2').DataTable({
         pageLength: 5,
         order: [[0, 'desc']],
@@ -613,20 +616,22 @@ function createTableSingle(data, channelName, channelid) {
                 });
         },
         dom: 'Bfrtip',
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                title: `Data_Historical`,
-            },
-            {
-                extend: 'csvHtml5',
-                title: `Data_Historical`,
-            },
-            {
-                extend: 'pdfHtml5',
-                title: `Data_Historical`,
-            },
-        ],
+        buttons: !isMobile
+            ? [
+                  {
+                      extend: 'excelHtml5',
+                      title: `Data_Historical`,
+                  },
+                  {
+                      extend: 'csvHtml5',
+                      title: `Data_Historical`,
+                  },
+                  {
+                      extend: 'pdfHtml5',
+                      title: `Data_Historical`,
+                  },
+              ]
+            : [],
     });
 }
 
