@@ -23,7 +23,7 @@ let modalConsumption = document.getElementById('modalConsumption');
 
 let chart;
 
-function openChart(channelId, location, channelName, units) {
+function openChart(channelId, location, channelName, units, typeMeter) {
     if (channelId != null && channelId != undefined && channelId.trim() != '') {
         channelIdForViewChart = channelId;
         locationForChart = location;
@@ -67,6 +67,7 @@ function openChart(channelId, location, channelName, units) {
                                 channelNameForChart,
                                 unitForChart,
                                 response.data.DataLogger,
+                                typeMeter,
                             );
                             fillDataChannel(response.data);
                         })
@@ -158,7 +159,7 @@ function viewChart() {
 }
 
 // func draw chart
-function drawChart(channelId, location, channelname, units, data) {
+function drawChart(channelId, location, channelname, units, data, typeMeter) {
     // if (chart != null && chart != undefined) {
     //     chart.dispose();
     // }
@@ -284,7 +285,7 @@ function drawChart(channelId, location, channelname, units, data) {
     Plotly.newPlot('chartDataLogger', [trace], layout, config);
     Plotly.Plots.resize('chartDataLogger');
 
-    createTableSingle(dataForChart, channelname, channelId);
+    createTableSingle(dataForChart, channelname, channelId, typeMeter);
 }
 
 function onChangeInputChannel(e) {
@@ -560,14 +561,35 @@ function drawChartMultiple(data) {
     createTableMultiple(data);
 }
 
-function createTableSingle(data, channelName, channelid) {
+function createTableSingle(data, channelName, channelid, typeMeter) {
     let header = `<tr><th>TimeStamp</th><th>${capitalizeWords(
         channelName,
     )}</th></tr>`;
 
-    let body = '';
+    let body = ``;
 
     for (let item of data) {
+        if (typeMeter === 'Kronhe') {
+            let splitChannel = channelid.split('_');
+            if (splitChannel[splitChannel.length - 1] === '101') {
+                if (item[`${channelid}`] <= 0) {
+                    item[`${channelid}`] = '0 - No error';
+                } else if (item[`${channelid}`] === 1) {
+                    item[`${channelid}`] = ' 1- Flow measurement ';
+                } else if (item[`${channelid}`] === 2) {
+                    item[`${channelid}`] = '2 - < 10% battery ';
+                } else if (item[`${channelid}`] === 4) {
+                    item[`${channelid}`] = '4 - EEPROM error ';
+                } else if (item[`${channelid}`] === 8) {
+                    item[`${channelid}`] = '8 - Communication error ';
+                } else if (item[`${channelid}`] === 16) {
+                    item[`${channelid}`] = '16 - Empty pipe';
+                } else if (item[`${channelid}`] === 32) {
+                    item[`${channelid}`] = ' 32 -Mains power failure ';
+                }
+            }
+        }
+
         body += `<tr><td>${convertDateToString(
             item.TimeStamp,
         )}</td><td>${ConvertDataIntoTable(item[`${channelid}`])}</td></tr>`;
@@ -662,8 +684,26 @@ function convertData(input) {
                 });
             }
 
-            // Gán giá trị vào đúng channel
-            timeMap[ts][colKey] = Number(item.Value).toFixed(2);
+            if (info.channelname === '6. Alarm') {
+                if (item.Value <= 0) {
+                    item.Value = '0 - No error';
+                } else if (item.Value === 1) {
+                    item.Value = ' 1- Flow measurement ';
+                } else if (item.Value === 2) {
+                    item.Value = '2 - < 10% battery ';
+                } else if (item.Value === 4) {
+                    item.Value = '4 - EEPROM error ';
+                } else if (item.Value === 8) {
+                    item.Value = '8 - Communication error ';
+                } else if (item.Value === 16) {
+                    item.Value = '16 - Empty pipe';
+                } else if (item.Value === 32) {
+                    item.Value = ' 32 -Mains power failure ';
+                }
+                timeMap[ts][colKey] = item.Value;
+            } else {
+                timeMap[ts][colKey] = Number(item.Value).toFixed(2);
+            }
         });
     });
 

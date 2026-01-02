@@ -658,7 +658,26 @@ function convertData(data) {
                 timeMap[ts] = { TimeStamp: ts };
             }
 
-            timeMap[ts][item.ChannelName] = item.Value;
+            if (item.ChannelName === '6. Alarm') {
+                if (item.Value <= 0) {
+                    item.Value = '0 - No error';
+                } else if (item.Value === 1) {
+                    item.Value = ' 1- Flow measurement ';
+                } else if (item.Value === 2) {
+                    item.Value = '2 - < 10% battery ';
+                } else if (item.Value === 4) {
+                    item.Value = '4 - EEPROM error ';
+                } else if (item.Value === 8) {
+                    item.Value = '8 - Communication error ';
+                } else if (item.Value === 16) {
+                    item.Value = '16 - Empty pipe';
+                } else if (item.Value === 32) {
+                    item.Value = ' 32 -Mains power failure ';
+                }
+                timeMap[ts][item.ChannelName] = item.Value;
+            } else {
+                timeMap[ts][item.ChannelName] = Number(item.Value).toFixed(2);
+            }
         });
     });
 
