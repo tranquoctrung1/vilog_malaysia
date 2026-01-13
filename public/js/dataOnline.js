@@ -445,6 +445,8 @@ function drawChartMultiple(data) {
     }
 }
 
+const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
 function CreateDataTable() {
     let mutipleChannels = listChannel.join('|');
 
@@ -547,6 +549,8 @@ function CreateDataTable() {
                                 )}_To_${convertDateToString(
                                     new Date(endDateTime),
                                 )}`,
+                                orientation: 'landscape',
+                                pageSize: 'A3',
                             },
                         ],
                         language: {
@@ -558,6 +562,16 @@ function CreateDataTable() {
                                 next: 'Next',
                             },
                         },
+                        responsive: isMobile
+                            ? {
+                                  details: {
+                                      type: 'inline',
+                                      display:
+                                          $.fn.dataTable.Responsive.display
+                                              .childRow,
+                                  },
+                              }
+                            : false,
                         // columnDefs: [
                         //     {
                         //         targets: 0, // Timestamp column
