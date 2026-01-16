@@ -81,7 +81,7 @@ function findValueChannel(data, siteid) {
             );
         } else if (find.TypeMeter === 'Kronhe') {
             batteryChannel = find.ListChannel.find(
-                (c) => c.ChannelId === `${find.LoggerId}_06`,
+                (c) => c.ChannelId === `${find.LoggerId}_05`,
             );
             signalChannel = find.ListChannel.find(
                 (c) => c.ChannelId === `${find.LoggerId}_07`,
@@ -130,7 +130,9 @@ function renderVilogTable(data) {
                         <td>${item.SiteId}</td>
                         <td>${item.Location}</td>
                         <td>Disconnected</td>
-                        <td>${convertDateToString(convertDateFromApi(valueChannel.time))}</td>
+                        <td>${convertDateToString(
+                            convertDateFromApi(valueChannel.time),
+                        )}</td>
                         <td data-signal="${ConvertDataIntoTable(
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
@@ -154,7 +156,9 @@ function renderVilogTable(data) {
                         <td>${item.SiteId}</td>
                         <td>${item.Location}</td>
                         <td>DataPresent</td>
-                         <td>${convertDateToString(convertDateFromApi(valueChannel.time))}</td>
+                         <td>${convertDateToString(
+                             convertDateFromApi(valueChannel.time),
+                         )}</td>
                         <td data-signal="${ConvertDataIntoTable(
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
@@ -179,7 +183,9 @@ function renderVilogTable(data) {
                         <td>${item.SiteId}</td>
                         <td>${item.Location}</td>
                         <td>DataPresent</td>
-                         <td>${convertDateToString(convertDateFromApi(valueChannel.time))}</td>
+                         <td>${convertDateToString(
+                             convertDateFromApi(valueChannel.time),
+                         )}</td>
                         <td data-signal="${ConvertDataIntoTable(
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
@@ -280,26 +286,30 @@ function drawTable() {
     });
 
     // 3. Custom DataTables filter
-    $.fn.dataTable.ext.search.push(
-        function (settings, searchData, index, rowData, counter) {
-            var $row = $('#vlogTable').DataTable().row(index).node();
-            var rowStatus = $($row).data('status');
-            var rowFlow = $($row).data('flow');
-            var rowAlarm = $($row).data('alarm');
+    $.fn.dataTable.ext.search.push(function (
+        settings,
+        searchData,
+        index,
+        rowData,
+        counter,
+    ) {
+        var $row = $('#vlogTable').DataTable().row(index).node();
+        var rowStatus = $($row).data('status');
+        var rowFlow = $($row).data('flow');
+        var rowAlarm = $($row).data('alarm');
 
-            if (currentStatusFilter === 'Total') {
-                return true;
-            } else if (currentStatusFilter === 'DataPresent') {
-                return rowStatus === 'DataPresent';
-            } else if (currentStatusFilter === 'Disconnected') {
-                return rowStatus === 'Disconnected';
-            } else if (currentStatusFilter === 'Alarm') {
-                return rowAlarm === 'Yes';
-            }
+        if (currentStatusFilter === 'Total') {
+            return true;
+        } else if (currentStatusFilter === 'DataPresent') {
+            return rowStatus === 'DataPresent';
+        } else if (currentStatusFilter === 'Disconnected') {
+            return rowStatus === 'Disconnected';
+        } else if (currentStatusFilter === 'Alarm') {
+            return rowAlarm === 'Yes';
+        }
 
-            return false;
-        },
-    );
+        return false;
+    });
 
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
