@@ -38,6 +38,7 @@ const DashBoardVilogApi = require('../../controller/api/dashboardVilog');
 const DataLoggerDashboardVilogApi = require('../../controller/api/dataLoggerDashboardVilog');
 const HistoryAlarmAPI = require('../../controller/api/historyAlarm');
 const LoginAPI = require('../../controller/api/login');
+const ConfigVilogApi = require('../../controller/api/configVilog');
 
 router.get('/GetSiteByUId/:userid', SiteApi.GetSiteByUid);
 router.get('/GetSiteBySiteId/:siteid', SiteApi.GetSiteBySiteId);
@@ -323,5 +324,11 @@ router.get(
 );
 
 router.post('/login', LoginAPI.Login);
+
+router.get('/GetLoggingTimeVilog/:siteid', ConfigVilogApi.GetLoggingTimeVilog);
+
+router.post('/UpdateConfigVilog', ConfigVilogApi.UpdateConfigVilog);
+
+router.post('/StopLoggingVilog', ConfigVilogApi.StopLoggingVilog);
 
 module.exports = router;
