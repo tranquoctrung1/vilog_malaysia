@@ -19,6 +19,16 @@ let urlStopLoggingVilog = `${hostname}/StopLoggingVilog`;
 
 let siteidSelect = null;
 
+let currentSiteId = '';
+let currentLocation = '';
+let currentSendTime = '';
+let currentLogTime = '';
+
+let isChangeSiteId = false;
+let isChangeLocation = false;
+let isChangeSendTime = false;
+let isChangeLogTime = false;
+
 function fetchSites() {
     axios
         .get(urlGetSite)
@@ -93,6 +103,8 @@ function sendTimeChanged(e) {
     } else if (interval == '6h' && logTime.value === '15m') {
         logTime.value = '30m';
     }
+
+    isChangeSendTime = true;
 }
 
 function SetEmptySite() {
@@ -100,6 +112,34 @@ function SetEmptySite() {
     locationSite.value = '';
 
     typeMeter.value = '';
+}
+
+function onForcusInSiteId(e) {
+    currentSiteId = e.value;
+    isChangeSiteId = false;
+}
+
+function onForcusOutSiteId(e) {
+    if (currentSiteId !== e.value) {
+        currentSiteId = e.value;
+        isChangeSiteId = true;
+    }
+}
+
+function onForcusInLocation(e) {
+    currentLocation = e.value;
+    isChangeLocation = false;
+}
+
+function onForcusOutLocation(e) {
+    if (currentLocation !== e.value) {
+        currentLocation = e.value;
+        isChangeLocation = true;
+    }
+}
+
+function logTimeChange(e) {
+    isChangeLogTime = true;
 }
 
 function UpdateVilog() {
@@ -121,12 +161,23 @@ function UpdateVilog() {
 
         obj.oldSiteId = site.value;
         obj.oldLocation = oldLocation.value;
-
-        obj.siteId = siteIdConfig.value;
-        obj.location = locationSite.value;
         obj.typeMeter = typeMeter.value;
-        obj.sendTime = sendTime.value;
-        obj.logTime = logTime.value;
+
+        if (isChangeSiteId || isChangeLocation) {
+            obj.siteId = siteIdConfig.value;
+            obj.location = locationSite.value;
+        } else {
+            obj.siteId = '';
+            obj.location = '';
+        }
+
+        if (isChangeSendTime || isChangeLogTime) {
+            obj.sendTime = sendTime.value;
+            obj.logTime = logTime.value;
+        } else {
+            obj.sendTime = '';
+            obj.logTime = '';
+        }
 
         axios
             .post(urlUpdateVilog, obj)
@@ -164,6 +215,7 @@ function StopLogging() {
                 const obj = {};
                 obj.oldSiteId = site.value;
                 obj.oldLocation = oldLocation.value;
+                obj.typeMeter = typeMeter.value;
 
                 obj.siteId = siteIdConfig.value;
                 obj.location = locationSite.value;

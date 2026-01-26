@@ -27,10 +27,10 @@ block content
                             input#oldLocation.form-control(type="text" disabled)
                         .col-md-6
                             label.form-label.form-label-config(for="siteid") Site Id
-                            input#siteid.form-control(type="text")
+                            input#siteid.form-control(type="text" onfocusin="onForcusInSiteId(this)" onfocusout="onForcusOutSiteId(this)")
                         .col-md-6
                             label.form-label.form-label-config(for="location") SiteName
-                            input#location.form-control(type="text")
+                            input#location.form-control(type="text" onfocusin="onForcusInLocation(this)" onfocusout="onForcusOutLocation(this)")
                         .col-md-6
                             label.form-label.form-label-config(for="typeMeter" ) Meter Type
                             input#typeMeter.form-control(type="typeMeter" disabled)
@@ -45,7 +45,7 @@ block content
                                 option(value="12h") 12h
                         .col-md-6
                             label.form-label.form-label-config(for="logTime") Log Time
-                            select#logTime.form-select
+                            select#logTime.form-select(onChange="logTimeChange(this)")
                                 option(value="15m") 15m
                                 option(value="30m") 30m
                                 option(value="60m") 60m
