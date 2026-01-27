@@ -239,8 +239,6 @@ module.exports.UpdateConfigVilog = async (req, res) => {
                 let setTime = timeSend / timeLog;
 
                 stringMqtt.push(`AT+CLOCKLOG=1,0,${timeLog},${setTime};`);
-
-                stringMqtt.push(`AT+PRO=3,5;`);
             }
         }
 

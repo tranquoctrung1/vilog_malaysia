@@ -90,7 +90,11 @@ site.addEventListener('change', function (e) {
         .get(url)
         .then((res) => {
             if (res.status === 200) {
-                logTime.value = res.data + 'm';
+                if (res.data === 360) {
+                    logTime.value = '6h';
+                } else {
+                    logTime.value = res.data + 'm';
+                }
             }
         })
         .catch((err) => console.log(err));
