@@ -99,6 +99,47 @@ module.exports.UpdateConfigVilog = async (req, res) => {
 
         let stringMqtt = [];
 
+        let checkChangeTime = false;
+
+        if (data.siteId !== '' && data.location !== '') {
+            stringMqtt.push(
+                `AT+SUBTOPIC=Vilog_${data.location}_${data.siteId}_SUB;`,
+            );
+            stringMqtt.push(
+                `AT+PUBTOPIC=Vilog_${data.location}_${data.siteId}_PUB;`,
+            );
+        }
+
+        if (data.sendTime !== '') {
+            if (data.sendTime === '1m') {
+                stringMqtt.push('AT+TDC=60;');
+            } else if (data.sendTime === '5m') {
+                stringMqtt.push('AT+TDC=300;');
+            } else if (data.sendTime === '10m') {
+                stringMqtt.push('AT+TDC=600;');
+            } else if (data.sendTime === '15m') {
+                stringMqtt.push('AT+TDC=900;');
+            } else if (data.sendTime === '30m') {
+                stringMqtt.push('AT+TDC=1800;');
+            } else if (data.sendTime === '1h') {
+                stringMqtt.push('AT+TDC=3600;');
+            } else if (data.sendTime === '2h') {
+                stringMqtt.push('AT+TDC=7200;');
+            } else if (data.sendTime === '3h') {
+                stringMqtt.push('AT+TDC=10800;');
+            } else if (data.sendTime === '4h') {
+                stringMqtt.push('AT+TDC=14400;');
+            } else if (data.sendTime === '6h') {
+                stringMqtt.push('AT+TDC=21600;');
+            } else if (data.sendTime === '12h') {
+                stringMqtt.push('AT+TDC=43200;');
+            } else if (data.sendTime === '24h') {
+                stringMqtt.push('AT+TDC=86400;');
+            }
+
+            checkChangeTime = true;
+        }
+
         if (data.typeMeter === 'SU') {
             if (data.logTime !== '') {
                 let intervalLogTime = `00 0F`;
@@ -148,57 +189,10 @@ module.exports.UpdateConfigVilog = async (req, res) => {
                 );
 
                 stringMqtt.push(writeCommand('04', intervalLogTime));
+
+                checkChangeTime = true;
             }
-        }
-
-        if (data.sendTime !== '') {
-            if (data.sendTime === '1m') {
-                stringMqtt.push('AT+TDC=60;');
-            } else if (data.sendTime === '5m') {
-                stringMqtt.push('AT+TDC=300;');
-            } else if (data.sendTime === '10m') {
-                stringMqtt.push('AT+TDC=600;');
-            } else if (data.sendTime === '15m') {
-                stringMqtt.push('AT+TDC=900;');
-            } else if (data.sendTime === '30m') {
-                stringMqtt.push('AT+TDC=1800;');
-            } else if (data.sendTime === '1h') {
-                stringMqtt.push('AT+TDC=3600;');
-            } else if (data.sendTime === '2h') {
-                stringMqtt.push('AT+TDC=7200;');
-            } else if (data.sendTime === '3h') {
-                stringMqtt.push('AT+TDC=10800;');
-            } else if (data.sendTime === '4h') {
-                stringMqtt.push('AT+TDC=14400;');
-            } else if (data.sendTime === '6h') {
-                stringMqtt.push('AT+TDC=21600;');
-            } else if (data.sendTime === '12h') {
-                stringMqtt.push('AT+TDC=43200;');
-            } else if (data.sendTime === '24h') {
-                stringMqtt.push('AT+TDC=86400;');
-            }
-        }
-
-        if (data.siteId !== '' && data.location !== '') {
-            stringMqtt.push(
-                `AT+SUBTOPIC=Vilog_${data.location}_${data.siteId}_SUB;`,
-            );
-            stringMqtt.push(
-                `AT+PUBTOPIC=Vilog_${data.location}_${data.siteId}_PUB;`,
-            );
-
-            let check = await ConfigVilogModel.find({
-                oldSiteId: data.oldSiteId,
-            });
-
-            if (check.length === 0) {
-                const obj = {...data, isComplete: false}
-
-                await ConfigVilogModel.insertMany([obj]);
-            }
-        }
-
-        if (data.typeMeter === 'Kronhe') {
+        } else if (data.typeMeter === 'Kronhe') {
             if (data.sendTime !== '' && data.logTime !== '') {
                 let timeSend = 10;
 
@@ -239,6 +233,29 @@ module.exports.UpdateConfigVilog = async (req, res) => {
                 let setTime = timeSend / timeLog;
 
                 stringMqtt.push(`AT+CLOCKLOG=1,0,${timeLog},${setTime};`);
+                checkChangeTime = true;
+            }
+        }
+
+        if (checkChangeTime === true) {
+            stringMqtt.push(`ATZ;`);
+        }
+
+        if (
+            data.siteId !== '' ||
+            data.location !== '' ||
+            data.sendTime !== '' ||
+            data.logTime !== ''
+        ) {
+            let check = await ConfigVilogModel.find({
+                oldSiteId: data.oldSiteId,
+                isComplete: false,
+            });
+
+            if (check.length === 0) {
+                const obj = { ...data, isComplete: false };
+
+                await ConfigVilogModel.insertMany([obj]);
             }
         }
 
@@ -261,6 +278,7 @@ module.exports.UpdateConfigVilog = async (req, res) => {
             res.status(500).json({ error: err.message });
         }
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err.message });
     }
 };

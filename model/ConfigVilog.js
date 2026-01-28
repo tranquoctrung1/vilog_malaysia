@@ -6,6 +6,8 @@ var configVilogSchema = new mongoose.Schema({
     siteId: String,
     location: String,
     typeMeter: String,
+    logTime: String,
+    sendTime: String,
     isComplete: Boolean,
 });
 
