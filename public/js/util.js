@@ -412,3 +412,27 @@ function createDataForListSite(data, idDom) {
 
     domSelect.innerHTML = content;
 }
+
+window.showToast = function (type, message) {
+    // You can integrate with a toast library like Toastify or use Bootstrap toast
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    toast.style.cssText =
+        'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+
+    document.body.appendChild(toast);
+
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 5000);
+};
+
+// Format date
+window.formatDate = function (date) {
+    return new Date(date).toLocaleString();
+};

@@ -1,0 +1,638 @@
+:root {
+    --primary-red: #cc0000;
+    --hover-red: #a30000;
+}
+
+body {
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)),
+        url('/images/bg-outer.png') center center fixed no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+/* Typography */
+h2,
+h5,
+.text-primary {
+    color: var(--primary-red) !important;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
+}
+
+.card-custom {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    max-width: 950px;
+}
+
+.transfer-container {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+}
+
+.site-list {
+    height: 350px;
+    overflow-y: auto;
+    border-radius: 8px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.site-list-item {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-list-item:last-child {
+    border-bottom: none;
+}
+
+.site-list-item:hover {
+    background-color: #e9ecef;
+}
+
+.site-list-item.selected {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.site-list-item.selected strong {
+    color: white;
+}
+
+.site-list-item.selected span {
+    color: #dee2e6 !important;
+}
+
+.control-buttons .btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0.3rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.control-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: var(--primary-red) !important;
+    color: white;
+    border-bottom: none;
+}
+
+.modal-title {
+    color: white !important;
+    text-shadow: none !important;
+}
+.modal-footer button {
+    background-color: grey;
+    color: white;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.fade:not(.show) {
+    opacity: 1 !important;
+}
+
+@media only screen and (max-width: 426px) {
+    .modal-body {
+        height: 400px;
+        overflow: scroll;
+    }
+}
+div.dt-buttons .btn {
+    background-color: #cc0000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    margin-left: 8px !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 15px !important;
+    box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
+}
+
+div.dt-buttons .btn i {
+    color: #fff !important;
+    margin-right: 5px;
+}
+
+div.dt-buttons .btn:hover {
+    background-color: #a30000 !important; /* Đỏ đậm hơn */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
+}
+
+div.dt-buttons {
+    float: right;
+}
+
+/* Add to existing CSS */
+
+/* Button groups in list items */
+.site-list .btn-group {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.site-list li:hover .btn-group {
+    opacity: 1;
+}
+
+/* Modal specific styles */
+.modal-header {
+    background: --primary-red;
+    color: white;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+/* Form validation */
+input:invalid {
+    border-color: #dc3545;
+}
+
+input:valid {
+    border-color: #28a745;
+}
+
+/* Selection badge */
+.badge {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+}
+
+/* Range display */
+.range-display {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+/* Loading overlay */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Edit buttons in list */
+.edit-chat-btn,
+.edit-range-btn {
+    padding: 2px 8px;
+    font-size: 0.8rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 10px;
+    }
+
+    .modal-content {
+        border-radius: 10px;
+    }
+}
+
+/* Telegram Configuration Page Styles - Enhanced Selection */
+.card-custom {
+    max-width: 1200px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.transfer-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    min-height: 450px;
+    padding: 20px !important;
+}
+
+.site-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    background: white;
+    height: 350px;
+    overflow-y: auto;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.site-list li {
+    padding: 12px 20px;
+    border-bottom: 1px solid #e9ecef;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.site-list li:last-child {
+    border-bottom: none;
+}
+
+.site-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: transparent;
+    transition: background-color 0.3s ease;
+}
+
+.site-list li:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.site-list li:hover::before {
+    background: #0dcaf0;
+}
+
+/* Selected state - Chat (only one can be selected) */
+.site-list li.selected-chat {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-left: 4px solid #0d6efd;
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2);
+    border-radius: 8px;
+    margin: 5px;
+    padding-left: 16px;
+}
+
+.site-list li.selected-chat::before {
+    background: #0d6efd;
+    width: 4px;
+}
+
+.site-list li.selected-chat .chat-name {
+    color: #0d6efd;
+    font-weight: 700;
+}
+
+.site-list li.selected-chat .chat-id {
+    color: #1e88e5;
+    font-weight: 500;
+}
+
+/* Selected state - Range (multiple can be selected) */
+.site-list li.selected-range {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-left: 4px solid #198754;
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.2);
+    border-radius: 8px;
+    margin: 5px;
+    padding-left: 16px;
+}
+
+.site-list li.selected-range::before {
+    background: #198754;
+    width: 4px;
+}
+
+.site-list li.selected-range .chat-name {
+    color: #198754;
+    font-weight: 700;
+}
+
+.site-list li.selected-range .chat-id {
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+/* Badge styles for selection */
+.selection-badge {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.chat-info {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.chat-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 1rem;
+    color: #212529;
+    transition: all 0.3s ease;
+}
+
+.chat-id {
+    font-size: 0.85em;
+    color: #6c757d;
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* Selection counters */
+.selection-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #6c757d;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.3;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* Search highlight */
+.search-highlight {
+    background-color: #fff3cd;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+/* Button styles */
+.btn-lg {
+    padding: 12px 40px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-lg:active {
+    transform: translateY(0);
+}
+
+.btn-lg:disabled {
+    opacity: 0.6;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Save button states */
+#updateAccessBtn {
+    background: linear-gradient(135deg, #198754 0%, #157347 100%);
+    border: none;
+    min-width: 200px;
+}
+
+#updateAccessBtn:disabled {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    cursor: not-allowed;
+}
+
+#updateAccessBtn:not(:disabled):hover {
+    background: linear-gradient(135deg, #157347 0%, #0d462f 100%);
+    box-shadow: 0 5px 20px rgba(25, 135, 84, 0.3);
+}
+
+/* Selection summary */
+.selection-summary {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    border: 2px dashed #dee2e6;
+}
+
+.selection-summary h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.selection-item {
+    display: inline-block;
+    background: white;
+    padding: 5px 12px;
+    margin: 3px;
+    border-radius: 20px;
+    border: 1px solid #dee2e6;
+    font-size: 0.85rem;
+    color: #495057;
+}
+
+.selection-item.chat-item {
+    border-color: #0d6efd;
+    background: #e7f1ff;
+    color: #0d6efd;
+}
+
+.selection-item.range-item {
+    border-color: #198754;
+    background: #d4edda;
+    color: #198754;
+}
+
+/* Custom scrollbar */
+.site-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.site-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.site-list::-webkit-scrollbar-thumb {
+    background: #adb5bd;
+    border-radius: 4px;
+}
+
+.site-list::-webkit-scrollbar-thumb:hover {
+    background: #6c757d;
+}
+
+/* Section headers with selection count */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.selection-count {
+    background: #0d6efd;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.selected-pulse {
+    animation: pulse 0.5s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .transfer-container {
+        flex-direction: column;
+        padding: 15px !important;
+    }
+
+    .transfer-container > div {
+        width: 100%;
+    }
+
+    .site-list {
+        height: 250px;
+        margin-bottom: 20px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+/* Checkmark for selected ranges */
+.selected-checkmark {
+    width: 24px;
+    height: 24px;
+    background: #198754;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.8rem;
+}
+
+/* Edit button styles */
+.edit-chat-btn,
+.edit-range-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+}
+
+.edit-chat-btn:hover,
+.edit-range-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.site-list li:hover .edit-chat-btn,
+.site-list li:hover .edit-range-btn {
+    opacity: 1;
+}
+
+/* Badge cho chat có assignments */
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+/* Tooltip cho badge */
+[title] {
+    cursor: help;
+}
+
+/* Hiệu ứng cho button update */
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    border: none;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e0a800 0%, #c69500 100%);
+    box-shadow: 0 5px 20px rgba(255, 193, 7, 0.3);
+}

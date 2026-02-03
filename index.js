@@ -63,10 +63,12 @@ const DashBoardTotal = require('./router/dashBoardTotal');
 const DashBoardVilog = require('./router/dashboardVilog');
 const HistoryAlarm = require('./router/historyAlarm');
 const ConfigVilog = require('./router/configVilog');
+const ConfigTelegram = require('./router/configTelegram');
 
 // call api
 const Api = require('./router/api/api');
 const SWOCApi = require('./router/api/SWOCApi');
+const telegramApi = require('./router/api/telegram');
 
 // app.set("trust proxy", 1); // trust first proxy
 // app.use(
@@ -127,6 +129,8 @@ app.use('/api', Api);
 
 // call SWOC api
 app.use('/SWOCApi', SWOCApi);
+// call telegram api
+app.use('/api/telegram', telegramApi);
 
 // use router
 // app.use('/login', login);
@@ -160,6 +164,7 @@ app.use('/dashboardTotal', Auth.auth, DashBoardTotal);
 app.use('/dashboardVilog', Auth.auth, DashBoardVilog);
 app.use('/historyAlarm', Auth.auth, HistoryAlarm);
 app.use('/configVilog', Auth.auth, ConfigVilog);
+app.use('/configTelegram', Auth.auth, ConfigTelegram);
 
 // log out
 app.use('/logout', Logout);

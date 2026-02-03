@@ -36,6 +36,9 @@ module.exports.RouterConfig = async function (req, res) {
             } else if (item.Parent == 'ConfigVilog') {
                 content += `
               <li><a href="/configVilog"><i class="ti-pencil-alt"></i>Config Vilog</a></li>`;
+            } else if (item.Parent == 'ConfigTelegram') {
+                content += `
+              <li><a href="/configTelegram"><i class="ti-save-alt"></i>Config Telegram</a></li>`;
             } else {
                 if (item.Parent == 'Forcast') {
                     icon = 'ti-pie-chart';
