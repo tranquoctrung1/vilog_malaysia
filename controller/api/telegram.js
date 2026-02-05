@@ -6,7 +6,7 @@ class TelegramController {
     // Get all telegram chats
     static async getTelegramChats(req, res) {
         try {
-            const chats = await Telegram.find().sort({ name: 1 });
+            const chats = await Telegram.find();
             res.json(chats);
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -16,7 +16,7 @@ class TelegramController {
     // Get all ranges
     static async getRanges(req, res) {
         try {
-            const ranges = await Range.find().sort({ start: 1 });
+            const ranges = await Range.find();
             res.json(ranges);
         } catch (error) {
             res.status(500).json({ error: error.message });
