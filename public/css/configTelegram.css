@@ -636,3 +636,10 @@ input:valid {
     background: linear-gradient(135deg, #e0a800 0%, #c69500 100%);
     box-shadow: 0 5px 20px rgba(255, 193, 7, 0.3);
 }
+
+.box-checking {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}

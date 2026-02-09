@@ -99,6 +99,14 @@ block content
                                 .mb-3
                                     label.form-label End Range
                                     input.form-control#rangeEnd(type="number", placeholder="End", min="0", required)
+                        .row
+                            .col-10
+                                .mb-3
+                                    label.form-label List Site ID
+                                    input.form-control#listSiteId(type="text", placeholder="list site id",required)
+                            .col-2.box-checking
+                                .mb-3
+                                    input#isCheckList.form-check-input.form-control(type='checkbox')
                         input(type="hidden", id="rangeEditId")
                 .modal-footer
                     button.btn.btn-secondary(type="button", data-bs-dismiss="modal") Cancel

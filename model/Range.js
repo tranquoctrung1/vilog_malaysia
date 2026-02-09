@@ -8,12 +8,10 @@ const rangeSchema = new mongoose.Schema({
     },
     start: {
         type: Number,
-        required: true,
         min: 0,
     },
     end: {
         type: Number,
-        required: true,
         min: 0,
     },
     createdAt: {
@@ -23,6 +21,14 @@ const rangeSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now,
+    },
+    listSiteId: {
+        type: String,
+        trim: true,
+    },
+    isCheckList: {
+        type: Boolean,
+        default: false,
     },
 });
 

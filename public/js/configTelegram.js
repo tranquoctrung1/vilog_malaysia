@@ -56,6 +56,8 @@ class TelegramConfig {
             addRangeBtn: document.getElementById('addRangeBtn'),
             editRangeBtn: document.getElementById('editRangeBtn'),
             deleteRangeBtn: document.getElementById('deleteRangeBtn'),
+            listSiteId: document.getElementById('listSiteId'),
+            isCheckList: document.getElementById('isCheckList'),
         };
     }
 
@@ -394,6 +396,8 @@ class TelegramConfig {
             this.elements.rangeStart.value = range.start;
             this.elements.rangeEnd.value = range.end;
             this.elements.rangeEditId.value = range._id;
+            this.elements.listSiteId.value = range.listSiteId;
+            this.elements.isCheckList.checked = range.isCheckList;
 
             this.elements.addRangeBtn.style.display = 'none';
             this.elements.editRangeBtn.style.display = 'inline-block';
@@ -604,6 +608,7 @@ class TelegramConfig {
                     <div class="chat-info">
                         <div class="chat-name">${this.escapeHtml(range.name)}</div>
                         <div class="chat-id">Range: ${range.start} - ${range.end}</div>
+                        <div class="chat-id">List Site ID: ${range.listSiteId ? range.listSiteId : 'No List Site ID'}</div>
                     </div>
                     <div class="d-flex align-items-center gap-2 ms-auto">
                         <button class="btn btn-sm btn-outline-success edit-range-btn" title="Edit">
@@ -934,12 +939,16 @@ class TelegramConfig {
         try {
             const start = parseInt(this.elements.rangeStart.value);
             const end = parseInt(this.elements.rangeEnd.value);
+            const isCheckList = this.elements.isCheckList.checked;
+            const listSiteId = this.elements.listSiteId.value.trim();
 
-            if (start > end) {
-                this.showError(
-                    'Start range must be less than or equal to end range',
-                );
-                return;
+            if (isCheckList === false) {
+                if (start > end) {
+                    this.showError(
+                        'Start range must be less than or equal to end range',
+                    );
+                    return;
+                }
             }
 
             const response = await fetch(`${this.hostname}/telegram/ranges`, {
@@ -949,6 +958,8 @@ class TelegramConfig {
                     name: this.elements.rangeName.value.trim(),
                     start: start,
                     end: end,
+                    listSiteId: listSiteId,
+                    isCheckList: isCheckList,
                 }),
             });
 
@@ -981,12 +992,16 @@ class TelegramConfig {
         try {
             const start = parseInt(this.elements.rangeStart.value);
             const end = parseInt(this.elements.rangeEnd.value);
+            const isCheckList = this.elements.isCheckList.checked;
+            const listSiteId = this.elements.listSiteId.value.trim();
 
-            if (start > end) {
-                this.showError(
-                    'Start range must be less than or equal to end range',
-                );
-                return;
+            if (isCheckList === false) {
+                if (start > end) {
+                    this.showError(
+                        'Start range must be less than or equal to end range',
+                    );
+                    return;
+                }
             }
 
             const response = await fetch(
@@ -998,6 +1013,8 @@ class TelegramConfig {
                         name: this.elements.rangeName.value.trim(),
                         start: start,
                         end: end,
+                        listSiteId: listSiteId,
+                        isCheckList: isCheckList,
                     }),
                 },
             );
@@ -1151,6 +1168,8 @@ class TelegramConfig {
         const name = this.elements.rangeName.value.trim();
         const start = this.elements.rangeStart.value;
         const end = this.elements.rangeEnd.value;
+        const isCheckList = this.elements.isCheckList.checked;
+        const listSiteId = this.elements.listSiteId.value.trim();
 
         // Reset validation states
         this.elements.rangeName.classList.remove('is-invalid');
@@ -1165,25 +1184,33 @@ class TelegramConfig {
             isValid = false;
         }
 
-        if (!start || isNaN(start) || parseInt(start) < 0) {
-            this.elements.rangeStart.classList.add('is-invalid');
-            this.showError('Start range must be a positive number');
-            isValid = false;
-        }
+        if (isCheckList === true) {
+            if (!listSiteId) {
+                this.elements.listSiteId.classList.add('is-invalid');
+                this.showError('List Site ID is required');
+                isValid = false;
+            }
+        } else {
+            if (!start || isNaN(start) || parseInt(start) < 0) {
+                this.elements.rangeStart.classList.add('is-invalid');
+                this.showError('Start range must be a positive number');
+                isValid = false;
+            }
 
-        if (!end || isNaN(end) || parseInt(end) < 0) {
-            this.elements.rangeEnd.classList.add('is-invalid');
-            this.showError('End range must be a positive number');
-            isValid = false;
-        }
+            if (!end || isNaN(end) || parseInt(end) < 0) {
+                this.elements.rangeEnd.classList.add('is-invalid');
+                this.showError('End range must be a positive number');
+                isValid = false;
+            }
 
-        if (start && end && parseInt(start) > parseInt(end)) {
-            this.elements.rangeStart.classList.add('is-invalid');
-            this.elements.rangeEnd.classList.add('is-invalid');
-            this.showError(
-                'Start range must be less than or equal to end range',
-            );
-            isValid = false;
+            if (start && end && parseInt(start) > parseInt(end)) {
+                this.elements.rangeStart.classList.add('is-invalid');
+                this.elements.rangeEnd.classList.add('is-invalid');
+                this.showError(
+                    'Start range must be less than or equal to end range',
+                );
+                isValid = false;
+            }
         }
 
         return isValid;

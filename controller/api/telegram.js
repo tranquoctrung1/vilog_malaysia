@@ -103,8 +103,15 @@ class TelegramController {
     // Add new range
     static async addRange(req, res) {
         try {
-            const { name, start, end } = req.body;
-            const range = new Range({ name, start, end });
+            const { name, start, end, listSiteId, isCheckList } = req.body;
+            const range = new Range({
+                name,
+                start,
+                end,
+                listSiteId,
+                isCheckList,
+            });
+
             await range.save();
             res.status(201).json(range);
         } catch (error) {
@@ -116,11 +123,11 @@ class TelegramController {
     static async updateRange(req, res) {
         try {
             const { id } = req.params;
-            const { name, start, end } = req.body;
+            const { name, start, end, listSiteId, isCheckList } = req.body;
 
             const range = await Range.findByIdAndUpdate(
                 id,
-                { name, start, end },
+                { name, start, end, listSiteId, isCheckList },
                 { new: true, runValidators: true },
             );
 
