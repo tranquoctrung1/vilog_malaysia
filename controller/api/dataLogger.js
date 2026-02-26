@@ -38,6 +38,68 @@ module.exports.GetDataLoggerByTimeStampSWOC = async function (req, res) {
     res.status(200).json(result);
 };
 
+module.exports.GetDataLoggerByTimeStampWithSiteIDSWOC = async function (
+    req,
+    res,
+) {
+    const { siteid, start, end } = req.query;
+
+    const result = [];
+
+    let startDate = new Date(parseInt(start));
+    let endDate = new Date(parseInt(end));
+
+    const sites = await SiteModel.find({ SiteId: siteid });
+
+    if (sites.length > 0) {
+        const channels = await ChannelModel.find({
+            LoggerId: sites[0].LoggerId,
+        });
+
+        if (channels.length > 0) {
+            for (const channel of channels) {
+                const d = {};
+                d.ChannelId = channel.ChannelId;
+                d.ChannelName = channel.ChannelName;
+                d.Unit = channel.Unit;
+                d.TimeStamp = channel.TimeStamp;
+                d.LastValue = channel.LastValue;
+                d.LoggerId = channel.LoggerId;
+                d.Data = [];
+
+                const DataLoggerSchema = new mongoose.Schema({
+                    TimeStamp: Date,
+                    Value: Number,
+                });
+
+                delete mongoose.models.DataLogger;
+
+                const DataLogger = mongoose.model(
+                    'DataLogger',
+                    DataLoggerSchema,
+                    't_Data_Logger_' + channel.ChannelId,
+                );
+
+                const data = await DataLogger.find({
+                    TimeStamp: { $gte: startDate, $lte: endDate },
+                }).sort({ TimeStamp: 1 });
+
+                for (const item of data) {
+                    const obj = {};
+                    obj.Value = item.Value;
+                    obj.TimeStamp = item.TimeStamp;
+
+                    d.Data.push(obj);
+                }
+
+                result.push(d);
+            }
+        }
+    }
+
+    res.status(200).json(result);
+};
+
 module.exports.GetDataLoggerWithTime = async function (req, res) {
     const channelid = req.params.channelid;
     const start = req.params.start;

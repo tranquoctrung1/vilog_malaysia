@@ -9,10 +9,12 @@ const rangeSchema = new mongoose.Schema({
     start: {
         type: Number,
         min: 0,
+        defauilt: null,
     },
     end: {
         type: Number,
         min: 0,
+        default: null,
     },
     createdAt: {
         type: Date,
