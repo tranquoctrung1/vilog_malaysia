@@ -48,6 +48,12 @@ router.get(
 );
 
 router.get(
+    '/GetDataLoggerByTimeStampAndAllSiteSWOC',
+    Auth.verifyAccessToken,
+    DataLoggerController.GetDataLoggerByTimeStampAndAllSiteSWOC,
+);
+
+router.get(
     `/GetChannels`,
     Auth.verifyAccessToken,
     ChannelConfigController.GetChannelsSWOC,

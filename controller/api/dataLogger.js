@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const ChannelModel = require('../../model/Channel');
 const SiteModel = require('../../model/site');
+const UserModel = require('../../model/user');
 
 module.exports.GetDataLoggerByTimeStampSWOC = async function (req, res) {
     const { channelid, start, end } = req.query;
@@ -95,6 +96,126 @@ module.exports.GetDataLoggerByTimeStampWithSiteIDSWOC = async function (
                 result.push(d);
             }
         }
+    }
+
+    res.status(200).json(result);
+};
+
+module.exports.GetDataLoggerByTimeStampAndAllSiteSWOC = async function (
+    req,
+    res,
+) {
+    const { start, end } = req.query;
+    const username = req.username;
+    const result = [];
+
+    let startDate = new Date(parseInt(start));
+    let endDate = new Date(parseInt(end));
+
+    let user = await UserModel.findOne({ Username: username });
+
+    let listSite;
+
+    if (user.Role == 'admin') {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    } else if (user.Role == 'consumer') {
+        let listIdSite = await ConsumerSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+
+        //listSite = await SiteModel.find({ ConsumerId: user.ConsumerId });
+    } else if (user.Role == 'staff') {
+        let listIdSite = await StaffSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+        //listSite = await SiteModel.find({ StaffId: user.StaffId });
+    } else {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    }
+
+    for (const item of listSite) {
+        const site = {};
+        site.SiteId = item.SiteId;
+        site.SiteName = item.Location;
+        site.IMEI = item.IMEI;
+        site.TimeDelay = item.TimeDelay;
+        site.Channels = [];
+
+        const channels = await ChannelModel.find({
+            LoggerId: item.LoggerId,
+        });
+
+        if (channels.length > 0) {
+            for (const channel of channels) {
+                const d = {};
+                d.ChannelId = channel.ChannelId;
+                d.ChannelName = channel.ChannelName;
+                d.Unit = channel.Unit;
+                d.TimeStamp = channel.TimeStamp;
+                d.LastValue = channel.LastValue;
+                d.LoggerId = channel.LoggerId;
+                d.Data = [];
+
+                const DataLoggerSchema = new mongoose.Schema({
+                    TimeStamp: Date,
+                    Value: Number,
+                });
+
+                delete mongoose.models.DataLogger;
+
+                const DataLogger = mongoose.model(
+                    'DataLogger',
+                    DataLoggerSchema,
+                    't_Data_Logger_' + channel.ChannelId,
+                );
+
+                const data = await DataLogger.find({
+                    TimeStamp: { $gte: startDate, $lte: endDate },
+                }).sort({ TimeStamp: 1 });
+
+                for (const item of data) {
+                    const obj = {};
+                    obj.Value = item.Value;
+                    obj.TimeStamp = item.TimeStamp;
+
+                    d.Data.push(obj);
+                }
+
+                site.Channels.push(d);
+            }
+        }
+
+        result.push(site);
     }
 
     res.status(200).json(result);
