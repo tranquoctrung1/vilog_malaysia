@@ -30,6 +30,12 @@ router.get(
 );
 
 router.get(
+    '/GetLastDataChannelConfigTimeStampSWOC',
+    Auth.verifyAccessToken,
+    ChannelConfigController.GetLastDataChannelConfigTimeStampSWOC,
+);
+
+router.get(
     '/GetDataLoggerSWOC',
     Auth.verifyAccessToken,
     DataLoggerController.GetDataLoggerByTimeStampSWOC,

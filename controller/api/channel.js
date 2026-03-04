@@ -153,6 +153,110 @@ module.exports.GetLastDataChannelConfigSWOC = async function (req, res) {
     res.status(200).json(result);
 };
 
+module.exports.GetLastDataChannelConfigTimeStampSWOC = async function (
+    req,
+    res,
+) {
+    const result = [];
+
+    const username = req.username;
+
+    const { start, end } = req.query;
+
+    let startDate = new Date(parseInt(start));
+    let endDate = new Date(parseInt(end));
+
+    let user = await UserModel.findOne({ Username: username });
+
+    let listSite;
+
+    if (user.Role == 'admin') {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    } else if (user.Role == 'consumer') {
+        let listIdSite = await ConsumerSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+
+        //listSite = await SiteModel.find({ ConsumerId: user.ConsumerId });
+    } else if (user.Role == 'staff') {
+        let listIdSite = await StaffSiteModel.find(
+            { IdUser: user._id },
+            { IdSite: 1, _id: 0 },
+        );
+
+        let list = [];
+
+        for (let item of listIdSite) {
+            list.push(item.IdSite);
+        }
+
+        if (listIdSite.length > 0) {
+            listSite = await SiteModel.find({ _id: { $in: list } }).sort({
+                SiteId: 1,
+            });
+        } else {
+            listSite = [];
+        }
+        //listSite = await SiteModel.find({ StaffId: user.StaffId });
+    } else {
+        listSite = await SiteModel.find({}).sort({ SiteId: 1 });
+    }
+
+    for (const item of listSite) {
+        const data = await ChannelModel.find({ LoggerId: item.LoggerId }).sort({
+            ChannelId: 1,
+        });
+        for (const item of data) {
+            const obj = {};
+            obj.LoggerId = item.LoggerId;
+            obj.channelId = item.ChannelId;
+            obj.LastValue = null;
+            obj.TimeStamp = null;
+
+            const DataLoggerSchema = new mongoose.Schema({
+                TimeStamp: Date,
+                Value: Number,
+            });
+
+            delete mongoose.models.DataLogger;
+
+            const DataLogger = mongoose.model(
+                'DataLogger',
+                DataLoggerSchema,
+                't_Data_Logger_' + item.ChannelId,
+            );
+
+            const dataLogger = await DataLogger.find({
+                TimeStamp: { $gte: startDate, $lte: endDate },
+            }).sort({ TimeStamp: -1 });
+
+            if (dataLogger.length > 0) {
+                obj.LastValue = dataLogger[0].Value;
+                obj.TimeStamp = dataLogger[0].TimeStamp;
+            }
+
+            result.push(obj);
+        }
+    }
+
+    res.status(200).json(result);
+};
+
 module.exports.GetChannelByLoggerId = async function (req, res) {
     const loggerid = req.params.loggerid;
 
