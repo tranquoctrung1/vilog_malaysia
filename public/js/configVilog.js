@@ -70,6 +70,8 @@ site.addEventListener('change', function (e) {
                         sendTime.value = '12h';
                     } else if (timeDelay >= 360) {
                         sendTime.value = '6h';
+                    } else if (timeDelay >= 180) {
+                        sendTime.value = '3h';
                     } else if (timeDelay >= 120) {
                         sendTime.value = '2h';
                     } else if (timeDelay >= 60) {

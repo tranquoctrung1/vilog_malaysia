@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ChannelModel = require('../../model/Channel');
 const SiteModel = require('../../model/site');
 const UserModel = require('../../model/user');
+const ConsumerSiteModel = require('../../model/consumerSite');
+const StaffSiteModel = require('../../model/staffSite');
 
 module.exports.GetDataLoggerByTimeStampSWOC = async function (req, res) {
     const { channelid, start, end } = req.query;

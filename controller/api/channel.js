@@ -780,7 +780,7 @@ module.exports.GetChannelBySiteId = async function (req, res) {
             LoggerId: site[0].LoggerId,
         }).sort({ ChannelName: 1 });
 
-        res.json(channels);
+        return res.json(channels);
     }
     res.json([]);
 };

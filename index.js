@@ -16,10 +16,13 @@ const connectLiveReload = require('connect-livereload');
 const cors = require('./middleware/cors');
 const Auth = require('./middleware/auth');
 const permissionPage = require('./middleware/permissionPage');
+const helmet = require('helmet');
 
 const mongoose = require('mongoose');
 
 const app = express();
+
+//app.use(helmet());
 
 // connect mongodb
 mongoose.connect(process.env.CONNECTION_STRING, {
