@@ -53,6 +53,7 @@ function findValueChannel(data, siteid) {
         reverse: null,
         battery: null,
         net: null,
+        level: null,
         time: null,
     };
 
@@ -68,6 +69,7 @@ function findValueChannel(data, siteid) {
         let batteryChannel = null;
         let signalChannel = null;
         let netChannel = null;
+        let levelChannel = null;
 
         if (find.TypeMeter === 'SU') {
             batteryChannel = find.ListChannel.find(
@@ -88,6 +90,16 @@ function findValueChannel(data, siteid) {
             );
             netChannel = find.ListChannel.find(
                 (c) => c.ChannelId === `${find.LoggerId}_100`,
+            );
+        } else if (find.TypeMeter === 'Level') {
+            batteryChannel = find.ListChannel.find(
+                (c) => c.ChannelId === `${find.LoggerId}_05`,
+            );
+            signalChannel = find.ListChannel.find(
+                (c) => c.ChannelId === `${find.LoggerId}_07`,
+            );
+            levelChannel = find.ListChannel.find(
+                (c) => c.ChannelId === `${find.LoggerId}_200`,
             );
         }
 
@@ -111,6 +123,9 @@ function findValueChannel(data, siteid) {
             obj.net = netChannel.LastValue;
             obj.time = netChannel.TimeStamp;
         }
+        if (levelChannel !== undefined && levelChannel !== null) {
+            obj.level = levelChannel.LastValue;
+        }
         return obj;
     }
 }
@@ -133,12 +148,13 @@ function renderVilogTable(data) {
                         <td>${convertDateToString(
                             convertDateFromApi(valueChannel.time),
                         )}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.level)}</td>
                         <td data-signal="${ConvertDataIntoTable(
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
                         <td>Yes</td>
                     </tr>`;
@@ -159,12 +175,13 @@ function renderVilogTable(data) {
                          <td>${convertDateToString(
                              convertDateFromApi(valueChannel.time),
                          )}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.level)}</td>
                         <td data-signal="${ConvertDataIntoTable(
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
                         <td>Yes</td>
                     </tr>`;
@@ -186,12 +203,13 @@ function renderVilogTable(data) {
                          <td>${convertDateToString(
                              convertDateFromApi(valueChannel.time),
                          )}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
+                        <td>${ConvertDataIntoTable(valueChannel.level)}</td>
                         <td data-signal="${ConvertDataIntoTable(
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
                         <td>No</td>
                     </tr>`;
@@ -250,10 +268,10 @@ function drawTable() {
         var $row = $(this);
         var status = $row.data('status');
         var flow = $row.data('flow');
-        var signalCell = $row.find('td:eq(4)');
+        var signalCell = $row.find('td:eq(8)');
         var signalText = signalCell.attr('data-signal');
         var signal = parseInt(signalText);
-        var alarm = $row.find('td:eq(8)').text();
+        var alarm = $row.find('td:eq(9)').text();
 
         totalSites++;
 
@@ -271,12 +289,12 @@ function drawTable() {
         }
         // Alarm Tagging (Cột 7)
         if (alarm === 'Yes') {
-            $row.find('td:eq(9)').html(
+            $row.find('td:eq(10)').html(
                 '<span class="status-tag tag-danger">ALARM</span>',
             );
             //alarmSites++;
         } else {
-            $row.find('td:eq(9)').html(
+            $row.find('td:eq(10)').html(
                 '<span class="status-tag tag-success">NORMAL</span>',
             );
         }
