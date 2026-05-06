@@ -304,30 +304,26 @@ function drawTable() {
     });
 
     // 3. Custom DataTables filter
-    $.fn.dataTable.ext.search.push(function (
-        settings,
-        searchData,
-        index,
-        rowData,
-        counter,
-    ) {
-        var $row = $('#vlogTable').DataTable().row(index).node();
-        var rowStatus = $($row).data('status');
-        var rowFlow = $($row).data('flow');
-        var rowAlarm = $($row).data('alarm');
+    $.fn.dataTable.ext.search.push(
+        function (settings, searchData, index, rowData, counter) {
+            var $row = $('#vlogTable').DataTable().row(index).node();
+            var rowStatus = $($row).data('status');
+            var rowFlow = $($row).data('flow');
+            var rowAlarm = $($row).data('alarm');
 
-        if (currentStatusFilter === 'Total') {
-            return true;
-        } else if (currentStatusFilter === 'DataPresent') {
-            return rowStatus === 'DataPresent';
-        } else if (currentStatusFilter === 'Disconnected') {
-            return rowStatus === 'Disconnected';
-        } else if (currentStatusFilter === 'Alarm') {
-            return rowAlarm === 'Yes';
-        }
+            if (currentStatusFilter === 'Total') {
+                return true;
+            } else if (currentStatusFilter === 'DataPresent') {
+                return rowStatus === 'DataPresent';
+            } else if (currentStatusFilter === 'Disconnected') {
+                return rowStatus === 'Disconnected';
+            } else if (currentStatusFilter === 'Alarm') {
+                return rowAlarm === 'Yes';
+            }
 
-        return false;
-    });
+            return false;
+        },
+    );
 
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 

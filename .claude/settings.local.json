@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npx @yao-pkg/pkg . --targets node20-win-x64 --output dist/app.exe)",
+      "Bash(npx @yao-pkg/pkg index.js --targets node20-win-x64 --output dist/app.exe)",
+      "Bash(echo \"EXIT: $?\")",
+      "PowerShell(Get-ChildItem \"d:\\\\project\\\\node_malaysia\\\\\" -Depth 0 | Where-Object { $_.Name -notmatch \"node_modules\" } | Select-Object Name, PSIsContainer)",
+      "PowerShell(Get-ChildItem \"d:\\\\project\\\\node_malaysia\" | Where-Object { $_.Name -ne \"node_modules\" } | Format-Table Name, PSIsContainer -AutoSize)"
+    ]
+  }
+}

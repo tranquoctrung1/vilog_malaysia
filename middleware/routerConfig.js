@@ -18,21 +18,9 @@ module.exports.RouterConfig = async function (req, res) {
             if (item.Parent == 'Map') {
                 content += `
             <li><a href="/"><i class="ti-map"></i> Map</a></li>`;
-            } else if (item.Parent == 'Dashboard Vilog') {
-                content += `
-            <li><a href="/dashboardVilog"><i class="ti-dashboard"></i>Dashboard Vilog</a></li>`;
             } else if (item.Parent == 'HistoryAlarm') {
                 content += `
         <li><a href="/historyAlarm"><i class="ti-bell"></i> History Alarm</a></li>`;
-            } else if (item.Parent == 'DashBoard') {
-                content += `
-            <li><a href="/dashboard"><i class="ti-layers"></i> DashBoard</a></li>`;
-            } else if (item.Parent == 'DashBoardTotal') {
-                content += `
-              <li><a href="/dashboardTotal"><i class="ti-layers"></i>DashBoard general</a></li>`;
-            } else if (item.Parent == 'AlarmLostWater') {
-                content += `
-        <li><a href="/alarmLostWater"><i class="ti-bell"></i>Alarm water lost</a></li>`;
             } else if (item.Parent == 'ConfigVilog') {
                 content += `
               <li><a href="/configVilog"><i class="ti-pencil-alt"></i>Config Vilog</a></li>`;
@@ -64,6 +52,9 @@ module.exports.RouterConfig = async function (req, res) {
                 } else if (item.Parent == 'Camera Online') {
                     icon = 'ti-video-camera';
                     parent = 'Camera Online';
+                } else if (item.Parent == 'Dashboard') {
+                    icon = 'ti-dashboard';
+                    parent = 'Dashboard';
                 }
 
                 // <li class="label">${parent}</li>
