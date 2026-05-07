@@ -53,6 +53,21 @@ function initMap() {
         ],
     });
 
+    const TOOLTIP_ZOOM_THRESHOLD = 14;
+
+    map.on('zoomend', function () {
+        const z = map.getZoom();
+        map.eachLayer(function (layer) {
+            if (layer instanceof L.Marker) {
+                if (z >= TOOLTIP_ZOOM_THRESHOLD) {
+                    layer.openTooltip();
+                } else {
+                    layer.closeTooltip();
+                }
+            }
+        });
+    });
+
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution:
             '<strong style="color: #0078a8">Copyright &copy by Bavitech</strong>',
@@ -87,7 +102,7 @@ function initMap() {
                         site.Longitude != null &&
                         site.Longitude != undefined
                     ) {
-                        map.setView([site.Latitude, site.Longitude], 16);
+                        map.setView([site.Latitude, site.Longitude], 7);
 
                         isSetView = true;
                     }
@@ -352,7 +367,7 @@ function initMap() {
                             .bindTooltip(labelHtml, {
                                 interactive: true,
                                 direction: 'bottom',
-                                permanent: true,
+                                permanent: false,
                                 offset: [10, 19],
                             })
                             .on('click', onMarkerClick);
