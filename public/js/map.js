@@ -143,14 +143,9 @@ function initMap() {
                         let checkStatusValue = true;
                         for (let channel of res.data) {
                             if (channel.ChannelName.includes('Mem')) {
-                                channel.ChannelName =
-                                    channel.ChannelName.replace(
-                                        'Mem',
-                                        'Memory',
-                                    );
+                                channel.ChannelName = '1.2 Memory Error';
                             } else if (channel.ChannelName.includes('Com')) {
-                                channel.ChannelName =
-                                    channel.ChannelName.replace('Com', 'Comm');
+                                channel.ChannelName = '1.7 Comm Error';
                             }
                             if (
                                 channel.ChannelName.length > 3 &&
@@ -470,15 +465,9 @@ function updateMap() {
                 let checkStatusValue = true;
                 for (let channel of res.data) {
                     if (channel.ChannelName.includes('Mem')) {
-                        channel.ChannelName = channel.ChannelName.replace(
-                            'Mem',
-                            'Memory',
-                        );
+                        channel.ChannelName = '1.2 Memory Error';
                     } else if (channel.ChannelName.includes('Com')) {
-                        channel.ChannelName = channel.ChannelName.replace(
-                            'Com',
-                            'Comm',
-                        );
+                        channel.ChannelName = '1.7 Comm Error';
                     }
                     if (
                         channel.ChannelName.length > 3 &&

@@ -8,7 +8,7 @@
         "start": "nodemon -e js,pug,sass index.js",
         "test": "echo \"Error: no test specified\" && exit 1",
         "deploy": "deploy.bat",
-        "build": "npx @yao-pkg/pkg . --targets node20-win-x64 --output dist/app.exe"
+        "build": "npx @yao-pkg/pkg . --targets node22-win-x64 --compress GZip --output dist/app.exe"
     },
     "pkg": {
         "scripts": [
@@ -28,7 +28,7 @@
             "node_modules/popper.js/dist/umd/**/*",
             "node_modules/axios/dist/**/*"
         ],
-        "targets": ["node20-win-x64"],
+        "targets": ["node22-win-x64"],
         "outputPath": "dist"
     },
     "keywords": [],
