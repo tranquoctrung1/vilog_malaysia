@@ -28,7 +28,9 @@
             "node_modules/popper.js/dist/umd/**/*",
             "node_modules/axios/dist/**/*"
         ],
-        "targets": ["node22-win-x64"],
+        "targets": [
+            "node22-win-x64"
+        ],
         "outputPath": "dist"
     },
     "keywords": [],

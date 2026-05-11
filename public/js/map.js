@@ -145,7 +145,7 @@ function initMap() {
                             if (channel.ChannelName.includes('Mem')) {
                                 channel.ChannelName = '1.2 Memory Error';
                             } else if (channel.ChannelName.includes('Com')) {
-                                channel.ChannelName = '1.7 Comm Error';
+                                channel.ChannelName = '1.7 Comms Error';
                             }
                             if (
                                 channel.ChannelName.length > 3 &&
@@ -467,7 +467,7 @@ function updateMap() {
                     if (channel.ChannelName.includes('Mem')) {
                         channel.ChannelName = '1.2 Memory Error';
                     } else if (channel.ChannelName.includes('Com')) {
-                        channel.ChannelName = '1.7 Comm Error';
+                        channel.ChannelName = '1.7 Comms Error';
                     }
                     if (
                         channel.ChannelName.length > 3 &&
