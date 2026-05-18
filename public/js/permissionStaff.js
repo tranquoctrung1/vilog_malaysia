@@ -70,6 +70,8 @@ $(document).ready(async function () {
         const staffSel = $('#staffSelect').val() !== null;
         $('#assignBtn').prop('disabled', !availSel || !staffSel);
         $('#unassignBtn').prop('disabled', !assignedSel || !staffSel);
+        $('#assignAllBtn').prop('disabled', !staffSel || $('#availableSitesList li').length === 0);
+        $('#unassignAllBtn').prop('disabled', !staffSel || $('#assignedSitesList li').length === 0);
         $('#updateAccessBtn').prop('disabled', !staffSel);
     }
 
@@ -120,6 +122,16 @@ $(document).ready(async function () {
             (s) => !currentAssignedSites.includes(s),
         );
         renderLists(available, currentAssignedSites);
+    });
+
+    $('#assignAllBtn').on('click', function () {
+        currentAssignedSites = [...ALL_SITE_IDS];
+        renderLists([], currentAssignedSites);
+    });
+
+    $('#unassignAllBtn').on('click', function () {
+        currentAssignedSites = [];
+        renderLists(ALL_SITE_IDS, []);
     });
 
     function filterList(searchId, listId) {

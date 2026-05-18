@@ -68,9 +68,11 @@ $(document).ready(async function () {
     function updateControlButtons() {
         const availSel = $('#availableSitesList .selected').length > 0;
         const assignedSel = $('#assignedSitesList .selected').length > 0;
-        const staffSel = $('#staffSelect').val() !== null;
+        const staffSel = $('#consumerSelect').val() !== null;
         $('#assignBtn').prop('disabled', !availSel || !staffSel);
         $('#unassignBtn').prop('disabled', !assignedSel || !staffSel);
+        $('#assignAllBtn').prop('disabled', !staffSel || $('#availableSitesList li').length === 0);
+        $('#unassignAllBtn').prop('disabled', !staffSel || $('#assignedSitesList li').length === 0);
         $('#updateAccessBtn').prop('disabled', !staffSel);
     }
 
@@ -121,6 +123,16 @@ $(document).ready(async function () {
             (s) => !currentAssignedSites.includes(s),
         );
         renderLists(available, currentAssignedSites);
+    });
+
+    $('#assignAllBtn').on('click', function () {
+        currentAssignedSites = [...ALL_SITE_IDS];
+        renderLists([], currentAssignedSites);
+    });
+
+    $('#unassignAllBtn').on('click', function () {
+        currentAssignedSites = [];
+        renderLists(ALL_SITE_IDS, []);
     });
 
     function filterList(searchId, listId) {
