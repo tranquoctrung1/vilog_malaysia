@@ -6,7 +6,16 @@
       "Bash(npx @yao-pkg/pkg index.js --targets node20-win-x64 --output dist/app.exe)",
       "Bash(echo \"EXIT: $?\")",
       "PowerShell(Get-ChildItem \"d:\\\\project\\\\node_malaysia\\\\\" -Depth 0 | Where-Object { $_.Name -notmatch \"node_modules\" } | Select-Object Name, PSIsContainer)",
-      "PowerShell(Get-ChildItem \"d:\\\\project\\\\node_malaysia\" | Where-Object { $_.Name -ne \"node_modules\" } | Format-Table Name, PSIsContainer -AutoSize)"
+      "PowerShell(Get-ChildItem \"d:\\\\project\\\\node_malaysia\" | Where-Object { $_.Name -ne \"node_modules\" } | Format-Table Name, PSIsContainer -AutoSize)",
+      "Bash(mkdir -p \"d:/project/node_malaysia/.claude/agents\" \"d:/project/node_malaysia/.claude/skills/feature-dev-orchestrator/references\" \"d:/project/node_malaysia/.claude/skills/express-mvc-pattern\" \"d:/project/node_malaysia/.claude/skills/pug-frontend-pattern\" \"d:/project/node_malaysia/.claude/skills/mqtt-realtime-pattern\" \"d:/project/node_malaysia/.claude/skills/integration-qa\")",
+      "Edit(/.claude/skills/express-mvc-pattern/**)",
+      "Edit(/.claude/skills/pug-frontend-pattern/**)",
+      "Edit(/.claude/skills/mqtt-realtime-pattern/**)",
+      "Edit(/.claude/skills/integration-qa/**)",
+      "Edit(/.claude/skills/feature-dev-orchestrator/**)"
+    ],
+    "additionalDirectories": [
+      "d:\\project\\node_malaysia\\.claude"
     ]
   }
 }
