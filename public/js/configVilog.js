@@ -27,7 +27,22 @@ let currentLogTime = '';
 let isChangeSiteId = false;
 let isChangeLocation = false;
 let isChangeSendTime = false;
-let isChangeLogTime = false;
+
+async function calculateLogTime(siteId) {
+    if (!siteId) return;
+    try {
+        const response = await axios.get(`${urlGetLoggingTime}/${siteId}`);
+        if (response.status === 200) {
+            if (response.data === 360) {
+                logTime.value = '6h';
+            } else {
+                logTime.value = response.data + 'm';
+            }
+        }
+    } catch (err) {
+        console.log('Error calculating log time', err);
+    }
+}
 
 function fetchSites() {
     axios
@@ -38,10 +53,10 @@ function fetchSites() {
             }
             createOptionsInSelectBox(res.data, 'site');
             siteidSelect = new TomSelect('#site', {
-                create: false, // Disallow custom entries
+                create: false,
                 sortField: { field: 'text', direction: 'asc' },
                 persist: false,
-                selectOnTab: false, // ⛔ don't select on Tab or Enter
+                selectOnTab: false,
                 preload: false,
                 maxOptions: null,
             });
@@ -86,20 +101,7 @@ site.addEventListener('change', function (e) {
         })
         .catch((err) => console.log(err));
 
-    url = `${urlGetLoggingTime}/${e.target.value}`;
-
-    axios
-        .get(url)
-        .then((res) => {
-            if (res.status === 200) {
-                if (res.data === 360) {
-                    logTime.value = '6h';
-                } else {
-                    logTime.value = res.data + 'm';
-                }
-            }
-        })
-        .catch((err) => console.log(err));
+    calculateLogTime(e.target.value);
 });
 
 function sendTimeChanged(e) {
@@ -144,10 +146,6 @@ function onForcusOutLocation(e) {
     }
 }
 
-function logTimeChange(e) {
-    isChangeLogTime = true;
-}
-
 function UpdateVilog() {
     const obj = {};
 
@@ -177,12 +175,10 @@ function UpdateVilog() {
             obj.location = '';
         }
 
-        if (isChangeSendTime || isChangeLogTime) {
+        if (isChangeSendTime) {
             obj.sendTime = sendTime.value;
-            obj.logTime = logTime.value;
         } else {
             obj.sendTime = '';
-            obj.logTime = '';
         }
 
         axios
