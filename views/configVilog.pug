@@ -46,18 +46,14 @@ block content
                                 option(value="12h") 12h
                         .col-md-6
                             label.form-label.form-label-config(for="logTime") Log Time
-                            select#logTime.form-select(onChange="logTimeChange(this)")
-                                option(value="15m") 15m
-                                option(value="30m") 30m
-                                option(value="60m") 60m
-                                option(value="6h") 6h
+                            input#logTime.form-control(type="text" readonly)
                     .row
                         .col-12.button
                             .config-actions.text-end
                                 button.btn.btn-info.me-2.text-white#btnUpdate(type="button" onclick="UpdateVilog(this)")
                                     i.fas.fa-save.me-1
                                     | Update
-                                button.btn.btn-danger#btnStop(type="button" onclick="StopLogging(this)")
+                                button.btn-danger#btnStop(type="button" onclick="StopLogging(this)")
                                     i.fas.fa-trash.me-1
                                     | Stop Logging
 
@@ -69,8 +65,6 @@ block linkcriptbody
     script(src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js")
     script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.bootstrap5.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js")
     script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js")
     script(src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js")
     script(src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js")

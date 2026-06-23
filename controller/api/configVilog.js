@@ -30,7 +30,7 @@ module.exports.GetLoggingTimeVilog = async (req, res) => {
 
         let value = await DataLogger.find({}).sort({ TimeStamp: -1 }).limit(2);
 
-        if (value.length > 0) {
+        if (value.length >= 2) {
             if (value[0].TimeStamp !== null && value[1].TimeStamp !== null) {
                 let diffMs = value[0].TimeStamp - value[1].TimeStamp;
                 result = Math.round(diffMs / 60000);
@@ -38,6 +38,8 @@ module.exports.GetLoggingTimeVilog = async (req, res) => {
         }
 
         res.status(200).json(result);
+    } else {
+        res.status(200).json(0);
     }
 };
 
@@ -48,7 +50,6 @@ function writeCommand(cmdCode, data) {
 
 function toHex2(value, isYear = false) {
     if (isYear) {
-        // Ví dụ: 2026 → 07 EA (tuỳ device, bạn chỉnh lại nếu cần)
         const hex = value.toString(16).toUpperCase();
         return hex.match(/.{1,2}/g).join(' ');
     }
@@ -61,7 +62,6 @@ function mergeStringsByLength(arr, maxLength = 140) {
     let current = '';
 
     for (const s of arr) {
-        // Nếu thêm vào bị vượt quá giới hạn
         if (current.length + s.length > maxLength) {
             current = current.slice(0, -1);
             current = `{${current}}`;
@@ -73,7 +73,6 @@ function mergeStringsByLength(arr, maxLength = 140) {
         current += s;
     }
 
-    // Thêm phần còn lại
     if (current.length > 0) {
         current = current.slice(0, -1);
         current = `{${current}}`;
@@ -140,60 +139,67 @@ module.exports.UpdateConfigVilog = async (req, res) => {
             checkChangeTime = true;
         }
 
+        let logTimeValue = data.logTime || '';
+
         if (data.typeMeter === 'SU') {
-            if (data.logTime !== '') {
-                let intervalLogTime = `00 0F`;
-
-                if (data.logTime === '15m') {
-                    intervalLogTime = `00 0F`;
-                } else if (data.logTime === '30m') {
-                    intervalLogTime = `00 1E`;
-                } else if (data.logTime === '60m') {
-                    intervalLogTime = `00 3C`;
-                } else {
-                    intervalLogTime = `00 0F`;
-                }
-
-                const ts = new Date();
-
-                // Helper giống LocalDateTime
-                const getYear = () => ts.getFullYear();
-                const getMonthValue = () => ts.getMonth() + 1; // JS month: 0–11
-                const getDayOfMonth = () => ts.getDate();
-                const getHour = () => ts.getHours();
-                const getMinute = () => ts.getMinutes();
-
-                stringMqtt.push(writeCommand('0B', toHex2(getYear(), true)));
-                stringMqtt.push(
-                    writeCommand(
-                        '0C',
-                        `${toHex2(getMonthValue())} ${toHex2(getDayOfMonth())}`,
-                    ),
-                );
-                stringMqtt.push(
-                    writeCommand(
-                        '0D',
-                        `${toHex2(getHour())} ${toHex2(getMinute())}`,
-                    ),
-                );
-
-                stringMqtt.push(writeCommand('01', toHex2(getYear(), true)));
-                stringMqtt.push(
-                    writeCommand(
-                        '02',
-                        `${toHex2(getMonthValue())} ${toHex2(getDayOfMonth())}`,
-                    ),
-                );
-                stringMqtt.push(
-                    writeCommand('03', `${toHex2((getHour() + 1) % 24)} 00`),
-                );
-
-                stringMqtt.push(writeCommand('04', intervalLogTime));
-
-                checkChangeTime = true;
+            if (!logTimeValue) {
+                const calculated = await module.exports.GetLoggingTimeVilog({ params: { siteid: data.oldSiteId } }, { status: () => {}, json: (val) => val });
+                logTimeValue = typeof calculated === 'object' && calculated.json ? await new Promise((resolve) => {
+                    const fakeRes = { status: () => {}, json: (v) => resolve(v) };
+                    module.exports.GetLoggingTimeVilog({ params: { siteid: data.oldSiteId } }, fakeRes);
+                }) : calculated;
             }
+
+            let intervalLogTime = `00 0F`;
+
+            if (logTimeValue === '15m') {
+                intervalLogTime = `00 0F`;
+            } else if (logTimeValue === '30m') {
+                intervalLogTime = `00 1E`;
+            } else if (logTimeValue === '60m') {
+                intervalLogTime = `00 3C`;
+            } else {
+                intervalLogTime = `00 0F`;
+            }
+
+            const ts = new Date();
+
+            const getYear = () => ts.getFullYear();
+            const getMonthValue = () => ts.getMonth() + 1;
+            const getDayOfMonth = () => ts.getDate();
+            const getHour = () => ts.getHours();
+            const getMinute = () => ts.getMinutes();
+
+            stringMqtt.push(writeCommand('0B', toHex2(getYear(), true)));
+            stringMqtt.push(
+                writeCommand(
+                    '0C',
+                    `${toHex2(getMonthValue())} ${toHex2(getDayOfMonth())}`,
+                ),
+            );
+            stringMqtt.push(
+                writeCommand(
+                    '0D',
+                    `${toHex2(getHour())} ${toHex2(getMinute())}`,
+                ),
+            );
+
+            stringMqtt.push(writeCommand('01', toHex2(getYear(), true)));
+            stringMqtt.push(
+                writeCommand(
+                    '02',
+                    `${toHex2(getMonthValue())} ${toHex2(getDayOfMonth())}`,
+                ),
+            );
+            stringMqtt.push(
+                writeCommand('03', `${toHex2((getHour() + 1) % 24)} 00`),
+            );
+
+            stringMqtt.push(writeCommand('04', intervalLogTime));
+
+            checkChangeTime = true;
         } else if (data.typeMeter === 'Kronhe') {
-            if (data.sendTime !== '' && data.logTime !== '') {
+            if (data.sendTime !== '' && logTimeValue) {
                 let timeSend = 10;
 
                 if (data.sendTime === '10m') {
@@ -218,15 +224,15 @@ module.exports.UpdateConfigVilog = async (req, res) => {
 
                 let timeLog = 5;
 
-                if (data.logTime === '5m') {
+                if (logTimeValue === '5m') {
                     timeLog = 5;
-                } else if (data.logTime === '10m') {
+                } else if (logTimeValue === '10m') {
                     timeLog = 10;
-                } else if (data.logTime === '15m') {
+                } else if (logTimeValue === '15m') {
                     timeLog = 15;
-                } else if (data.logTime === '30m') {
+                } else if (logTimeValue === '30m') {
                     timeLog = 30;
-                } else if (data.logTime === '60m') {
+                } else if (logTimeValue === '60m') {
                     timeLog = 60;
                 }
 
@@ -245,7 +251,7 @@ module.exports.UpdateConfigVilog = async (req, res) => {
             data.siteId !== '' ||
             data.location !== '' ||
             data.sendTime !== '' ||
-            data.logTime !== ''
+            logTimeValue !== ''
         ) {
             let check = await ConfigVilogModel.find({
                 oldSiteId: data.oldSiteId,
@@ -253,7 +259,7 @@ module.exports.UpdateConfigVilog = async (req, res) => {
             });
 
             if (check.length === 0) {
-                const obj = { ...data, isComplete: false };
+                const obj = { ...data, logTime: logTimeValue, isComplete: false };
 
                 await ConfigVilogModel.insertMany([obj]);
             }

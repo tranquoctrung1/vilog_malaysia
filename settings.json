@@ -1,4 +1,5 @@
 {
     "title": "WATER METER SYSTEM",
-    "CompanyName": "ViCloud"
+    "CompanyName": "ViCloud",
+    "Host": "mongodb://localhost:27017/vilog_malaysia"
 }

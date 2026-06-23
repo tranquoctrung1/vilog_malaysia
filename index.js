@@ -68,6 +68,7 @@ const DashBoardLevel = require('./router/dashboardLevel');
 const HistoryAlarm = require('./router/historyAlarm');
 const ConfigVilog = require('./router/configVilog');
 const ConfigTelegram = require('./router/configTelegram');
+const ConfigVilogTable = require('./router/configVilogTable');
 
 // call api
 const Api = require('./router/api/api');
@@ -170,6 +171,7 @@ app.use('/dashboardLevel', Auth.auth, DashBoardLevel);
 app.use('/historyAlarm', Auth.auth, HistoryAlarm);
 app.use('/configVilog', Auth.auth, ConfigVilog);
 app.use('/configTelegram', Auth.auth, ConfigTelegram);
+app.use('/configVilogTable', Auth.auth, ConfigVilogTable);
 
 // log out
 app.use('/logout', Logout);

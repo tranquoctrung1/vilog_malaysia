@@ -23,7 +23,8 @@ module.exports.RouterConfig = async function (req, res) {
         <li><a href="/historyAlarm"><i class="ti-bell"></i> History Alarm</a></li>`;
             } else if (item.Parent == 'ConfigVilog') {
                 content += `
-              <li><a href="/configVilog"><i class="ti-pencil-alt"></i>Config Vilog</a></li>`;
+              <li><a href="/configVilog"><i class="ti-pencil-alt"></i>Config Vilog</a></li>
+              <li><a href="/configVilogTable"><i class="ti-layout"></i>Config Vilog Table</a></li>`;
             } else if (item.Parent == 'ConfigTelegram') {
                 content += `
               <li><a href="/configTelegram"><i class="ti-save-alt"></i>Config Telegram</a></li>`;
