@@ -50,7 +50,26 @@ async function getDataForListtree() {
     let dataPayload = [];
 
     let site = await axios.get(urlGetSiteByUid);
-    for (let s of site.data) {
+
+    // fire all channel requests in parallel instead of awaiting one-by-one per site
+    let channelResponses = await Promise.all(
+        site.data.map((s) => {
+            let logger =
+                s.LoggerId != null &&
+                s.LoggerId != undefined &&
+                s.LoggerId.trim() != ''
+                    ? s.LoggerId.trim()
+                    : 'nothing';
+            return axios.get(urlGetChannels + logger);
+        }),
+    );
+
+    for (let idx = 0; idx < site.data.length; idx++) {
+        let s = site.data[idx];
+        let channels = channelResponses[idx];
+
+        if (channels.data.length === 0) continue;
+
         let index = 0;
         let hasDisplayGroup = false;
         let obj = {};
@@ -74,50 +93,23 @@ async function getDataForListtree() {
             obj.data = [];
         }
 
-        let logger;
+        let obj2 = {};
+        obj2.name = s.SiteId;
+        obj2.location = s.Location;
+        obj2.data = [];
 
-        if (
-            s.LoggerId != null &&
-            s.LoggerId != undefined &&
-            s.LoggerId.trim() != ''
-        ) {
-            logger = s.LoggerId.trim();
-        } else {
-            logger = 'nothing';
+        for (let item of channels.data) {
+            obj2.data.push({
+                ChannelName: item.ChannelName,
+                ChannelId: item.ChannelId,
+            });
         }
 
-        let channels = await axios.get(urlGetChannels + logger);
         if (hasDisplayGroup == true) {
-            if (channels.data.length > 0) {
-                let obj2 = {};
-                obj2.name = s.SiteId;
-                obj2.location = s.Location;
-                obj2.data = [];
-
-                for (let item of channels.data) {
-                    obj2.data.push({
-                        ChannelName: item.ChannelName,
-                        ChannelId: item.ChannelId,
-                    });
-                }
-                dataPayload[index].data.push(obj2);
-            }
+            dataPayload[index].data.push(obj2);
         } else {
-            if (channels.data.length > 0) {
-                let obj2 = {};
-                obj2.name = s.SiteId;
-                obj2.location = s.Location;
-                obj2.data = [];
-
-                for (let item of channels.data) {
-                    obj2.data.push({
-                        ChannelName: item.ChannelName,
-                        ChannelId: item.ChannelId,
-                    });
-                }
-                obj.data.push(obj2);
-                dataPayload.push(obj);
-            }
+            obj.data.push(obj2);
+            dataPayload.push(obj);
         }
     }
     dataForTreeSite = [...dataPayload];

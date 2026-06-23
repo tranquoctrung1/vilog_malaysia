@@ -224,6 +224,7 @@ function drawChart(channelId, location, channelname, units, data, typeMeter) {
     // chart.exporting.menu = new am4core.ExportMenu();
 
     let dataForChart = [];
+    let validData = [];
 
     for (let item of data) {
         if (
@@ -237,23 +238,27 @@ function drawChart(channelId, location, channelname, units, data, typeMeter) {
                 obj[`${channelId}`] = item.Value;
 
                 dataForChart.push(obj);
+                validData.push(item);
             }
         }
     }
 
+    validData.sort((a, b) => new Date(a.TimeStamp) - new Date(b.TimeStamp));
+
     const trace = {
-        x: data.map((d) => {
+        x: validData.map((d) => {
             const date = new Date(d.TimeStamp);
             return date.setHours(date.getHours() - 8);
         }),
-        y: data.map((d) => d.Value),
+        y: validData.map((d) => d.Value),
         mode: 'lines+markers',
         type: 'scatter',
         line: { shape: 'spline', width: 2 },
         marker: { size: 5 },
+        connectgaps: true,
         name: `${location} | ${capitalizeWords(channelname)}`,
         hovertemplate: `%{customdata}: %{y}<extra></extra> ${units}`, // 👈 custom tooltip
-        customdata: data.map((d) => {
+        customdata: validData.map((d) => {
             const date = new Date(d.TimeStamp);
             date.setHours(date.getHours() - 8);
             return convertDateToString(date);
@@ -508,12 +513,22 @@ function drawChartMultiple(data) {
 
     if (dataForChart.length > 0) {
         const traces = dataForChart.map((group) => {
+            const validGroup = group
+                .filter(
+                    (d) =>
+                        d.TimeStamp != null &&
+                        d.TimeStamp != undefined &&
+                        d.Value != null &&
+                        d.Value != undefined,
+                )
+                .sort((a, b) => new Date(a.TimeStamp) - new Date(b.TimeStamp));
+
             return {
-                x: group.map((d) => {
+                x: validGroup.map((d) => {
                     const date = new Date(d.TimeStamp);
                     return date.setHours(date.getHours() - 8);
                 }),
-                y: group.map((d) => d.Value),
+                y: validGroup.map((d) => d.Value),
                 mode: 'lines+markers',
                 type: 'scatter',
                 name: `${dataNameChart[count].location} | ${capitalizeWords(
@@ -521,8 +536,9 @@ function drawChartMultiple(data) {
                 )}`,
                 line: { shape: 'spline', width: 2 },
                 marker: { size: 6 },
+                connectgaps: true,
                 hovertemplate: `%{customdata}: %{y}<extra></extra>`,
-                customdata: group.map((d) => {
+                customdata: validGroup.map((d) => {
                     const date = new Date(d.TimeStamp);
                     date.setHours(date.getHours() - 8);
                     return convertDateToString(date);
