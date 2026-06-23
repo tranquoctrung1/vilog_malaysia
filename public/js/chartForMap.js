@@ -31,10 +31,15 @@ function openChart(channelId, location, channelName, units, typeMeter) {
         channelNameForChart = channelName;
         isMultipleViewChart = false;
         for (let item of mutipleChannels) {
-            document.getElementById(`${item}`).checked = false;
+            let el = document.getElementById(`${item}`);
+            if (el) {
+                el.checked = false;
+            }
         }
         let channelForCheckView = document.getElementById(`${channelId}`);
-        channelForCheckView.checked = true;
+        if (channelForCheckView) {
+            channelForCheckView.checked = true;
+        }
         mutipleChannels = [];
         mutipleChannels.push(channelId);
         // show chart

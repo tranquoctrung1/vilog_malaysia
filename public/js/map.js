@@ -382,9 +382,12 @@ function initMap() {
 
                         markers.push(marker);
 
-                        document.getElementById(
+                        let errorEl = document.getElementById(
                             `error-site${site.SiteId}`,
-                        ).innerHTML = contentError;
+                        );
+                        if (errorEl) {
+                            errorEl.innerHTML = contentError;
+                        }
                     })
                     .catch((err) => console.log(err));
             }
@@ -678,8 +681,10 @@ function updateMap() {
                         marker.getTooltip().update();
                     }
                 });
-                document.getElementById(`error-site${site.SiteId}`).innerHTML =
-                    contentError;
+                let errorEl = document.getElementById(`error-site${site.SiteId}`);
+                if (errorEl) {
+                    errorEl.innerHTML = contentError;
+                }
             })
             .catch((err) => console.log(err));
     });
