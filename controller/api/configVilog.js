@@ -139,67 +139,59 @@ module.exports.UpdateConfigVilog = async (req, res) => {
             checkChangeTime = true;
         }
 
-        let logTimeValue = data.logTime || '';
-
         if (data.typeMeter === 'SU') {
-            if (!logTimeValue) {
-                const calculated = await module.exports.GetLoggingTimeVilog({ params: { siteid: data.oldSiteId } }, { status: () => {}, json: (val) => val });
-                logTimeValue = typeof calculated === 'object' && calculated.json ? await new Promise((resolve) => {
-                    const fakeRes = { status: () => {}, json: (v) => resolve(v) };
-                    module.exports.GetLoggingTimeVilog({ params: { siteid: data.oldSiteId } }, fakeRes);
-                }) : calculated;
+            if (data.logTime !== '') {
+                let intervalLogTime = `00 0F`;
+
+                if (data.logTime === '15m') {
+                    intervalLogTime = `00 0F`;
+                } else if (data.logTime === '30m') {
+                    intervalLogTime = `00 1E`;
+                } else if (data.logTime === '60m') {
+                    intervalLogTime = `00 3C`;
+                } else {
+                    intervalLogTime = `00 0F`;
+                }
+
+                const ts = new Date();
+
+                const getYear = () => ts.getFullYear();
+                const getMonthValue = () => ts.getMonth() + 1;
+                const getDayOfMonth = () => ts.getDate();
+                const getHour = () => ts.getHours();
+                const getMinute = () => ts.getMinutes();
+
+                stringMqtt.push(writeCommand('0B', toHex2(getYear(), true)));
+                stringMqtt.push(
+                    writeCommand(
+                        '0C',
+                        `${toHex2(getMonthValue())} ${toHex2(getDayOfMonth())}`,
+                    ),
+                );
+                stringMqtt.push(
+                    writeCommand(
+                        '0D',
+                        `${toHex2(getHour())} ${toHex2(getMinute())}`,
+                    ),
+                );
+
+                stringMqtt.push(writeCommand('01', toHex2(getYear(), true)));
+                stringMqtt.push(
+                    writeCommand(
+                        '02',
+                        `${toHex2(getMonthValue())} ${toHex2(getDayOfMonth())}`,
+                    ),
+                );
+                stringMqtt.push(
+                    writeCommand('03', `${toHex2((getHour() + 1) % 24)} 00`),
+                );
+
+                stringMqtt.push(writeCommand('04', intervalLogTime));
+
+                checkChangeTime = true;
             }
-
-            let intervalLogTime = `00 0F`;
-
-            if (logTimeValue === '15m') {
-                intervalLogTime = `00 0F`;
-            } else if (logTimeValue === '30m') {
-                intervalLogTime = `00 1E`;
-            } else if (logTimeValue === '60m') {
-                intervalLogTime = `00 3C`;
-            } else {
-                intervalLogTime = `00 0F`;
-            }
-
-            const ts = new Date();
-
-            const getYear = () => ts.getFullYear();
-            const getMonthValue = () => ts.getMonth() + 1;
-            const getDayOfMonth = () => ts.getDate();
-            const getHour = () => ts.getHours();
-            const getMinute = () => ts.getMinutes();
-
-            stringMqtt.push(writeCommand('0B', toHex2(getYear(), true)));
-            stringMqtt.push(
-                writeCommand(
-                    '0C',
-                    `${toHex2(getMonthValue())} ${toHex2(getDayOfMonth())}`,
-                ),
-            );
-            stringMqtt.push(
-                writeCommand(
-                    '0D',
-                    `${toHex2(getHour())} ${toHex2(getMinute())}`,
-                ),
-            );
-
-            stringMqtt.push(writeCommand('01', toHex2(getYear(), true)));
-            stringMqtt.push(
-                writeCommand(
-                    '02',
-                    `${toHex2(getMonthValue())} ${toHex2(getDayOfMonth())}`,
-                ),
-            );
-            stringMqtt.push(
-                writeCommand('03', `${toHex2((getHour() + 1) % 24)} 00`),
-            );
-
-            stringMqtt.push(writeCommand('04', intervalLogTime));
-
-            checkChangeTime = true;
         } else if (data.typeMeter === 'Kronhe') {
-            if (data.sendTime !== '' && logTimeValue) {
+            if (data.sendTime !== '' && data.logTime !== '') {
                 let timeSend = 10;
 
                 if (data.sendTime === '10m') {
@@ -224,15 +216,15 @@ module.exports.UpdateConfigVilog = async (req, res) => {
 
                 let timeLog = 5;
 
-                if (logTimeValue === '5m') {
+                if (data.logTime === '5m') {
                     timeLog = 5;
-                } else if (logTimeValue === '10m') {
+                } else if (data.logTime === '10m') {
                     timeLog = 10;
-                } else if (logTimeValue === '15m') {
+                } else if (data.logTime === '15m') {
                     timeLog = 15;
-                } else if (logTimeValue === '30m') {
+                } else if (data.logTime === '30m') {
                     timeLog = 30;
-                } else if (logTimeValue === '60m') {
+                } else if (data.logTime === '60m') {
                     timeLog = 60;
                 }
 
@@ -251,7 +243,7 @@ module.exports.UpdateConfigVilog = async (req, res) => {
             data.siteId !== '' ||
             data.location !== '' ||
             data.sendTime !== '' ||
-            logTimeValue !== ''
+            data.logTime !== ''
         ) {
             let check = await ConfigVilogModel.find({
                 oldSiteId: data.oldSiteId,
@@ -259,7 +251,7 @@ module.exports.UpdateConfigVilog = async (req, res) => {
             });
 
             if (check.length === 0) {
-                const obj = { ...data, logTime: logTimeValue, isComplete: false };
+                const obj = { ...data, isComplete: false };
 
                 await ConfigVilogModel.insertMany([obj]);
             }
