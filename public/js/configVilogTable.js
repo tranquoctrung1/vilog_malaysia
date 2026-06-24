@@ -82,67 +82,50 @@ function loadTableData(data) {
     siteListTable = $('#siteListTable').DataTable({
         data: data,
         columns: [
-            { data: 'No', className: 'text-center' },
-            { data: 'siteId', className: 'text-center fw-bold' },
-            { data: 'location', className: 'text-center' },
-            {
-                data: 'typeMeter',
-                className: 'text-center',
-                render: function(data) {
-                    if (!data) return '-';
-                    const badgeClass = data === 'SU' ? 'bg-primary' :
-                                       data === 'Kronhe' ? 'bg-success' : 'bg-secondary';
-                    return `<span class="badge ${badgeClass}">${data}</span>`;
+            { data: 'No' },
+            { data: 'siteId', className: 'fw-bold' },
+            { data: 'location' },
+            { data: 'typeMeter',
+                render: function (data) {
+                    const raw = data == null ? '' : data.toString().trim();
+                    const isEmpty =
+                        raw === '' ||
+                        raw.toLowerCase() === 'null' ||
+                        raw.toLowerCase() === 'undefined' ||
+                        raw === '-';
+                    const displayText = isEmpty ? 'Level' : data;
+                    const badgeClass = isEmpty ? 'tag-secondary' :
+                        data === 'SU' ? 'tag-info' :
+                            data === 'Kronhe' ? 'tag-success' :
+                                'tag-secondary';
+                    return `<span class="alarm-tag ${badgeClass}">${displayText}</span>`;
                 }
             },
-            { data: 'loggerId', className: 'text-center' },
+            { data: 'loggerId' },
             {
                 data: 'sendTime',
-                className: 'text-center',
-                render: function(data) {
-                    return data ? `<span class="badge bg-info">${data}</span>` : '-';
+                render: function (data) {
+                    return data ? `<span class="alarm-tag tag-info">${data}</span>` : '-';
                 }
             },
             {
                 data: 'logTime',
-                className: 'text-center',
-                render: function(data) {
-                    return data ? `<span class="badge bg-warning text-dark">${data}</span>` : '-';
+                render: function (data) {
+                    return data ? `<span class="alarm-tag tag-warning">${data}</span>` : '-';
                 }
             },
-            {
-                data: 'latitude',
-                className: 'text-center',
-                render: function(data) {
-                    return data || '-';
-                }
-            },
-            {
-                data: 'longitude',
-                className: 'text-center',
-                render: function(data) {
-                    return data || '-';
-                }
-            },
-            {
-                data: 'status',
-                className: 'text-center',
-                render: function(data) {
-                    if (!data) return '-';
-                    const badgeClass = data === 'Active' ? 'bg-success' : 'bg-secondary';
-                    return `<span class="badge ${badgeClass}">${data}</span>`;
-                }
-            }
+            { data: 'latitude' },
+            { data: 'longitude' }
         ],
-        dom: 'Bfrtip',
+        dom: '<"d-flex justify-content-between align-items-center mb-3"lf><"d-flex justify-content-start"B>rtip',
         buttons: [
-            { extend: 'csv', className: 'btn btn-success', text: '<i class="fas fa-file-csv me-1"></i> CSV' },
-            { extend: 'excel', className: 'btn btn-success', text: '<i class="fas fa-file-excel me-1"></i> Excel' },
-            { extend: 'pdf', className: 'btn btn-danger', text: '<i class="fas fa-file-pdf me-1"></i> PDF' }
+            { extend: 'excel', className: 'btn btn-sm', text: '<i class="fas fa-file-excel me-1"></i> Excel', filename: 'list_vilog' },
+            { extend: 'csv', className: 'btn btn-sm', text: '<i class="fas fa-file-csv me-1"></i> CSV', filename: 'list_vilog' },
+            { extend: 'pdf', className: 'btn btn-sm', text: '<i class="fas fa-file-pdf me-1"></i> PDF', filename: 'list_vilog' }
         ],
         responsive: true,
-        pageLength: 25,
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        pageLength: 13,
+        lengthMenu: [[13, 25, 50, 100, -1], [13, 25, 50, 100, "All"]],
         order: [[1, 'asc']],
         language: {
             search: "Search:",
@@ -154,31 +137,13 @@ function loadTableData(data) {
                 next: "Next",
                 previous: "Previous"
             }
-        },
-        initComplete: function() {
-            forceHeaderStyle();
-        },
-        drawCallback: function() {
-            forceHeaderStyle();
         }
     });
-
-    function forceHeaderStyle() {
-        const headers = document.querySelectorAll('#siteListTable thead th');
-        headers.forEach(th => {
-            th.style.backgroundColor = '#2c3e50';
-            th.style.color = 'white';
-            th.style.fontWeight = '600';
-            th.style.textAlign = 'center';
-            th.style.verticalAlign = 'middle';
-            th.style.borderColor = '#1a252f';
-        });
-    }
 }
 
 // ======================
 // INITIALIZE
 // ======================
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     fetchAllSitesForTable();
 });

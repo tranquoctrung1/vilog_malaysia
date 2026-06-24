@@ -7,6 +7,7 @@ block linkcss
     link(rel="stylesheet", href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.bootstrap5.min.css")
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css")
     link(rel="stylesheet", href="/css/configVilog.css")
+    link(rel="stylesheet", href="/css/configVilogTable.css")
     link(rel="stylesheet", href="/css/pageCommon.css")
 block content
     .container-fluid.py-4
@@ -16,19 +17,18 @@ block content
                 | Vilog Remote Configuration (Table View)
             .card-body.p-4.p-lg-5
                 .table-responsive.mb-4
-                    table.table.table-striped.table-bordered.table-hover#siteListTable(width="100%")
-                        thead.thead-dark
+                    table#siteListTable.table.table-striped.table-bordered.table-hover(width="100%")
+                        thead.table-light
                             tr
-                                th.text-center No
-                                th.text-center Site ID
-                                th.text-center Location
-                                th.text-center Meter Type
-                                th.text-center Logger ID
-                                th.text-center Send Time
-                                th.text-center Log Time
-                                th.text-center Latitude
-                                th.text-center Longitude
-                                th.text-center Status
+                                th No
+                                th Site ID
+                                th Location
+                                th Meter Type
+                                th Logger ID
+                                th Send Time
+                                th Log Time
+                                th Latitude
+                                th Longitude
                         tbody
 
 block linkcriptbody

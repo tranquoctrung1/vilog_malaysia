@@ -1,68 +1,55 @@
 /* =========================================
-   CONFIG VILOG TABLE - EXTENDS configVilog.css
-   Additional styles for table view
+   CONFIG VILOG TABLE - Matching historyAlarm style
    ========================================= */
 
-/* Table Styles */
-#siteListTable thead th,
-#siteListTable thead th.sorting,
-#siteListTable thead th.sorting_asc,
-#siteListTable thead th.sorting_desc,
-.dataTables_wrapper .table thead th,
-.dataTables_wrapper table.dataTable thead th {
-    background-color: #2c3e50 !important;
-    color: white !important;
-    font-weight: 600 !important;
-    text-align: center !important;
-    vertical-align: middle !important;
-    font-size: 0.85rem !important;
-    border-color: #1a252f !important;
-}
-
-#siteListTable thead.dark th {
-    background-color: #2c3e50 !important;
-    color: white !important;
-}
-
-.table thead.thead-dark th,
-.table thead.dark th,
-table.dataTable thead th,
-.table.dataTable thead th {
-    background-color: #2c3e50 !important;
-    color: white !important;
-    font-weight: 600;
+/* === Alarm Tag Styles (matching historyAlarm) === */
+.alarm-tag {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    display: inline-block;
+    min-width: 90px;
     text-align: center;
-    vertical-align: middle;
-    font-size: 0.85rem;
 }
 
-.table tbody td {
-    text-align: center;
-    vertical-align: middle;
-    font-size: 0.85rem;
+.tag-danger {
+    background-color: #fcebeb;
+    color: #dc3545;
 }
 
-.table tbody tr {
-    cursor: pointer;
-    transition: all 0.2s;
+.tag-warning {
+    background-color: #fff4e6;
+    color: #ffc107;
 }
 
-.table tbody tr:hover {
-    background-color: #e8f4fc;
+.tag-info {
+    background-color: #e8f5ff;
+    color: #0d6efd;
 }
 
-/* DataTables Customization */
-.dataTables_filter input {
-    border-radius: 5px;
-    border: 1px solid #ced4da;
-    padding: 8px 12px;
+.tag-secondary {
+    background-color: #f1f1f1;
+    color: #6c757d;
+}
+
+.tag-success {
+    background-color: #d4edda;
+    color: #198754;
+}
+
+/* === DataTables Buttons (matching historyAlarm) === */
+div.dt-buttons {
+    float: none !important;
+    margin: 0 0 15px 0 !important;
 }
 
 div.dt-buttons .btn {
     background-color: #cc0000 !important;
     color: #ffffff !important;
     border: none !important;
-    margin-left: 8px !important;
+    margin-right: 8px !important;
     font-size: 0.85rem;
     font-weight: 600;
     border-radius: 4px;
@@ -81,11 +68,7 @@ div.dt-buttons .btn:hover {
     box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
 }
 
-div.dt-buttons {
-    float: right;
-}
-
-/* TomSelect Customization - Override TomSelect border to match form-control */
+/* TomSelect Customization */
 .ts-wrapper.form-control {
     border: 1px solid #ced4da;
     border-radius: 6px;
@@ -98,7 +81,7 @@ div.dt-buttons {
 
 .ts-control:focus,
 .ts-wrapper.focus .ts-control {
-    border-color: var(--primary-red) !important;
+    border-color: #cc0000 !important;
     box-shadow: 0 0 0 0.2rem rgba(204, 0, 0, 0.15) !important;
 }
 
@@ -108,28 +91,72 @@ div.dt-buttons {
 }
 
 .ts-dropdown .active {
-    background-color: var(--primary-red);
+    background-color: #cc0000;
     color: white;
 }
 
 .ts-dropdown .highlight {
     background-color: #ffebee;
-    color: var(--primary-red);
+    color: #cc0000;
 }
 
-/* Badge styles for table */
-.badge.bg-secondary {
-    background-color: #6c757d !important;
+/* DataTables Length Menu - Show entries */
+.dataTables_length {
+    margin-bottom: 0;
 }
 
-.badge.bg-info {
-    background-color: #0dcaf0 !important;
+.dataTables_length select {
+    padding: 4px 24px 4px 8px !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 4px !important;
+    background-color: #fff !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 4px center !important;
+    background-size: 10px !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    min-width: 70px !important;
+    margin: 0 4px;
 }
 
-.badge.bg-warning {
-    background-color: #ffc107 !important;
+.dataTables_length select:focus {
+    border-color: #cc0000 !important;
+    box-shadow: 0 0 0 0.2rem rgba(204, 0, 0, 0.15) !important;
+    outline: none;
 }
 
-.badge.bg-success {
-    background-color: #198754 !important;
+/* DataTables Search */
+.dataTables_filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dataTables_filter label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+.dataTables_filter input {
+    padding: 6px 12px !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+}
+
+.dataTables_filter input:focus {
+    border-color: #cc0000 !important;
+    box-shadow: 0 0 0 0.2rem rgba(204, 0, 0, 0.15) !important;
+    outline: none;
+}
+
+/* Table cell text align left */
+#siteListTable_wrapper table.dataTable tbody td,
+#siteListTable_wrapper table.dataTable thead th {
+    text-align: left !important;
+    vertical-align: middle !important;
 }
