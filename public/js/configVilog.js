@@ -22,25 +22,36 @@ let siteidSelect = null;
 let currentSiteId = '';
 let currentLocation = '';
 let currentSendTime = '';
-let currentLogTime = '';
 
 let isChangeSiteId = false;
 let isChangeLocation = false;
 let isChangeSendTime = false;
+let isChangeLogTime = false;
+let currentLogTime = '';
 
 async function calculateLogTime(siteId) {
     if (!siteId) return;
     try {
         const response = await axios.get(`${urlGetLoggingTime}/${siteId}`);
         if (response.status === 200) {
-            if (response.data === 360) {
-                logTime.value = '6h';
+            let value = response.data;
+            if (value === 0) {
+                logTime.value = '15m';
+            } else if (value >= 60) {
+                logTime.value = '60m';
+            } else if (value >= 30) {
+                logTime.value = '30m';
             } else {
-                logTime.value = response.data + 'm';
+                logTime.value = '15m';
             }
+            currentLogTime = logTime.value;
+            isChangeLogTime = false;
         }
     } catch (err) {
         console.log('Error calculating log time', err);
+        logTime.value = '15m';
+        currentLogTime = '15m';
+        isChangeLogTime = false;
     }
 }
 
@@ -104,12 +115,20 @@ site.addEventListener('change', function (e) {
     calculateLogTime(e.target.value);
 });
 
+function logTimeChanged(e) {
+    if (e.value !== currentLogTime) {
+        isChangeLogTime = true;
+    }
+}
+
 function sendTimeChanged(e) {
     const interval = e.value;
     if (interval === '12h') {
         logTime.value = '60m';
+        currentLogTime = '60m';
     } else if (interval == '6h' && logTime.value === '15m') {
         logTime.value = '30m';
+        currentLogTime = '30m';
     }
 
     isChangeSendTime = true;
@@ -159,8 +178,10 @@ function UpdateVilog() {
         const interval = sendTime.value;
         if (interval === '12h') {
             logTime.value = '60m';
+            currentLogTime = '60m';
         } else if (interval == '6h' && logTime.value === '15m') {
             logTime.value = '30m';
+            currentLogTime = '30m';
         }
 
         obj.oldSiteId = site.value;
@@ -179,6 +200,12 @@ function UpdateVilog() {
             obj.sendTime = sendTime.value;
         } else {
             obj.sendTime = '';
+        }
+
+        if (isChangeLogTime) {
+            obj.logTime = logTime.value;
+        } else {
+            obj.logTime = '';
         }
 
         axios

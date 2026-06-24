@@ -1,8 +1,74 @@
-/* =========================================
-   CONFIG VILOG TABLE - Matching historyAlarm style
-   ========================================= */
+body {
+    /* Hiệu ứng nền ẩn nhẹ nhàng giống Dashboard */
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)),
+        url('/images/bg-outer.png') center center fixed no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
 
-/* === Alarm Tag Styles (matching historyAlarm) === */
+/* --- Typography Colors --- */
+/* Ép toàn bộ màu xanh mặc định (text-primary) thành màu Đỏ */
+h2,
+h5,
+.text-primary {
+    color: #cc0000 !important;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
+}
+
+/* === Card Styles === */
+.card-custom {
+    border: none;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+}
+
+.card-title {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Icon trong tiêu đề */
+.card-title i {
+    color: #cc0000 !important;
+}
+
+/* Đổi màu viền focus từ xanh sang Đỏ */
+.form-control:focus,
+.form-control-datetime:focus {
+    border-color: #cc0000;
+    box-shadow: 0 0 0 0.2rem rgba(204, 0, 0, 0.15);
+}
+
+/* Nút VIEW màu Đỏ */
+.btn-primary {
+    background-color: #cc0000;
+    border-color: #cc0000;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 6px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 6px rgba(204, 0, 0, 0.2);
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
+    background-color: #a30000 !important;
+    border-color: #900000 !important;
+    transform: translateY(-2px);
+}
+
+/* === Alarm Tag Styles === */
 .alarm-tag {
     padding: 6px 12px;
     border-radius: 6px;
@@ -39,36 +105,7 @@
     color: #198754;
 }
 
-/* === DataTables Buttons (matching historyAlarm) === */
-div.dt-buttons {
-    float: none !important;
-    margin: 0 0 15px 0 !important;
-}
-
-div.dt-buttons .btn {
-    background-color: #cc0000 !important;
-    color: #ffffff !important;
-    border: none !important;
-    margin-right: 8px !important;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border-radius: 4px;
-    padding: 6px 15px !important;
-    box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
-}
-
-div.dt-buttons .btn i {
-    color: #fff !important;
-    margin-right: 5px;
-}
-
-div.dt-buttons .btn:hover {
-    background-color: #a30000 !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
-}
-
-/* TomSelect Customization */
+/* === TomSelect Customization === */
 .ts-wrapper.form-control {
     border: 1px solid #ced4da;
     border-radius: 6px;
@@ -100,7 +137,36 @@ div.dt-buttons .btn:hover {
     color: #cc0000;
 }
 
-/* DataTables Length Menu - Show entries */
+/* === DataTables Buttons === */
+div.dt-buttons {
+    float: none !important;
+    margin: 0 0 15px 0 !important;
+}
+
+div.dt-buttons .btn {
+    background-color: #cc0000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    margin-left: 8px !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 15px !important;
+    box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
+}
+
+div.dt-buttons .btn i {
+    color: #fff !important;
+    margin-right: 5px;
+}
+
+div.dt-buttons .btn:hover {
+    background-color: #a30000 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(204, 0, 0, 0.4);
+}
+
+/* === DataTables Length Menu - Show entries === */
 .dataTables_length {
     margin-bottom: 0;
 }
@@ -117,7 +183,7 @@ div.dt-buttons .btn:hover {
     appearance: none !important;
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
-    min-width: 70px !important;
+    min-width: 120px !important;
     margin: 0 4px;
 }
 
@@ -127,7 +193,7 @@ div.dt-buttons .btn:hover {
     outline: none;
 }
 
-/* DataTables Search */
+/* === DataTables Search === */
 .dataTables_filter {
     display: flex;
     align-items: center;
@@ -146,6 +212,7 @@ div.dt-buttons .btn:hover {
     padding: 6px 12px !important;
     border: 1px solid #ced4da !important;
     border-radius: 4px !important;
+    min-width: 200px !important;
 }
 
 .dataTables_filter input:focus {
@@ -154,9 +221,66 @@ div.dt-buttons .btn:hover {
     outline: none;
 }
 
-/* Table cell text align left */
+/* === Mobile: Hide buttons === */
+@media (max-width: 768px) {
+    .dt-buttons {
+        display: none !important;
+    }
+}
+
+/* === Mobile: Entries & Search Layout === */
+@media (max-width: 768px) {
+    .d-flex.justify-content-between.align-items-center.mb-3 {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        display: flex !important;
+        align-items: center;
+        justify-content: center !important;
+        width: 100%;
+    }
+
+    .dataTables_length select {
+        min-width: 80px !important;
+    }
+
+    .dataTables_filter input {
+        flex: 1 !important;
+        min-width: unset !important;
+        max-width: 300px !important;
+    }
+}
+
+/* === Table Styles === */
 #siteListTable_wrapper table.dataTable tbody td,
 #siteListTable_wrapper table.dataTable thead th {
     text-align: left !important;
     vertical-align: middle !important;
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.child > ul {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    margin: 2px;
+    width: 100%;
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.child > ul > li {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+/* Responsive */
+@media only screen and (max-width: 426px) {
+    .modal-body {
+        height: 400px;
+        overflow: scroll;
+    }
 }

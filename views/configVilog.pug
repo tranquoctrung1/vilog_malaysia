@@ -46,7 +46,10 @@ block content
                                 option(value="12h") 12h
                         .col-md-6
                             label.form-label.form-label-config(for="logTime") Log Time
-                            input#logTime.form-control(type="text" readonly)
+                            select#logTime.form-select(onChange="logTimeChanged(this)")
+                                option(value="15m") 15m
+                                option(value="30m") 30m
+                                option(value="60m") 60m
                     .row
                         .col-12.button
                             .config-actions.text-end
