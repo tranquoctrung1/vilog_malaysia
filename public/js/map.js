@@ -16,6 +16,7 @@ let statusSites = [];
 
 const urlGetSiteByUid = `${hostname}/GetSiteByUId/${userName}`;
 const urlGetChannels = `${hostname}/GetChannelByLoggerId/`;
+const urlGetChannelsBatch = `${hostname}/GetChannelsByLoggerIds/`;
 const urlGetCurrentTimeStamp = `${hostname}/GetCurrentTimeStamp`;
 const urlGetDataMultipleChannel = `${hostname}/GetMultipleChannelData`;
 const urlGetStatusSite = `${hostname}/GetStatusSite/${userName}`;
@@ -93,34 +94,40 @@ function initMap() {
         .get(urlGetSiteByUid)
         .then(function (res) {
             sites = [...res.data];
-            for (let site of res.data) {
-                let logger = '';
-                if (isSetView == false) {
-                    if (
-                        site.Latitude != null &&
-                        site.Latitude != undefined &&
-                        site.Longitude != null &&
-                        site.Longitude != undefined
-                    ) {
-                        map.setView([site.Latitude, site.Longitude], 7);
 
-                        isSetView = true;
-                    }
-                }
-
+            for (let site of sites) {
                 if (
-                    site.LoggerId != null &&
-                    site.LoggerId != undefined &&
-                    site.LoggerId.trim() != ''
+                    isSetView == false &&
+                    site.Latitude != null &&
+                    site.Latitude != undefined &&
+                    site.Longitude != null &&
+                    site.Longitude != undefined
                 ) {
-                    logger = site.LoggerId.trim();
-                } else {
-                    logger = 'nothing';
+                    map.setView([site.Latitude, site.Longitude], 7);
+                    isSetView = true;
                 }
+            }
 
-                axios
-                    .get(urlGetChannels + logger)
-                    .then(function (res) {
+            const loggers = sites.map((site) =>
+                site.LoggerId != null &&
+                site.LoggerId != undefined &&
+                site.LoggerId.trim() != ''
+                    ? site.LoggerId.trim()
+                    : 'nothing',
+            );
+
+            getChannelsByLoggers(loggers)
+                .then(function (channelsByLogger) {
+                    for (let site of sites) {
+                        let logger =
+                            site.LoggerId != null &&
+                            site.LoggerId != undefined &&
+                            site.LoggerId.trim() != ''
+                                ? site.LoggerId.trim()
+                                : 'nothing';
+
+                        let res = { data: channelsByLogger[logger] || [] };
+
                         let isErrorDelay = false;
                         let contentError = '';
                         labelHtml =
@@ -388,15 +395,26 @@ function initMap() {
                         if (errorEl) {
                             errorEl.innerHTML = contentError;
                         }
-                    })
-                    .catch((err) => console.log(err));
-            }
+                    }
+                })
+                .catch((err) => console.log(err));
+
             // no site has lat and lon
             if (isSetView == false) {
                 map.setView([10.823099, 106.629662], 11);
             }
         })
         .catch((err) => console.log(err));
+}
+
+function getChannelsByLoggers(loggers) {
+    const uniqueLoggers = [...new Set(loggers)];
+    if (uniqueLoggers.length === 0) {
+        return Promise.resolve({});
+    }
+    return axios
+        .get(urlGetChannelsBatch + uniqueLoggers.join('|'))
+        .then((res) => res.data);
 }
 
 function hideLable(e) {
@@ -432,20 +450,26 @@ function openMarker(e) {
 }
 
 function updateMap() {
-    $.each(sites, function (i, site) {
-        if (
-            site.LoggerId != null &&
-            site.LoggerId != undefined &&
-            site.LoggerId.trim() != ''
-        ) {
-            logger = site.LoggerId.trim();
-        } else {
-            logger = 'nothing';
-        }
+    const loggers = sites.map((site) =>
+        site.LoggerId != null &&
+        site.LoggerId != undefined &&
+        site.LoggerId.trim() != ''
+            ? site.LoggerId.trim()
+            : 'nothing',
+    );
 
-        axios
-            .get(urlGetChannels + logger)
-            .then(function (res) {
+    getChannelsByLoggers(loggers)
+        .then(function (channelsByLogger) {
+            $.each(sites, function (i, site) {
+                let logger =
+                    site.LoggerId != null &&
+                    site.LoggerId != undefined &&
+                    site.LoggerId.trim() != ''
+                        ? site.LoggerId.trim()
+                        : 'nothing';
+
+                let res = { data: channelsByLogger[logger] || [] };
+
                 let isErrorDelay = false;
                 let contentError = '';
                 labelHtml =
@@ -685,9 +709,9 @@ function updateMap() {
                 if (errorEl) {
                     errorEl.innerHTML = contentError;
                 }
-            })
-            .catch((err) => console.log(err));
-    });
+            });
+        })
+        .catch((err) => console.log(err));
 }
 
 let prevMarker;

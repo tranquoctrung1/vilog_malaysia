@@ -47,6 +47,10 @@ router.post('/UpdateSite', SiteApi.UpdateSite);
 router.post('/DeleteSite', SiteApi.DeleteSite);
 router.get('/GetChannelByLoggerId/:loggerid', ChannelApi.GetChannelByLoggerId);
 router.get(
+    '/GetChannelsByLoggerIds/:loggerids',
+    ChannelApi.GetChannelsByLoggerIds,
+);
+router.get(
     '/GetDataLogger/:channelid/:start/:end/:desc',
     DataLoggerApi.GetDataLoggerWithTime,
 );

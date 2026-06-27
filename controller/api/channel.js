@@ -257,22 +257,18 @@ module.exports.GetLastDataChannelConfigTimeStampSWOC = async function (
     res.status(200).json(result);
 };
 
-module.exports.GetChannelByLoggerId = async function (req, res) {
-    const loggerid = req.params.loggerid;
-
-    let site = await SiteModel.find({ LoggerId: loggerid });
-
+async function buildChannelResultForLogger(loggerid, site, channels) {
     let nowTime = new Date(Date.now());
 
     let timeDelay = 60;
 
-    if (site.length > 0) {
+    if (site != null) {
         if (
-            site[0].TimeDelay != 'null' &&
-            site[0].TimeDelay != null &&
-            site[0].TimeDelay != undefined
+            site.TimeDelay != 'null' &&
+            site.TimeDelay != null &&
+            site.TimeDelay != undefined
         ) {
-            timeDelay = site[0].TimeDelay;
+            timeDelay = site.TimeDelay;
         }
     }
 
@@ -284,10 +280,6 @@ module.exports.GetChannelByLoggerId = async function (req, res) {
     let channelForward = '';
     let channelReverse = '';
     let commonDate = null;
-
-    let channels = await ChannelModel.find({ LoggerId: loggerid }).sort({
-        ChannelName: 1,
-    });
 
     let result = [];
 
@@ -445,13 +437,13 @@ module.exports.GetChannelByLoggerId = async function (req, res) {
         result.push(obj);
     }
 
-    if (site.length > 0) {
+    if (site != null) {
         let quantity = 0;
 
         let objChannelQuantity = {};
-        objChannelQuantity.ChannelId = site[0].LoggerId + '_102';
+        objChannelQuantity.ChannelId = site.LoggerId + '_102';
         objChannelQuantity.ChannelName = 'SLN';
-        objChannelQuantity.LoggerId = site[0].LoggerId;
+        objChannelQuantity.LoggerId = site.LoggerId;
         objChannelQuantity.Unit = 'm3/h';
         objChannelQuantity.Pressure1 = false;
         objChannelQuantity.Pressure2 = false;
@@ -554,7 +546,61 @@ module.exports.GetChannelByLoggerId = async function (req, res) {
         }
     }
 
+    return result;
+}
+
+module.exports.GetChannelByLoggerId = async function (req, res) {
+    const loggerid = req.params.loggerid;
+
+    let sites = await SiteModel.find({ LoggerId: loggerid });
+    let channels = await ChannelModel.find({ LoggerId: loggerid }).sort({
+        ChannelName: 1,
+    });
+
+    let result = await buildChannelResultForLogger(
+        loggerid,
+        sites.length > 0 ? sites[0] : null,
+        channels,
+    );
+
     res.json(result);
+};
+
+module.exports.GetChannelsByLoggerIds = async function (req, res) {
+    const loggerIdsParam = req.params.loggerids || '';
+    const loggerIds = [
+        ...new Set(
+            loggerIdsParam.split('|').filter((id) => id != null && id.trim() != ''),
+        ),
+    ];
+
+    const sites = await SiteModel.find({ LoggerId: { $in: loggerIds } });
+    const sitesByLogger = {};
+    for (const s of sites) {
+        sitesByLogger[s.LoggerId] = s;
+    }
+
+    const allChannels = await ChannelModel.find({
+        LoggerId: { $in: loggerIds },
+    }).sort({ ChannelName: 1 });
+    const channelsByLogger = {};
+    for (const ch of allChannels) {
+        if (!channelsByLogger[ch.LoggerId]) {
+            channelsByLogger[ch.LoggerId] = [];
+        }
+        channelsByLogger[ch.LoggerId].push(ch);
+    }
+
+    const resultByLogger = {};
+    for (const loggerid of loggerIds) {
+        resultByLogger[loggerid] = await buildChannelResultForLogger(
+            loggerid,
+            sitesByLogger[loggerid] || null,
+            channelsByLogger[loggerid] || [],
+        );
+    }
+
+    res.json(resultByLogger);
 };
 
 module.exports.GetAllChannel = async function (req, res) {
