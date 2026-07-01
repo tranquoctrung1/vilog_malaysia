@@ -11,7 +11,9 @@ module.exports.GetStatusSite = async function (req, res) {
 
     let listSite;
 
-    if (user.Role == 'admin') {
+    if (!user) {
+        listSite = [];
+    } else if (user.Role == 'admin') {
         listSite = await SiteModel.find({});
     } else if (user.Role == 'consumer') {
         let listIdSite = await ConsumerSiteModel.find(

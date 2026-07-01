@@ -77,6 +77,11 @@ module.exports.GetSiteByUid = async function (req, res) {
 
     let user = await UserModel.findOne({ Username: userid });
 
+    if (!user) {
+        res.json([]);
+        return;
+    }
+
     let listSite;
 
     if (user.Role == 'admin') {
