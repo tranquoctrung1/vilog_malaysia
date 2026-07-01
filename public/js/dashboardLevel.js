@@ -186,10 +186,10 @@ function createCard(
             <div class="ruler" id="ruler_${id}"></div>
         </div>
         <div class="tank-value" id="tankValue_${id}">${level.toFixed(2)} M</div>
-        ${statusHtml}
+        <div id="tankStatus_${id}">${statusHtml}</div>
         <div class="tank-meta">
-            <span><i class="fas fa-signal" style="color:${sigColor}"></i> ${sig != null ? sig + ' dB' : '--'}</span>
-            <span><i class="fas fa-battery-half" style="color:#198754"></i> ${battery != null ? parseFloat(battery).toFixed(1) + ' V' : '--'}</span>
+            <span><i class="fas fa-signal" style="color:${sigColor}"></i> <span id="tankSignalText_${id}">${sig != null ? sig + ' dB' : '--'}</span></span>
+            <span><i class="fas fa-battery-half" style="color:#198754"></i> <span id="tankBatteryText_${id}">${battery != null ? parseFloat(battery).toFixed(1) + ' V' : '--'}</span></span>
         </div>
     </div>`;
     return col;
@@ -262,13 +262,132 @@ function renderCards(data) {
     }
 }
 
+let levelData = null;
+
 function fetchData() {
     axios
         .get(urlGetStatusSite)
         .then((res) => {
-            if (res?.data) renderCards(res.data);
+            if (res?.data) {
+                levelData = res.data;
+                renderCards(res.data);
+            }
         })
         .catch((err) => console.error(err));
 }
 
 document.addEventListener('DOMContentLoaded', fetchData);
+
+function getSiteBucketLevel(channelList) {
+    if (!channelList || channelList.length <= 0) {
+        return 'siteDelay';
+    }
+    if (channelList.some((c) => c.Status === 2)) {
+        return 'siteDelay';
+    }
+    if (channelList.some((c) => c.Status === 4)) {
+        return 'siteAlarm';
+    }
+    return 'siteHasValue';
+}
+
+function applyRealtimeToDashboardLevel(loggerId, channelId, value, timeStamp, status) {
+    if (!levelData) {
+        return;
+    }
+
+    const site = levelData.sites.find(
+        (s) => (s.LoggerId || '').trim() === loggerId,
+    );
+    if (!site || !tankStates[site.SiteId]) {
+        return;
+    }
+
+    const id = site.SiteId;
+    const channel = site.ListChannel.find((c) => c.ChannelId === channelId);
+    if (!channel) {
+        return;
+    }
+
+    if (value !== undefined) {
+        channel.LastValue = value;
+    }
+    channel.Status = status;
+
+    if (channelId === `${loggerId}_200`) {
+        tankStates[id].target = value;
+    } else if (channelId === `${loggerId}_07`) {
+        const el = document.getElementById(`tankSignalText_${id}`);
+        if (el) {
+            el.innerText = value != null ? value + ' dB' : '--';
+        }
+    } else if (channelId === `${loggerId}_05`) {
+        const el = document.getElementById(`tankBatteryText_${id}`);
+        if (el) {
+            el.innerText =
+                value != null ? parseFloat(value).toFixed(1) + ' V' : '--';
+        }
+    }
+
+    const bucket = getSiteBucketLevel(site.ListChannel);
+
+    [levelData.siteDelay, levelData.siteAlarm, levelData.siteHasValue].forEach(
+        (list) => {
+            const idx = list.findIndex((s) => s.SiteId === id);
+            if (idx !== -1) {
+                list.splice(idx, 1);
+            }
+        },
+    );
+    if (bucket === 'siteDelay') {
+        levelData.siteDelay.push(site);
+    } else if (bucket === 'siteAlarm') {
+        levelData.siteAlarm.push(site);
+    } else {
+        levelData.siteHasValue.push(site);
+    }
+
+    const statusEl = document.getElementById(`tankStatus_${id}`);
+    if (statusEl) {
+        if (bucket === 'siteDelay') {
+            statusEl.innerHTML =
+                '<span class="status-tag tag-warning">Disconnected</span>';
+        } else if (bucket === 'siteAlarm') {
+            statusEl.innerHTML =
+                '<span class="status-tag tag-danger">Alarm</span>';
+        } else {
+            statusEl.innerHTML =
+                '<span class="status-tag tag-success">Normal</span>';
+        }
+    }
+}
+
+const dashboardLevelSocket = io();
+
+dashboardLevelSocket.on('realtime-update', function (data) {
+    if (!data || !data.loggerId || !data.ChannelId) {
+        return;
+    }
+
+    applyRealtimeToDashboardLevel(
+        data.loggerId,
+        data.ChannelId,
+        data.Value,
+        data.TimeStamp,
+        data.Status,
+    );
+});
+
+dashboardLevelSocket.on('channel-status-update', function (data) {
+    if (!data || !data.loggerId || !data.ChannelId || data.Status == null) {
+        return;
+    }
+
+    applyRealtimeToDashboardLevel(
+        data.loggerId,
+        data.ChannelId,
+        undefined,
+        undefined,
+        data.Status,
+    );
+});

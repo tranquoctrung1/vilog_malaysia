@@ -130,21 +130,10 @@ function findValueChannel(data, siteid) {
     }
 }
 
-function renderVilogTable(data) {
-    let content = ``;
-
-    let temp = [];
-
-    for (const item of data.siteDelay) {
-        const valueChannel = findValueChannel(data.sites, item.SiteId);
-
-        temp.push(item.SiteId);
-        content += ` <tr data-status="Disconnected" data-alarm="No" data-flow="${ConvertDataIntoTable(
-            valueChannel.flow,
-        )}">
-                        <td>${item.SiteId}</td>
+function buildRowCellsHtml(item, statusLabel, alarmLabel, valueChannel) {
+    return `<td>${item.SiteId}</td>
                         <td>${item.Location}</td>
-                        <td>Disconnected</td>
+                        <td>${statusLabel}</td>
                         <td>${convertDateToString(
                             convertDateFromApi(valueChannel.time),
                         )}</td>
@@ -156,8 +145,29 @@ function renderVilogTable(data) {
                             valueChannel.signal,
                         )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
                         <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
-                        <td>Yes</td>
+                        <td>${alarmLabel}</td>`;
+}
+
+function buildRowOuterHtml(item, statusLabel, alarmLabel, valueChannel) {
+    return `<tr data-siteid="${
+        item.SiteId
+    }" data-status="${statusLabel}" data-alarm="${alarmLabel}" data-flow="${ConvertDataIntoTable(
+        valueChannel.flow,
+    )}">
+                        ${buildRowCellsHtml(item, statusLabel, alarmLabel, valueChannel)}
                     </tr>`;
+}
+
+function renderVilogTable(data) {
+    let content = ``;
+
+    let temp = [];
+
+    for (const item of data.siteDelay) {
+        const valueChannel = findValueChannel(data.sites, item.SiteId);
+
+        temp.push(item.SiteId);
+        content += buildRowOuterHtml(item, 'Disconnected', 'Yes', valueChannel);
     }
 
     for (const item of data.siteAlarm) {
@@ -166,25 +176,12 @@ function renderVilogTable(data) {
         const find = temp.find((el) => el === item.SiteId);
         if (find === undefined) {
             temp.push(item.SiteId);
-            content += ` <tr data-status="DataPresent" data-alarm="Yes" data-flow="${ConvertDataIntoTable(
-                valueChannel.flow,
-            )}">
-                        <td>${item.SiteId}</td>
-                        <td>${item.Location}</td>
-                        <td>DataPresent</td>
-                         <td>${convertDateToString(
-                             convertDateFromApi(valueChannel.time),
-                         )}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.level)}</td>
-                        <td data-signal="${ConvertDataIntoTable(
-                            valueChannel.signal,
-                        )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
-                        <td>Yes</td>
-                    </tr>`;
+            content += buildRowOuterHtml(
+                item,
+                'DataPresent',
+                'Yes',
+                valueChannel,
+            );
         }
     }
 
@@ -194,75 +191,96 @@ function renderVilogTable(data) {
         const find = temp.find((el) => el === item.SiteId);
         if (find === undefined) {
             temp.push(item.SiteId);
-            content += ` <tr data-status="DataPresent" data-alarm="No" data-flow="${ConvertDataIntoTable(
-                valueChannel.flow,
-            )}">
-                        <td>${item.SiteId}</td>
-                        <td>${item.Location}</td>
-                        <td>DataPresent</td>
-                         <td>${convertDateToString(
-                             convertDateFromApi(valueChannel.time),
-                         )}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.net)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.flow)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.reverse)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.level)}</td>
-                        <td data-signal="${ConvertDataIntoTable(
-                            valueChannel.signal,
-                        )}">${ConvertDataIntoTable(valueChannel.signal)}</td>
-                        <td>${ConvertDataIntoTable(valueChannel.battery)}</td>
-                        <td>No</td>
-                    </tr>`;
+            content += buildRowOuterHtml(
+                item,
+                'DataPresent',
+                'No',
+                valueChannel,
+            );
         }
     }
 
     vlogTableBody.innerHTML = content;
 }
 
+// Function to generate Signal Progress Bar (module scope so applyRowStyling
+// can reuse it for realtime-patched rows, not just the initial draw).
+function getSignalProgressBar(signalValue) {
+    signalValue = parseInt(signalValue);
+    var MAX_SIGNAL = 50;
+
+    if (isNaN(signalValue) || signalValue <= 0) {
+        return '<div class="signal-text">N/A</div>';
+    }
+
+    var percentage = Math.min(100, (signalValue / MAX_SIGNAL) * 100);
+
+    var bgClass;
+    if (percentage < 40) {
+        bgClass = 'bg-danger';
+    } else if (percentage < 60) {
+        bgClass = 'bg-warning';
+    } else {
+        bgClass = 'bg-success';
+    }
+
+    return (
+        '' +
+        '<div class="d-flex align-items-center">' +
+        '<div class="progress" style="width: 80px; height: 10px; margin-right: 10px;">' +
+        '<div class="progress-bar ' +
+        bgClass +
+        '" role="progressbar" style="width: ' +
+        percentage +
+        '%;" aria-valuenow="' +
+        signalValue +
+        '" aria-valuemin="0" aria-valuemax="' +
+        MAX_SIGNAL +
+        '"></div>' +
+        '</div>' +
+        '<div class="signal-text">' +
+        signalValue +
+        ' dB</div>' +
+        '</div>'
+    );
+}
+
+// Applies the same status/alarm tag + signal bar styling drawTable() applies
+// on initial load, to a single row (used after a realtime patch).
+function applyRowStyling($row) {
+    var status = $row.data('status');
+    var signalCell = $row.find('td:eq(8)');
+    var signalText = signalCell.attr('data-signal');
+    var signal = parseInt(signalText);
+    var alarm = $row.find('td:eq(10)').text();
+
+    if (status === 'DataPresent') {
+        $row.find('td:eq(2)').html(
+            '<span class="status-tag tag-success">DataPresent</span>',
+        );
+    } else {
+        $row.find('td:eq(2)').html(
+            '<span class="status-tag tag-warning">Disconnected</span>',
+        );
+    }
+    if (alarm === 'Yes') {
+        $row.find('td:eq(10)').html(
+            '<span class="status-tag tag-danger">ALARM</span>',
+        );
+    } else {
+        $row.find('td:eq(10)').html(
+            '<span class="status-tag tag-success">NORMAL</span>',
+        );
+    }
+
+    signalCell.html(getSignalProgressBar(signal));
+}
+
+let vlogTableApi = null;
+
 function drawTable() {
     // GLOBAL FILTER STATE
     var currentStatusFilter = 'Total';
-
-    // 1. Function to generate Signal Progress Bar
-    function getSignalProgressBar(signalValue) {
-        signalValue = parseInt(signalValue);
-        var MAX_SIGNAL = 50;
-
-        if (isNaN(signalValue) || signalValue <= 0) {
-            return '<div class="signal-text">N/A</div>';
-        }
-
-        var percentage = Math.min(100, (signalValue / MAX_SIGNAL) * 100);
-
-        var bgClass;
-        if (percentage < 40) {
-            bgClass = 'bg-danger';
-        } else if (percentage < 60) {
-            bgClass = 'bg-warning';
-        } else {
-            bgClass = 'bg-success';
-        }
-
-        return (
-            '' +
-            '<div class="d-flex align-items-center">' +
-            '<div class="progress" style="width: 80px; height: 10px; margin-right: 10px;">' +
-            '<div class="progress-bar ' +
-            bgClass +
-            '" role="progressbar" style="width: ' +
-            percentage +
-            '%;" aria-valuenow="' +
-            signalValue +
-            '" aria-valuemin="0" aria-valuemax="' +
-            MAX_SIGNAL +
-            '"></div>' +
-            '</div>' +
-            '<div class="signal-text">' +
-            signalValue +
-            ' dB</div>' +
-            '</div>'
-        );
-    }
 
     $('#vlogTable tbody tr').each(function () {
         var $row = $(this);
@@ -271,7 +289,7 @@ function drawTable() {
         var signalCell = $row.find('td:eq(8)');
         var signalText = signalCell.attr('data-signal');
         var signal = parseInt(signalText);
-        var alarm = $row.find('td:eq(9)').text();
+        var alarm = $row.find('td:eq(10)').text();
 
         totalSites++;
 
@@ -375,6 +393,8 @@ function drawTable() {
         ],
     });
 
+    vlogTableApi = table;
+
     // 6. Filtering based on KPI Cards
     $('.card-kpi').on('click', function () {
         var filterType = $(this).data('filter');
@@ -436,4 +456,136 @@ $(document).ready(function () {
     // 2. Initial Data Processing & KPI Calculation
 
     getStatusSite();
+});
+
+function getSiteBucketDashboard(channelList) {
+    if (!channelList || channelList.length <= 0) {
+        return 'siteDelay';
+    }
+    if (channelList.some((c) => c.Status === 2)) {
+        return 'siteDelay';
+    }
+    if (channelList.some((c) => c.Status === 4)) {
+        return 'siteAlarm';
+    }
+    return 'siteHasValue';
+}
+
+function applyRealtimeToDashboardVilog(loggerId, channelId, value, timeStamp, status) {
+    const site = sites.find((s) => (s.LoggerId || '').trim() === loggerId);
+    if (!site || !site.ListChannel) {
+        return;
+    }
+
+    const channel = site.ListChannel.find((c) => c.ChannelId === channelId);
+    if (!channel) {
+        return;
+    }
+
+    if (value !== undefined) {
+        channel.LastValue = value;
+    }
+    if (timeStamp !== undefined) {
+        channel.TimeStamp = timeStamp;
+    }
+    channel.Status = status;
+
+    const bucket = getSiteBucketDashboard(site.ListChannel);
+
+    [siteDelay, siteAlarm, siteHasValue].forEach((list) => {
+        const idx = list.findIndex((s) => s.SiteId === site.SiteId);
+        if (idx !== -1) {
+            list.splice(idx, 1);
+        }
+    });
+    if (bucket === 'siteDelay') {
+        siteDelay.push(site);
+    } else if (bucket === 'siteAlarm') {
+        siteAlarm.push(site);
+    } else {
+        siteHasValue.push(site);
+    }
+
+    disconnectedSites = siteDelay.length;
+    alarmSites = siteAlarm.length;
+    dataPresent = siteHasValue.length;
+
+    $('#kpi-disconnected').text(disconnectedSites);
+    $('#kpi-data-present').text(dataPresent);
+    $('#kpi-alarm').text(alarmSites);
+
+    const valueChannel = findValueChannel(sites, site.SiteId);
+    const statusLabel = bucket === 'siteDelay' ? 'Disconnected' : 'DataPresent';
+    const alarmLabel = bucket === 'siteAlarm' ? 'Yes' : 'No';
+
+    const $row = $(`#vlogTableBody tr[data-siteid="${site.SiteId}"]`);
+    if ($row.length > 0 && vlogTableApi && valueChannel) {
+        // Patch each <td>'s content in place (not .html() on the whole row):
+        // DataTable/Bootstrap CSS applies column formatting to the existing
+        // <td> nodes at init time. Rebuilding the row from a raw HTML string
+        // drops that formatting (text drifts left, loses alignment) even
+        // though the markup itself matches the original row's structure.
+        // Set via .data() (not just .attr()): jQuery caches data-* values
+        // read through .data() at first access (drawTable()'s initial each()
+        // loop already read 'status' once), and .attr() alone doesn't
+        // refresh that cache — applyRowStyling() below reads via .data()
+        // and would otherwise keep seeing the page-load value forever.
+        $row.data('status', statusLabel);
+        $row.data('alarm', alarmLabel);
+        $row.data('flow', ConvertDataIntoTable(valueChannel.flow));
+        $row.attr('data-status', statusLabel);
+        $row.attr('data-alarm', alarmLabel);
+        $row.attr('data-flow', ConvertDataIntoTable(valueChannel.flow));
+
+        $row.find('td:eq(3)').text(
+            convertDateToString(convertDateFromApi(valueChannel.time)),
+        );
+        $row.find('td:eq(4)').text(ConvertDataIntoTable(valueChannel.net));
+        $row.find('td:eq(5)').text(ConvertDataIntoTable(valueChannel.flow));
+        $row.find('td:eq(6)').text(
+            ConvertDataIntoTable(valueChannel.reverse),
+        );
+        $row.find('td:eq(7)').text(ConvertDataIntoTable(valueChannel.level));
+        $row.find('td:eq(8)').attr(
+            'data-signal',
+            ConvertDataIntoTable(valueChannel.signal),
+        );
+        $row.find('td:eq(9)').text(
+            ConvertDataIntoTable(valueChannel.battery),
+        );
+        $row.find('td:eq(10)').text(alarmLabel);
+
+        applyRowStyling($row);
+        vlogTableApi.row($row).invalidate().draw(false);
+    }
+}
+
+const dashboardVilogSocket = io();
+
+dashboardVilogSocket.on('realtime-update', function (data) {
+    if (!data || !data.loggerId || !data.ChannelId) {
+        return;
+    }
+
+    applyRealtimeToDashboardVilog(
+        data.loggerId,
+        data.ChannelId,
+        data.Value,
+        data.TimeStamp,
+        data.Status,
+    );
+});
+
+dashboardVilogSocket.on('channel-status-update', function (data) {
+    if (!data || !data.loggerId || !data.ChannelId || data.Status == null) {
+        return;
+    }
+
+    applyRealtimeToDashboardVilog(
+        data.loggerId,
+        data.ChannelId,
+        undefined,
+        undefined,
+        data.Status,
+    );
 });

@@ -133,7 +133,7 @@ function initMap() {
                         let isErrorDelay = false;
                         let contentError = '';
                         labelHtml =
-                            '<table cellspacing="0" cellpadding="0" style="min-width: 300px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:black;background-color:white; "><span>' +
+                            '<table cellspacing="0" cellpadding="0" style="width: 300px; table-layout: fixed; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:black;background-color:white; "><span>' +
                             site.Location +
                             '</span></td></tr>' +
                             `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
@@ -340,7 +340,7 @@ function initMap() {
                             Math.round(Math.abs(index)) +
                             '</span></span>';
                         infoHtml +=
-                            '<br/><table cellpadding="5" cellspacing="5">';
+                            '<br/><table cellpadding="5" cellspacing="5" style="width: 340px; table-layout: fixed;">';
                         infoHtml += dInfoHtml;
                         //infoHtml += "<tr><td><a href=\"javascript:void(0);\" onclick=\"openChartMinMaxPre('" + s.LoggerId + "');\">MinMax Pressure Day</a></td></tr>"
 
@@ -380,6 +380,7 @@ function initMap() {
                             autoClose: false,
                             closeOnClick: false,
                             offset: [10, 8],
+                            autoPan: false,
                         })
                             .setContent(infoHtml)
                             .setLatLng([
@@ -460,7 +461,7 @@ function buildSiteContent(site, channelList) {
     let checkStatusValue = true;
 
     let labelHtml =
-        '<table cellspacing="0" cellpadding="0" style="min-width: 300px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:black;background-color:white; "><span>' +
+        '<table cellspacing="0" cellpadding="0" style="width: 300px; table-layout: fixed; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:black;background-color:white; "><span>' +
         site.Location +
         '</span></td></tr>' +
         `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
@@ -653,7 +654,7 @@ function buildSiteContent(site, channelList) {
         '<span style="font-weight:bold;color:blue;">' +
         Math.round(Math.abs(index)) +
         '</span></span>';
-    infoHtml += '<br/><table cellpadding="5" cellspacing="5">';
+    infoHtml += '<br/><table cellpadding="5" cellspacing="5" style="width: 340px; table-layout: fixed;">';
     infoHtml += dInfoHtml;
 
     return { infoHtml, labelHtml, img, contentError };
@@ -938,24 +939,50 @@ setTimeout(() => {
 
 setInterval(updateMap, 1000 * 60 * 2);
 
-function applyChannelUpdateToMarker(loggerId, channelId, value, timeStamp) {
-    const channelList = channelsByLoggerCache[loggerId];
-    if (!channelList) {
+function getSiteStatusBucket(channelList) {
+    if (!channelList || channelList.length <= 0) {
+        return 'siteDelay';
+    }
+    if (channelList.some((c) => c.Status === 2)) {
+        return 'siteDelay';
+    }
+    if (channelList.some((c) => c.Status === 4)) {
+        return 'siteAlarm';
+    }
+    return 'siteHasValue';
+}
+
+function updateFooterStatisticForSite(site, channelList) {
+    if (!statusSites || !statusSites.sites) {
         return;
     }
 
-    const channel = channelList.find((c) => c.ChannelId === channelId);
-    if (!channel) {
-        return;
-    }
+    const newBucket = getSiteStatusBucket(channelList);
 
-    channel.LastValue = value;
-    channel.TimeStamp = timeStamp;
-    channel.Status = 1;
+    ['siteDelay', 'siteAlarm', 'siteHasValue'].forEach((bucket) => {
+        const idx = statusSites[bucket].findIndex(
+            (s) => s.SiteId === site.SiteId,
+        );
+        if (idx !== -1) {
+            statusSites[bucket].splice(idx, 1);
+        }
+    });
 
-    const site = sites.find(
-        (s) => (s.LoggerId || '').trim() === loggerId,
+    statusSites[newBucket].push(site);
+
+    statusSites.totalSiteDelay = statusSites.siteDelay.length;
+    statusSites.totalSiteAlarm = statusSites.siteAlarm.length;
+    statusSites.totalSiteHasValue = statusSites.siteHasValue.length;
+
+    totalSiteDelay.innerHTML = fillDataIntoInputTag(statusSites.totalSiteDelay);
+    totalSiteAlarm.innerHTML = fillDataIntoInputTag(statusSites.totalSiteAlarm);
+    totalSiteHasValue.innerHTML = fillDataIntoInputTag(
+        statusSites.totalSiteHasValue,
     );
+}
+
+function renderMarkerForLogger(loggerId, channelList) {
+    const site = sites.find((s) => (s.LoggerId || '').trim() === loggerId);
     if (!site) {
         return;
     }
@@ -974,8 +1001,8 @@ function applyChannelUpdateToMarker(loggerId, channelId, value, timeStamp) {
         iconUrl: img,
         iconSize: [20, 20],
         iconAnchor: [
-            site.LabelAnchorX == null ? 40 : site.LabelAnchorX,
-            site.LabelAnchorY == null ? 0 : site.LabelAnchorY,
+            (site.LabelAnchorX = null ? 40 : site.LabelAnchorX),
+            (site.LabelAnchorY = null ? 0 : site.LabelAnchorY),
         ],
     });
 
@@ -989,6 +1016,42 @@ function applyChannelUpdateToMarker(loggerId, channelId, value, timeStamp) {
     if (errorEl) {
         errorEl.innerHTML = contentError;
     }
+
+    updateFooterStatisticForSite(site, channelList);
+}
+
+function applyChannelUpdateToMarker(loggerId, channelId, value, timeStamp, status) {
+    const channelList = channelsByLoggerCache[loggerId];
+    if (!channelList) {
+        return;
+    }
+
+    const channel = channelList.find((c) => c.ChannelId === channelId);
+    if (!channel) {
+        return;
+    }
+
+    channel.LastValue = value;
+    channel.TimeStamp = timeStamp;
+    channel.Status = status != null ? status : 1;
+
+    renderMarkerForLogger(loggerId, channelList);
+}
+
+function applyChannelStatusUpdate(loggerId, channelId, status) {
+    const channelList = channelsByLoggerCache[loggerId];
+    if (!channelList) {
+        return;
+    }
+
+    const channel = channelList.find((c) => c.ChannelId === channelId);
+    if (!channel) {
+        return;
+    }
+
+    channel.Status = status;
+
+    renderMarkerForLogger(loggerId, channelList);
 }
 
 const realtimeSocket = io();
@@ -1003,5 +1066,14 @@ realtimeSocket.on('realtime-update', function (data) {
         data.ChannelId,
         data.Value,
         data.TimeStamp,
+        data.Status,
     );
+});
+
+realtimeSocket.on('channel-status-update', function (data) {
+    if (!data || !data.loggerId || !data.ChannelId || data.Status == null) {
+        return;
+    }
+
+    applyChannelStatusUpdate(data.loggerId, data.ChannelId, data.Status);
 });
