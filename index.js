@@ -189,6 +189,10 @@ app.use(function (err, req, res, next) {
 
 const server = http.createServer(app);
 
+const io = socket(server);
+const mqttClient = require('./mqtt/client');
+mqttClient.attachSocketIO(io);
+
 server.listen(port, () => {
     console.log(`App is running on port ${port}`);
 });
