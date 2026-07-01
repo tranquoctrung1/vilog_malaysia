@@ -476,6 +476,12 @@ function buildSiteContent(site, channelList) {
     let dInfoHtml = '';
 
     for (let channel of channelList) {
+        // NOTE: These ChannelName transforms (Mem/Com rewrites, the charAt(3)==='.' dot-strip,
+        // and capitalizeWords) mutate channel.ChannelName in place and MUST remain idempotent.
+        // buildSiteContent can now be called multiple times on the SAME cached channel object
+        // between REST-API refetches (applyChannelUpdateToMarker invokes it once per realtime
+        // MQTT event for a logger), so re-running these transforms on already-transformed text
+        // must be a no-op or the cached ChannelName will be silently corrupted on the 2nd+ call.
         if (channel.ChannelName.includes('Mem')) {
             channel.ChannelName = '1.2 Memory Error';
         } else if (channel.ChannelName.includes('Com')) {
@@ -508,6 +514,16 @@ function buildSiteContent(site, channelList) {
             }
         }
 
+        // NOTE: The "Index:" total is intentionally poll-refreshed only. The MQTT realtime
+        // payload from the C# service only carries {ChannelId, Value, TimeStamp} — it does not
+        // include LastIndex (that expansion is out of scope; a separate repo change already
+        // reviewed/approved). applyChannelUpdateToMarker therefore only patches LastValue,
+        // TimeStamp, and Status on the cached channel — it never updates channel.LastIndex.
+        // As a result, after a realtime update the popup can show the new per-channel LastValue
+        // while the aggregate Index total below is briefly stale, until the next ~2-minute
+        // updateMap() poll refetches LastIndex and self-corrects. This is a deliberate minimal-
+        // payload design tradeoff, not a bug — do not "fix" it by adding LastIndex to the
+        // realtime path.
         if (
             channel.LastIndex != null &&
             channel.LastIndex != 'undefined'
