@@ -42,13 +42,20 @@ Meter → MQTT (raw topic) → mqtt app (C#) decode → [song song]
 
 ### C# (mqtt app — `MQTT_Vilog_Malaysia_No_Check_Imei`)
 
-- File mới `MQTT/RealtimePublisher.cs`: wrap `IMqttClient` (dùng lại kết nối
-  MQTTnet hiện có hoặc client riêng), `PublishAsync` JSON serialize
-  (Newtonsoft.Json — đã có sẵn dependency).
-- Gọi từ `Actions/HandleDataAction.cs` ngay sau insert DB (dòng 67-68 hiện
-  tại): publish `RealTimeModel` (đầy đủ field: ForwardFlow, ReverseFlow,
-  ForwardIndex, ReverseIndex, Battery, Signal, error flags, TimeStamp) +
-  `LoggerId`/`ChannelId` lên topic `Vilog_RealTime/{LoggerId}/{ChannelId}`.
+- File mới `MQTT/RealtimePublisher.cs`: dùng lại kết nối MQTTnet hiện có
+  (`IMqttClient`), `PublishAsync` JSON serialize (Newtonsoft.Json — đã có
+  sẵn dependency).
+- Gọi ngay sau `channelConfigAction.BulkUpdateValues(chUpdates)` trong mỗi
+  method của `HandleDataAction.cs` (Kronhe, KronheOverTime, SU, Level,
+  LevelOverTime). Ba loại meter dùng 3 model realtime khác nhau
+  (LogKronheModel, RealTimeModel, LogLevelModel) nên không có 1 class chung
+  — thay vào đó publish trực tiếp từ `chUpdates` (list `(channelId,
+  DataLoggerModel value, isIndex)` đã được build sẵn trong mỗi method cho
+  `BulkUpdateValues`), mỗi channel value (không phải index) → 1 message
+  `{ChannelId, Value, TimeStamp}` lên topic
+  `Vilog_RealTime/{LoggerId}/{ChannelId}`. Cách này tận dụng cấu trúc code
+  có sẵn, đồng nhất giữa 5 method, không cần field-map riêng cho từng loại
+  meter.
 - QoS 0 — chấp nhận mất gói vì đây là kênh UI phụ trợ, không phải nguồn dữ
   liệu chính (DB insert vẫn là source of truth).
 - Publish bọc try/catch — lỗi publish KHÔNG được làm fail luồng insert DB
