@@ -79,6 +79,8 @@ Meter → MQTT (raw topic) → mqtt app (C#) decode → [song song]
   in-place, không tạo lại marker, không gọi lại API.
 - Status màu tính lại inline ngay tại client: message mới tới = data tươi →
   set status OK (xanh) + timestamp mới, không gọi lại `GetStatusSite`.
+  **[SUPERSEDED bởi phần "Server-side Status computation" bên dưới]** — client
+  không còn tự hardcode Status=1, nhận Status đã tính từ server.
 
 ## Error handling & edge cases
 
@@ -112,3 +114,95 @@ Meter → MQTT (raw topic) → mqtt app (C#) decode → [song song]
   marker popup/label đổi không cần F5, (3) LoggerId lạ không crash trang.
 - **Load**: không cần test tải riêng — traffic thấp, theo interval logger
   của từng channel, không phải per-second stream.
+
+---
+
+## Update 2026-07-01 (v2): Server-side Status computation + disconnect detection
+
+### Problem
+
+v1 chỉ xử lý trường hợp "data mới tới → xanh" (client hardcode `Status=1`).
+Hai trường hợp còn thiếu:
+1. Giá trị vượt ngưỡng (`BaseMin`/`BaseMax`) → phải vàng/đỏ alarm ngay khi
+   nhận, không chờ poll.
+2. Mất kết nối (không có message mới trong `TimeDelay` phút) — realtime
+   thuần push-based không tự phát hiện được việc "không có gì xảy ra".
+
+### Scope
+
+- KHÔNG đổi bảng/collection nào, KHÔNG đổi payload MQTT từ C# (vẫn
+  `{ChannelId, Value, TimeStamp}` — threshold/site data đã có sẵn ở Node,
+  không cần C# gửi thêm).
+- Chỉ sửa `mqtt/client.js` (Node) + `public/js/map.js` (client).
+
+### Architecture
+
+```
+mqtt/client.js nhận "Vilog_RealTime/{loggerId}/{ChannelId}"
+    ↓
+Promise.all([ChannelModel.findOne({ChannelId}), SiteModel.findOne({LoggerId})])
+    ↓
+computeStatus(Value, BaseMin, BaseMax) → 1 (ok) hoặc 4 (alarm)
+    ↓
+channelFreshnessCache.set(`${loggerId}_${ChannelId}`, {TimeStamp, timeDelay, lastStatus: status})
+    ↓
+io.emit('realtime-update', {loggerId, ChannelId, Value, TimeStamp, Status: status})
+
+setInterval(30s):
+  duyệt channelFreshnessCache
+    nếu (now - TimeStamp) > timeDelay*60000 VÀ lastStatus !== 2:
+      lastStatus = 2
+      io.emit('channel-status-update', {loggerId, ChannelId, Status: 2})
+```
+
+### Components
+
+- **`mqtt/client.js`**:
+  - `computeStatus(value, baseMin, baseMax)` — pure function: trả `4` nếu
+    `baseMin != null && value < baseMin`, hoặc `baseMax != null && value >
+    baseMax`; ngược lại trả `1`.
+  - `channelFreshnessCache = new Map()` — key `${loggerId}_${ChannelId}`,
+    value `{TimeStamp: Date, timeDelay: number, lastStatus: number}`.
+  - Message handler (`Vilog_RealTime/#`): query song song Channel (lấy
+    `BaseMin`/`BaseMax`) + Site (lấy `TimeDelay`, default 60 nếu null —
+    khớp logic `buildChannelResultForLogger` hiện có ở
+    `controller/api/channel.js:263-272`), tính status, update cache, emit
+    `realtime-update` kèm `Status`.
+  - `setInterval(checkStaleChannels, 30000)`: quét cache, channel vượt
+    `timeDelay` mà `lastStatus !== 2` → set `lastStatus=2`, emit
+    `channel-status-update`. Channel có data mới lại (qua message handler ở
+    trên) tự reset `lastStatus` về giá trị mới tính — tự "tỉnh" lại, không
+    cần logic riêng.
+
+- **`public/js/map.js`**:
+  - `applyChannelUpdateToMarker(loggerId, channelId, value, timeStamp,
+    status)` — nhận thêm `status` từ payload, set `channel.Status = status`
+    (bỏ hardcode `= 1` cũ).
+  - Thêm listener `realtimeSocket.on('channel-status-update', ...)` — gọi
+    lại flow patch marker (tái dùng `buildSiteContent`), chỉ đổi
+    `channel.Status`, giữ nguyên `LastValue`/`TimeStamp` cache hiện có.
+
+### Error handling & edge cases
+
+- Site/Channel không tìm thấy (null) lúc lookup trong message handler → bỏ
+  qua, không emit, không crash (site/channel có thể chưa provision xong).
+- `channelFreshnessCache` mất khi Node restart — chấp nhận, không phải
+  source of truth; channel cũ tự có status đúng ở message tiếp theo hoặc ở
+  lần load trang kế (API vẫn tính đúng từ DB qua
+  `buildChannelResultForLogger`).
+- `BaseMin`/`BaseMax` null (chưa cấu hình ngưỡng) → không check alarm, giữ
+  `Status=1` nếu chưa vượt `timeDelay`.
+- Không emit lặp lại `channel-status-update` cho cùng 1 channel đã
+  `lastStatus=2` — tránh spam socket mỗi 30s cho channel đã biết mất kết
+  nối từ trước.
+
+### Testing
+
+- Unit test `computeStatus(value, baseMin, baseMax)` — case: trong ngưỡng,
+  dưới `BaseMin`, trên `BaseMax`, `BaseMin`/`BaseMax` null.
+- Unit test staleness-check logic — mock `Date.now`: entry cũ (vượt
+  `timeDelay`) → emit đúng 1 lần; entry mới → không emit; entry đã
+  `lastStatus=2` → không emit lặp lại lần quét tiếp theo.
+- Manual: publish tay message với Value vượt `BaseMax` → xem marker đổi
+  đúng màu alarm ngay; đợi qua `timeDelay` không gửi gì thêm → xem marker tự
+  chuyển vàng trong vòng ~30s, không cần reload/F5.
