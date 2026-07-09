@@ -21,6 +21,8 @@ const ConsumerApi = require('../../controller/api/consumer');
 const UserApi = require('../../controller/api/user');
 const StaffSiteApi = require('../../controller/api/staffSite');
 const ConsumerSiteApi = require('../../controller/api/consumerSite');
+const StaffSiteRangeApi = require('../../controller/api/staffSiteRange');
+const ConsumerSiteRangeApi = require('../../controller/api/consumerSiteRange');
 const CameraApi = require('../../controller/api/camera');
 const AlarmLostWaterApi = require('../../controller/api/alarmLostWater');
 const AlarmLostWaterAllApi = require('../../controller/api/alarmLostWaterAll');
@@ -240,6 +242,16 @@ router.get(
 );
 
 router.post('/UpdateConsumerSite', ConsumerSiteApi.UpdateConsumerSite);
+
+// range-based permission (staff)
+router.get('/GetStaffSiteRange/:userId', StaffSiteRangeApi.GetRanges);
+router.post('/AddStaffSiteRange', StaffSiteRangeApi.AddRange);
+router.post('/DeleteStaffSiteRange/:id', StaffSiteRangeApi.DeleteRange);
+
+// range-based permission (consumer)
+router.get('/GetConsumerSiteRange/:userId', ConsumerSiteRangeApi.GetRanges);
+router.post('/AddConsumerSiteRange', ConsumerSiteRangeApi.AddRange);
+router.post('/DeleteConsumerSiteRange/:id', ConsumerSiteRangeApi.DeleteRange);
 
 router.get('/GetListNameStation', CameraApi.GetListNameStation);
 

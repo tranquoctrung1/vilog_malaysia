@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 const SiteModel = require('../../model/site');
 const ChannelModel = require('../../model/Channel.js');
 const UserModel = require('../../model/user');
-const ConsumerSiteModel = require('../../model/consumerSite');
-const StaffSiteModel = require('../../model/staffSite');
+const { getPermittedSiteIds } = require('../../helper/sitePermission');
 
 module.exports.GetDataDashBoardVilog = async function (req, res) {
     const userid = req.params.userid;
@@ -12,49 +11,15 @@ module.exports.GetDataDashBoardVilog = async function (req, res) {
 
     let user = await UserModel.findOne({ Username: userid });
 
+    const permittedIds = await getPermittedSiteIds(user);
+
     let listSite;
-
-    if (user.Role == 'admin') {
+    if (permittedIds === null) {
         listSite = await SiteModel.find({});
-    } else if (user.Role == 'consumer') {
-        let listIdSite = await ConsumerSiteModel.find(
-            { IdUser: user._id },
-            { IdSite: 1, _id: 0 },
-        );
-
-        let list = [];
-
-        for (let item of listIdSite) {
-            list.push(item.IdSite);
-        }
-
-        if (listIdSite.length > 0) {
-            listSite = await SiteModel.find({ _id: { $in: list } });
-        } else {
-            listSite = [];
-        }
-
-        //listSite = await SiteModel.find({ ConsumerId: user.ConsumerId });
-    } else if (user.Role == 'staff') {
-        let listIdSite = await StaffSiteModel.find(
-            { IdUser: user._id },
-            { IdSite: 1, _id: 0 },
-        );
-
-        let list = [];
-
-        for (let item of listIdSite) {
-            list.push(item.IdSite);
-        }
-
-        if (listIdSite.length > 0) {
-            listSite = await SiteModel.find({ _id: { $in: list } });
-        } else {
-            listSite = [];
-        }
-        //listSite = await SiteModel.find({ StaffId: user.StaffId });
+    } else if (permittedIds.length > 0) {
+        listSite = await SiteModel.find({ _id: { $in: permittedIds } });
     } else {
-        listSite = await SiteModel.find({});
+        listSite = [];
     }
 
     if (listSite.length > 0) {

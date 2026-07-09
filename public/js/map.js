@@ -340,7 +340,7 @@ function initMap() {
                             Math.round(Math.abs(index)) +
                             '</span></span>';
                         infoHtml +=
-                            '<br/><table cellpadding="5" cellspacing="5" style="width: 340px; table-layout: fixed;">';
+                            '<br/><table cellpadding="5" cellspacing="5" style="width: 400px; table-layout: fixed;"><colgroup><col style="width:28%"><col style="width:26%"><col style="width:12%"><col style="width:24%"><col style="width:10%"></colgroup>';
                         infoHtml += dInfoHtml;
                         //infoHtml += "<tr><td><a href=\"javascript:void(0);\" onclick=\"openChartMinMaxPre('" + s.LoggerId + "');\">MinMax Pressure Day</a></td></tr>"
 
@@ -381,6 +381,7 @@ function initMap() {
                             closeOnClick: false,
                             offset: [10, 8],
                             autoPan: false,
+                            maxWidth: 460,
                         })
                             .setContent(infoHtml)
                             .setLatLng([
@@ -654,7 +655,7 @@ function buildSiteContent(site, channelList) {
         '<span style="font-weight:bold;color:blue;">' +
         Math.round(Math.abs(index)) +
         '</span></span>';
-    infoHtml += '<br/><table cellpadding="5" cellspacing="5" style="width: 340px; table-layout: fixed;">';
+    infoHtml += '<br/><table cellpadding="5" cellspacing="5" style="width: 400px; table-layout: fixed;"><colgroup><col style="width:28%"><col style="width:26%"><col style="width:12%"><col style="width:24%"><col style="width:10%"></colgroup>';
     infoHtml += dInfoHtml;
 
     return { infoHtml, labelHtml, img, contentError };
@@ -937,7 +938,7 @@ setTimeout(() => {
     getStatusSite();
 }, 500);
 
-setInterval(updateMap, 1000 * 60 * 2);
+setInterval(updateMap, 1000 * 60 * 10);
 
 function getSiteStatusBucket(channelList) {
     if (!channelList || channelList.length <= 0) {

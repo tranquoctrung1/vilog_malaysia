@@ -185,4 +185,106 @@ $(document).ready(async function () {
     });
 
     renderLists(ALL_SITE_IDS, []);
+
+    // ---- Range permission ----
+    const urlGetConsumerSiteRange = `${hostname}/GetConsumerSiteRange`;
+    const urlAddConsumerSiteRange = `${hostname}/AddConsumerSiteRange`;
+    const urlDeleteConsumerSiteRange = `${hostname}/DeleteConsumerSiteRange`;
+
+    function showRangeError(msg) {
+        $('#rangeError').text(msg || '');
+    }
+
+    function renderRangeTable(ranges) {
+        const $body = $('#rangeTableBody');
+        $body.empty();
+        if (!ranges || ranges.length === 0) {
+            $body.append(
+                '<tr><td colspan="4" class="text-center text-muted">No ranges for this consumer.</td></tr>',
+            );
+            return;
+        }
+        ranges.forEach((r) => {
+            $body.append(
+                `<tr>
+                    <td>${r.Field}</td>
+                    <td>${r.From}</td>
+                    <td>${r.To}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-danger delete-range-btn" data-range-id="${r._id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`,
+            );
+        });
+    }
+
+    async function loadRanges() {
+        const id = $('#consumerSelect').val();
+        if (!id) {
+            $('#rangeTableBody').html(
+                '<tr><td colspan="4" class="text-center text-muted">Select a consumer to view ranges.</td></tr>',
+            );
+            return;
+        }
+        try {
+            const res = await axios.get(`${urlGetConsumerSiteRange}/${id}`);
+            renderRangeTable(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    function updateAddRangeButton() {
+        $('#addRangeBtn').prop('disabled', !$('#consumerSelect').val());
+    }
+
+    // Refresh range table whenever the selected consumer changes.
+    $('#consumerSelect').on('change', function () {
+        showRangeError('');
+        updateAddRangeButton();
+        loadRanges();
+    });
+
+    $('#addRangeBtn').on('click', async function () {
+        showRangeError('');
+        const IdUser = $('#consumerSelect').val();
+        if (!IdUser) {
+            showRangeError('Please select a consumer first.');
+            return;
+        }
+        const payload = {
+            IdUser,
+            Field: $('#rangeField').val(),
+            From: $('#rangeFrom').val(),
+            To: $('#rangeTo').val(),
+        };
+        try {
+            await axios.post(urlAddConsumerSiteRange, payload);
+            $('#rangeFrom').val('');
+            $('#rangeTo').val('');
+            await loadRanges();
+        } catch (err) {
+            const msg =
+                err.response && err.response.data && err.response.data.error
+                    ? err.response.data.error
+                    : 'Failed to add range.';
+            showRangeError(msg);
+        }
+    });
+
+    $(document).on('click', '.delete-range-btn', async function () {
+        const rangeId = $(this).data('range-id');
+        showRangeError('');
+        try {
+            await axios.post(`${urlDeleteConsumerSiteRange}/${rangeId}`);
+            await loadRanges();
+        } catch (err) {
+            console.log(err);
+            showRangeError('Failed to delete range.');
+        }
+    });
+
+    updateAddRangeButton();
 });

@@ -53,6 +53,44 @@ block content
                         i.fas.fa-save.me-2
                         | Save Changes
 
+        .card.card-custom.mx-auto.mt-4
+            .card-body
+                h5.text-primary.fw-bold.mb-3
+                    i.fas.fa-layer-group.me-2
+                    | Range permission
+                p.text-muted.small.mb-3 Grant access to every site whose field value falls within a numeric range (inclusive). Applied in addition to the individually assigned sites above.
+
+                .row.g-2.align-items-end.mb-2
+                    .col-md-3
+                        label.form-label.fw-bold.text-primary(for="rangeField") Field
+                        select.form-select#rangeField
+                            option(value="SiteId") SiteId
+                            option(value="LoggerId") LoggerId
+                    .col-md-3
+                        label.form-label.fw-bold.text-primary(for="rangeFrom") From
+                        input.form-control#rangeFrom(type="number", placeholder="From")
+                    .col-md-3
+                        label.form-label.fw-bold.text-primary(for="rangeTo") To
+                        input.form-control#rangeTo(type="number", placeholder="To")
+                    .col-md-3.d-grid
+                        button.btn.btn-primary#addRangeBtn(type="button", disabled)
+                            i.fas.fa-plus.me-2
+                            | Add
+
+                .text-danger.small.mb-2#rangeError
+
+                .table-responsive
+                    table.table.table-bordered.table-hover.align-middle#rangeTable
+                        thead.table-light
+                            tr
+                                th Field
+                                th From
+                                th To
+                                th.text-center Action
+                        tbody#rangeTableBody
+                            tr
+                                td.text-center.text-muted(colspan="4") Select a staff to view ranges.
+
 block linkcriptbody
     script(src="/vendor/jquery/jquery-3.7.1.min.js")
     script(src="/vendor/bootstrap5/js/bootstrap.bundle.min.js")
