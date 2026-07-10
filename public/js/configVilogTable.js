@@ -44,7 +44,7 @@ async function fetchAllSitesForTable() {
     try {
         const res = await axios.get(fullUrlGetSite);
         if (res.status === 200) {
-            const sites = res.data;
+            const sites = res.data.filter((site) => site.SiteId && site.LoggerId);
 
             const promises = sites.map(async (site) => {
                 let logTimeMinutes = 15;

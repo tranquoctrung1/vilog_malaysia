@@ -15,7 +15,8 @@ function fetchSites() {
         .then((res) => {
             const siteidFirstValue = [];
 
-            createOptionsInSelectBox(res.data, 'selectSite');
+            const sites = res.data.filter((site) => site.SiteId);
+            createOptionsInSelectBox(sites, 'selectSite');
             selectedSite = new TomSelect('#selectSite', {
                 plugins: ['remove_button'], // Adds "x" to remove items
                 create: false, // Disallow custom entries
@@ -42,7 +43,7 @@ function fetchSites() {
             let endDate = document.getElementById('endDate');
             endDate.value = convertDateToDateInputTag(now);
 
-            if (res.data.length > 0) {
+            if (sites.length > 0) {
                 getDataApi(siteidFirstValue);
             }
         })

@@ -19,6 +19,8 @@ module.exports.GetStatusSite = async function (req, res) {
         listSite = [];
     }
 
+    listSite = listSite.filter((site) => site.SiteId && site.LoggerId);
+
     let result = {};
     result.totalSite = 0;
     result.totalSiteHasValue = 0;

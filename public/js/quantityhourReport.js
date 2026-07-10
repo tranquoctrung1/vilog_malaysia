@@ -14,7 +14,8 @@ function fetchSites() {
   axios
     .get(urlGetSites)
     .then((res) => {
-      createOptionsInSelectBox(res.data, "selectSite");
+      const sites = res.data.filter((site) => site.SiteId);
+      createOptionsInSelectBox(sites, "selectSite");
     })
     .catch((err) => console.log(err));
 }

@@ -54,7 +54,8 @@ function fetchSiteForDisplayGroup(displayGroup) {
             if (siteidSelect !== null) {
                 siteidSelect.destroy();
             }
-            createOptionsInSelectBox(res.data, 'site');
+            const sites = res.data.filter((site) => site.SiteId);
+            createOptionsInSelectBox(sites, 'site');
             siteidSelect = new TomSelect('#site', {
                 create: true, // Disallow custom entries
                 sortField: { field: 'text', direction: 'asc' },

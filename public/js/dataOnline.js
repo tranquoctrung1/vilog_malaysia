@@ -26,8 +26,9 @@ function fetchSites() {
     axios
         .get(urlGetSites)
         .then((res) => {
-            if (res.data.length > 0) {
-                createOptionsInSelectBox(res.data, 'selectSite');
+            const sites = res.data.filter((site) => site.SiteId);
+            if (sites.length > 0) {
+                createOptionsInSelectBox(sites, 'selectSite');
 
                 // first load data
                 selectSite.selectedIndex = 1;

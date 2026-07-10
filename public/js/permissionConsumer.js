@@ -22,7 +22,7 @@ GetUser();
 async function getSite() {
     const res = await axios.get(urlGetSiteByUid);
 
-    return res.data;
+    return res.data.filter((site) => site.SiteId);
 }
 
 async function getSitePermission(id) {

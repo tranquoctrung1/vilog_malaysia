@@ -20,6 +20,8 @@ module.exports.GetTableDataCurrent = async function (req, res) {
         listSite = [];
     }
 
+    listSite = listSite.filter((site) => site.SiteId && site.LoggerId);
+
     let result = [];
 
     for (let site of listSite) {

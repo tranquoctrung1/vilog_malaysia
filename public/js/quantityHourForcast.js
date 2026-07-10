@@ -20,7 +20,8 @@ function fetchSites() {
   axios
     .get(urlGetSites)
     .then((res) => {
-      createOptionsInSelectBoxAndSelectFirstValue(res.data, "selectSite");
+      const sites = res.data.filter((site) => site.SiteId);
+      createOptionsInSelectBoxAndSelectFirstValue(sites, "selectSite");
     })
     .catch((err) => console.log(err));
 }
