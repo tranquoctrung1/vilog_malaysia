@@ -2,6 +2,10 @@
 
 <!-- release-marker -->
 
+## [V1.8] - 2026-07-10
+### Fixed
+- Filter sites missing SiteId/LoggerId across table, select, and status endpoints.
+
 ## [V1.7] - 2026-07-09
 ### Added
 - Range-based permission model for consumers/staff: `consumerSiteRange`, `staffSiteRange`, `helper/sitePermission.js`.
