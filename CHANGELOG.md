@@ -2,7 +2,11 @@
 
 Quy ước version: bắt đầu từ **V1.0**, mỗi lần thay đổi/release sẽ tăng thêm **0.1** (V1.0 → V1.1 → V1.2 → ... → V1.9 → V1.10 → V1.11 ...). Version được lưu ở `package.json` (dạng semver `major.minor.0`, ví dụ V1.7 = `1.7.0`).
 
-Mục mới nhất nằm trên cùng. Từ V1.8 trở đi, mục changelog được sinh tự động bởi `npm run release` (xem `scripts/release.js`) — không sửa tay phần trên `<!-- release-marker -->` bên dưới nếu không cần thiết, script sẽ tự chèn vào đúng vị trí.
+Mục mới nhất nằm trên cùng. Từ V1.8 trở đi, mục changelog được sinh tự động bởi `npm run release` (xem `scripts/release.js`) — không sửa tay phần trên `<!-- release-marker -->
+
+## [V1.8] - 2026-07-10
+### Fixed
+- filter sites missing SiteId/LoggerId across table, select, and status endpoints` bên dưới nếu không cần thiết, script sẽ tự chèn vào đúng vị trí.
 
 <!-- release-marker -->
 
