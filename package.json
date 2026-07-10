@@ -1,6 +1,6 @@
 {
     "name": "login-fucntion",
-    "version": "1.0.0",
+    "version": "1.7.0",
     "description": "",
     "main": "index.js",
     "bin": "index.js",
@@ -8,7 +8,9 @@
         "start": "nodemon -e js,pug,sass index.js",
         "test": "echo \"Error: no test specified\" && exit 1",
         "deploy": "deploy.bat",
-        "build": "npx @yao-pkg/pkg . --targets node22-win-x64 --compress GZip --output dist/app.exe"
+        "build": "npx @yao-pkg/pkg . --targets node22-win-x64 --compress GZip --output dist/app.exe",
+        "release": "node scripts/release.js",
+        "hooks:install": "node scripts/install-hooks.js"
     },
     "pkg": {
         "scripts": [

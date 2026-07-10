@@ -12,7 +12,26 @@
       "Edit(/.claude/skills/pug-frontend-pattern/**)",
       "Edit(/.claude/skills/mqtt-realtime-pattern/**)",
       "Edit(/.claude/skills/integration-qa/**)",
-      "Edit(/.claude/skills/feature-dev-orchestrator/**)"
+      "Edit(/.claude/skills/feature-dev-orchestrator/**)",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git status *)",
+      "Bash(node --check \"d:\\\\project\\\\node_malaysia\\\\public\\\\js\\\\map.js\")",
+      "Bash(node --check \"d:\\\\project\\\\node_malaysia\\\\controller\\\\api\\\\channel.js\")",
+      "Bash(node --check \"d:\\\\project\\\\node_malaysia\\\\router\\\\api\\\\api.js\")",
+      "Bash(npm run *)",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/bootstrap/package.json'\\).version\\)\")",
+      "Bash(mkdir -p vendor/jquery vendor/bootstrap5/css vendor/bootstrap5/js vendor/fontawesome6/css vendor/fontawesome6/webfonts vendor/datatables/css vendor/datatables/js vendor/jszip vendor/pdfmake)",
+      "Bash(curl -sI https://code.jquery.com/jquery-3.7.1.min.js)",
+      "Bash(mkdir -p vendor/datatables/css vendor/tomselect/css vendor/tomselect/js vendor/select2/css vendor/select2/js)",
+      "Bash(curl -sL -o vendor/datatables/css/responsive.dataTables.min.css https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css)",
+      "Bash(curl -sL -o vendor/tomselect/css/tom-select.bootstrap5.min.css https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css)",
+      "Bash(curl -sL -o vendor/tomselect/js/tom-select.complete.min.js https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js)",
+      "Bash(curl -sL -o vendor/select2/css/select2.min.css https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css)",
+      "Bash(git commit -m ' *)"
     ],
     "additionalDirectories": [
       "d:\\project\\node_malaysia\\.claude"

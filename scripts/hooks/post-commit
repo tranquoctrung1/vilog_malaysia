@@ -1,0 +1,14 @@
+#!/bin/sh
+# Nhac nho sau moi commit: neu day la thay doi dang ghi changelog,
+# chay `npm run release` de tang version + cap nhat CHANGELOG.md.
+# Hook nay chi NHAC, khong tu dong sua file (theo yeu cau: hook goi y, script chot).
+
+VERSION=$(node -p "require('./package.json').version" 2>/dev/null)
+
+echo ""
+echo "Da commit. Version hien tai: v${VERSION}"
+echo "Neu thay doi nay dang ghi vao CHANGELOG, chay lenh sau de tang version + cap nhat CHANGELOG.md:"
+echo "  npm run release -- \"mo ta thay doi\" --type=feat|fix|change|docs"
+echo ""
+
+exit 0
