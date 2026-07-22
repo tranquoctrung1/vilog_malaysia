@@ -261,7 +261,7 @@ class ModernNavigation {
 
     setUpFooter() {
         const username = document.getElementById('userName').innerHTML;
-        fetch(`http://43.216.183.205:3000/api/GetUserByUserName/${username}`, {
+        fetch(`https://vilog.pws.com.my/api/GetUserByUserName/${username}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

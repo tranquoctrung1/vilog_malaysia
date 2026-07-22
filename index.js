@@ -194,8 +194,39 @@ const mqttClient = require('./mqtt/client');
 mqttClient.attachSocketIO(io);
 
 server.listen(port, () => {
-    console.log(`App is running on port ${port}`);
+    console.log(`HTTP server running on port ${port}`);
 });
+
+// Optional HTTPS: only starts if pfx cert is configured/found, so dev
+// machines without a cert keep running HTTP-only without crashing.
+const httpsPort = process.env.HTTPS_PORT || 443;
+const pfxPath = process.env.SSL_PFX_PATH;
+
+if (pfxPath) {
+    try {
+        const fs = require('fs');
+        const https = require('https');
+
+        const httpsServer = https.createServer(
+            {
+                pfx: fs.readFileSync(pfxPath),
+                passphrase: process.env.SSL_PFX_PASSPHRASE,
+            },
+            app
+        );
+
+        // share the same socket.io instance across both servers
+        io.attach(httpsServer);
+
+        httpsServer.listen(httpsPort, () => {
+            console.log(`HTTPS server running on port ${httpsPort}`);
+        });
+    } catch (err) {
+        console.error('Failed to start HTTPS server:', err.message);
+    }
+} else {
+    console.log('SSL_PFX_PATH not set, skipping HTTPS server');
+}
 
 if (process.env.NODE_ENV === 'dev') {
     // Reload when views change

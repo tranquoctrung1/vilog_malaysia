@@ -4,3 +4,4 @@
 /env
 /*.exe
 /dist
+/.env.production
