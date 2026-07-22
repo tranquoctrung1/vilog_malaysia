@@ -2,6 +2,10 @@
 
 <!-- release-marker -->
 
+## [V1.9] - 2026-07-22
+### Added
+- Added HTTPS support alongside HTTP (pfx cert), updated client links to production domain
+
 ## [V1.8] - 2026-07-10
 ### Fixed
 - Filter sites missing SiteId/LoggerId across table, select, and status endpoints.

@@ -4,6 +4,10 @@ Quy ước version: bắt đầu từ **V1.0**, mỗi lần thay đổi/release 
 
 Mục mới nhất nằm trên cùng. Từ V1.8 trở đi, mục changelog được sinh tự động bởi `npm run release` (xem `scripts/release.js`) — không sửa tay phần trên `<!-- release-marker -->
 
+## [V1.9] - 2026-07-22
+### Added
+- Ho tro chay HTTPS song song HTTP (pfx cert), sua link client tro ve domain vilog.pws.com.my
+
 ## [V1.8] - 2026-07-10
 ### Fixed
 - filter sites missing SiteId/LoggerId across table, select, and status endpoints` bên dưới nếu không cần thiết, script sẽ tự chèn vào đúng vị trí.
