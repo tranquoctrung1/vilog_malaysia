@@ -88,7 +88,10 @@ module.exports.GetTableDataCurrent = async function (req, res) {
                         obj.isError = true;
                     }
                 }
-            } else if (site.TypeMeter === 'Kronhe') {
+            } else if (
+                site.TypeMeter === 'Kronhe' ||
+                site.TypeMeter === 'MAG8000'
+            ) {
                 if (channel.OtherChannel === true) {
                     if (channel.LastValue >= 1) {
                         obj2.isError = true;

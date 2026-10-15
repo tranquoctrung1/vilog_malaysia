@@ -230,7 +230,10 @@ module.exports.GetDataLoggerWithTime = async function (req, res) {
         }
         if (sites[0].TypeMeter === 'SU') {
             channelNetIndex = `${loggerid}_108`;
-        } else if (sites[0].TypeMeter === 'Kronhe') {
+        } else if (
+            sites[0].TypeMeter === 'Kronhe' ||
+            sites[0].TypeMeter === 'MAG8000'
+        ) {
             channelNetIndex = `${loggerid}_100`;
         }
     }

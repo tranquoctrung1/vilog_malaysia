@@ -1,0 +1,37 @@
+/* Trang kích hoạt bản quyền - dùng chung nền/khung với login.css */
+
+.license-form {
+    padding-bottom: 20px;
+}
+
+.license-form h4 {
+    font-weight: 600;
+}
+
+.license-form label {
+    margin-bottom: 4px;
+}
+
+.license-hint {
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.license-form #hardwareId {
+    font-family: "Courier New", Consolas, monospace;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background-color: #f1f1f1;
+}
+
+.license-form #licenseKey {
+    font-family: "Courier New", Consolas, monospace;
+    word-break: break-all;
+}
+
+.license-vendor {
+    font-size: 13px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 12px;
+}

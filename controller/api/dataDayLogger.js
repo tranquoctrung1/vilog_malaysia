@@ -177,7 +177,10 @@ module.exports.GetDataDayLogger = async function (req, res) {
                                     minValue[0].Value.toFixed(2);
                             }
                         }
-                    } else if (site[0].TypeMeter === 'Kronhe') {
+                    } else if (
+                        site[0].TypeMeter === 'Kronhe' ||
+                        site[0].TypeMeter === 'MAG8000'
+                    ) {
                         if (channelSplit[channelSplit.length - 1] === '06') {
                             if (maxValue.length > 0) {
                                 obj.MaxBatteryLogger =

@@ -23,7 +23,7 @@ module.exports.GetHistoryAlarm = async function (req, res) {
     if (permittedIds === null) {
         result = await HistoryAlarm.find({
             TimeStampAlarm: { $gte: start, $lte: end },
-        }).sort({ TimeStampAlarm: -1 });
+        }).sort({ TimeStampAlarm: -1 }).lean();
     } else {
         let listSite = [];
         if (permittedIds.length > 0) {
@@ -40,7 +40,7 @@ module.exports.GetHistoryAlarm = async function (req, res) {
         result = await HistoryAlarm.find({
             TimeStampAlarm: { $gte: start, $lte: end },
             SiteId: { $in: listSiteId },
-        }).sort({ TimeStampAlarm: -1 });
+        }).sort({ TimeStampAlarm: -1 }).lean();
     }
 
     res.json(result);

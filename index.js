@@ -9,6 +9,7 @@ require('express-async-errors');
 const session = require('express-session');
 const socket = require('socket.io');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const livereload = require('livereload');
 const connectLiveReload = require('connect-livereload');
@@ -16,11 +17,17 @@ const connectLiveReload = require('connect-livereload');
 const cors = require('./middleware/cors');
 const Auth = require('./middleware/auth');
 const permissionPage = require('./middleware/permissionPage');
+const licenseGate = require('./middleware/licenseGate');
 const helmet = require('helmet');
+
+const blpClient = require('./services/license/blpClient');
 
 const mongoose = require('mongoose');
 
 const app = express();
+
+// gzip responses (static JS/CSS + API JSON) - must run before the statics
+app.use(compression());
 
 //app.use(helmet());
 
@@ -31,7 +38,14 @@ mongoose.connect(process.env.CONNECTION_STRING, {
     connectTimeoutMS: 10000, // optional: connection timeout
     socketTimeoutMS: 45000, // optional: socket timeout
     serverSelectionTimeoutMS: 10000, // optional: how long to wait for a server to respond
-});
+})
+    .then(() => {
+        // heartbeat license 15 phút/lần, chỉ chạy sau khi có kết nối DB
+        blpClient.startHeartbeat();
+    })
+    .catch((err) => {
+        console.log('MongoDB connection error: ' + err.message);
+    });
 
 // call router
 
@@ -69,6 +83,7 @@ const HistoryAlarm = require('./router/historyAlarm');
 const ConfigVilog = require('./router/configVilog');
 const ConfigTelegram = require('./router/configTelegram');
 const ConfigVilogTable = require('./router/configVilogTable');
+const License = require('./router/license');
 
 // call api
 const Api = require('./router/api/api');
@@ -124,10 +139,22 @@ app.use(
 );
 
 // use static file
+// vendor libs rarely change -> let browsers cache them for 7 days
+app.use(
+    '/vendor',
+    express.static(path.join(__dirname, '/public/vendor'), { maxAge: '7d' }),
+);
 app.use('/', express.static(path.join(__dirname, '/public')));
 
 // use cors
 app.use(cors);
+
+// license gate - phải chạy TRƯỚC mọi router bên dưới (kể cả /api và /SWOCApi).
+// Đặt sau express.static/cors để trang kích hoạt vẫn tải được css/js/ảnh của nó.
+app.use(licenseGate.licenseGate);
+
+// trang kích hoạt bản quyền (không qua Auth.auth)
+app.use('/license', License);
 
 // cal api router
 app.use('/api', Api);

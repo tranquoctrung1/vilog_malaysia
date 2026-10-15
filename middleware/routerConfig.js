@@ -8,6 +8,9 @@ module.exports.RouterConfig = async function (req, res) {
 
     let content = '';
 
+    // Cờ cho side-bar.pug: chỉ admin thấy menu License.
+    res.locals.isAdmin = result.length > 0 && result[0].Role === 'admin';
+
     if (result.length > 0) {
         let dataRouter = await RouterConfigModel.find({ Role: result[0].Role });
 

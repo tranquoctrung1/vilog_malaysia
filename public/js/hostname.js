@@ -1,2 +1,2 @@
-const hostname = `https://vilog.pws.com.my/api`;
-//const hostname = `http://localhost:3000/api`;
+// Same origin as the page (localhost, IP, or domain) - no hardcoded host.
+const hostname = `${window.location.origin}/api`;

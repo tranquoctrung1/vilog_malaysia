@@ -13,6 +13,35 @@ if (userName == null || userName == undefined || userName.trim() == '') {
 
 let markers = [];
 let statusSites = [];
+
+const MAG8000_ALARM_BITS = [
+    [0x0001, 'Insulation error'],
+    [0x0002, 'Coil current error'],
+    [0x0004, 'Preamplifier overload'],
+    [0x0008, 'Database checksum error'],
+    [0x0010, 'Low power warning'],
+    [0x0020, 'Flow overload warning'],
+    [0x0040, 'Pulse A overload warning'],
+    [0x0080, 'Pulse B overload warning'],
+    [0x0100, 'Consumption interval warning'],
+    [0x0200, 'Leakage warning'],
+    [0x0400, 'Empty pipe warning'],
+    [0x0800, 'Low impedance warning'],
+    [0x1000, 'Flow limit warning'],
+    [0x2000, 'Reverse flow warning'],
+];
+
+function decodeMag8000Alarm(val) {
+    if (val == null || val <= 0) {
+        return 'No error';
+    }
+    for (const [bit, text] of MAG8000_ALARM_BITS) {
+        if (val & bit) {
+            return text;
+        }
+    }
+    return 'No error';
+}
 let channelsByLoggerCache = {};
 
 const urlGetSiteByUid = `${hostname}/GetSiteByUId/${userName}`;
@@ -121,6 +150,13 @@ function initMap() {
                 .then(function (channelsByLogger) {
                     channelsByLoggerCache = channelsByLogger;
                     for (let site of sites) {
+                        if (
+                            isNaN(parseFloat(site.Latitude)) ||
+                            isNaN(parseFloat(site.Longitude))
+                        ) {
+                            continue;
+                        }
+
                         let logger =
                             site.LoggerId != null &&
                             site.LoggerId != undefined &&
@@ -282,6 +318,13 @@ function initMap() {
                                         } else if (val === 32) {
                                             val = 'Mains power failure ';
                                         }
+                                    }
+                                } else if (site.TypeMeter === 'MAG8000') {
+                                    if (
+                                        channel.ChannelName[0] === '6' ||
+                                        channel.OtherChannel === true
+                                    ) {
+                                        val = decodeMag8000Alarm(val);
                                     }
                                 }
                                 dInfoHtml +=
@@ -598,6 +641,13 @@ function buildSiteContent(site, channelList) {
                     } else if (val === 32) {
                         val = 'Mains power failure ';
                     }
+                }
+            } else if (site.TypeMeter === 'MAG8000') {
+                if (
+                    channel.ChannelName[0] === '6' ||
+                    channel.OtherChannel === true
+                ) {
+                    val = decodeMag8000Alarm(val);
                 }
             }
             dInfoHtml +=

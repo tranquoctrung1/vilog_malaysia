@@ -1,0 +1,173 @@
+extends ./partial/layout.pug
+block linkcss
+    link(rel="stylesheet", href="/css/pageCommon.css")
+    style.
+        .license-header { display: flex; align-items: center; justify-content: space-between; margin: 1.25em 0 1em; flex-wrap: wrap; }
+        .license-header .license-title-wrap { display: flex; align-items: center; }
+        .license-header .license-title-icon { width: 42px; height: 42px; border-radius: 10px; background: #e8f7ee; color: #27ae60; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-right: 0.75em; flex-shrink: 0; }
+        .license-header h3 { margin: 0; font-weight: 700; font-size: 1.25rem; color: #212529; }
+        .license-header small { color: #8a8a8a; }
+        .license-header .btn-reload { border-radius: 20px; }
+
+        .license-card { background: #fff; border-radius: 10px; padding: 1.5em 1.75em; margin-bottom: 1.5em; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+        .license-card .license-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1em; }
+        .license-card .license-card-head .status-title { font-weight: 700; font-size: 1.05rem; color: #212529; display: flex; align-items: center; }
+        .license-card .license-card-head .status-title i { color: #27ae60; margin-right: 8px; }
+        .badge-license-active { background: #27ae60; color: #fff; font-weight: 600; padding: 0.45em 1em; border-radius: 20px; font-size: 0.8rem; letter-spacing: 0.03em; }
+        .badge-license-inactive { background: #e67e22; color: #fff; font-weight: 600; padding: 0.45em 1em; border-radius: 20px; font-size: 0.8rem; letter-spacing: 0.03em; }
+
+        .license-detail-row { display: flex; align-items: baseline; padding: 0.35em 0; }
+        .license-detail-row i { width: 22px; color: #8a8a8a; }
+        .license-detail-row .label { color: #8a8a8a; margin-right: 0.35em; }
+        .license-detail-row .value { font-weight: 700; color: #2c3e50; word-break: break-all; }
+        .license-detail-row .value.text-mono { font-weight: 400; color: #6c757d; }
+
+        .license-progress-wrap { margin-top: 1em; }
+        .license-progress-wrap .progress { height: 5px; border-radius: 4px; background: #eef0f2; }
+        .license-progress-wrap .progress-bar { background: #27ae60; }
+        .license-progress-wrap small { color: #8a8a8a; }
+
+        .license-divider { text-align: center; color: #8a8a8a; margin: 0 0 1.25em; position: relative; font-size: 0.9rem; }
+        .license-divider span { background: #f4f6f9; padding: 0 1em; position: relative; z-index: 1; }
+        .license-divider::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid #e0e0e0; }
+
+        .license-vendor-card { display: flex; align-items: flex-start; }
+        .license-vendor-card .license-vendor-logo { width: 110px; height: 110px; display: flex; align-items: center; justify-content: center; margin-right: 1.25em; flex-shrink: 0; }
+        .license-vendor-card .license-vendor-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .license-vendor-card .license-vendor-name { font-weight: 700; font-size: 1.1rem; color: #212529; margin-bottom: 0.6em; }
+        .license-vendor-card .license-vendor-row { color: #212529; font-size: 1rem; margin-bottom: 0.35em; }
+        .license-vendor-card .license-vendor-row i { width: 20px; color: #8a8a8a; margin-right: 6px; }
+        .license-vendor-card .license-vendor-row a,
+        .license-vendor-card .license-vendor-row .value { color: #3498db; text-decoration: none; }
+        .license-vendor-card .license-vendor-row a:hover { text-decoration: underline; }
+
+        @media (max-width: 575.98px) {
+            .license-vendor-card { flex-direction: column; }
+            .license-vendor-card .license-vendor-logo { margin-bottom: 0.75em; }
+        }
+
+        #moduleListModal .modal-content { border: none; border-radius: 12px; overflow: hidden; }
+        #moduleListModal .modal-header { background: linear-gradient(135deg, #27ae60, #219150); color: #fff; align-items: center; padding: 1em 1.5em; border: none; }
+        #moduleListModal .modal-header .modal-title { font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; }
+        #moduleListModal .modal-header .modal-title i { margin-right: 10px; }
+        #moduleListModal .modal-header .module-count-badge { background: rgba(255,255,255,0.22); border-radius: 20px; padding: 0.2em 0.8em; font-size: 0.8rem; font-weight: 600; margin-left: 10px; }
+        #moduleListModal .modal-header .close-button { color: #fff; opacity: 0.85; cursor: pointer; font-size: 1.1rem; line-height: 1; }
+        #moduleListModal .modal-header .close-button:hover { opacity: 1; }
+        #moduleListModal .modal-body { padding: 1.25em 1.5em; background: #f8faf9; }
+        #moduleListModal .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.6em; }
+        #moduleListModal .module-item { display: flex; align-items: center; background: #fff; border: 1px solid #e5e9ec; border-radius: 8px; padding: 0.65em 0.85em; }
+        #moduleListModal .module-item .module-icon { width: 30px; height: 30px; border-radius: 8px; background: #e8f7ee; color: #27ae60; display: flex; align-items: center; justify-content: center; margin-right: 0.65em; flex-shrink: 0; font-size: 0.85rem; }
+        #moduleListModal .module-item .module-name { font-weight: 600; color: #2c3e50; font-size: 0.9rem; line-height: 1.25; }
+        #moduleListModal .module-item .module-code { color: #9aa5ab; font-size: 0.72rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+block content
+    .container-fluid
+        .license-header
+            .license-title-wrap
+                .license-title-icon
+                    i.fa.fa-shield
+                div
+                    h3 License
+                    small Software license management
+            a.btn.btn-outline-primary.btn-sm.btn-reload(href='/license/info')
+                i.fa.fa-refresh.mr-1
+                |  Reload
+
+        if payloadError
+            .alert.alert-danger
+                strong Could not read license information:
+                |  #{payloadError}
+
+        .license-card
+            .license-card-head
+                .status-title
+                    i.fa.fa-refresh
+                    | Status
+                if hasToken
+                    span.badge-license-active ACTIVE
+                else
+                    span.badge-license-inactive NOT ACTIVATED
+
+            if customerName
+                .license-detail-row
+                    i.fa.fa-building
+                    span.label Customer:
+                    span.value= customerName
+
+            .license-detail-row
+                i.fa.fa-calendar-times-o
+                span.label Expires:
+                span.value= expiresAtShort
+
+            .license-detail-row
+                i.fa.fa-puzzle-piece
+                span.label Modules:
+                span.value= moduleCount > 0 ? moduleCount + ' module(s)' : 'All'
+                if moduleCount > 0
+                    button.btn.btn-link.btn-sm.p-0.ml-2(type='button', data-toggle='modal', data-target='#moduleListModal')
+                        | View details
+
+            if licenseId
+                .license-detail-row
+                    i.fa.fa-key
+                    span.label License ID:
+                    span.value.text-mono= licenseId
+
+            if daysLeft !== null
+                .license-progress-wrap
+                    .progress
+                        .progress-bar(role='progressbar', style=`width: ${percentLeft}%`, aria-valuenow=percentLeft, aria-valuemin="0", aria-valuemax="100")
+                    small #{daysLeft} day(s) left
+
+        .license-divider
+            span Vendor
+
+        .license-card
+            .license-vendor-card
+                .license-vendor-logo
+                    img(src="/images/logo-bavitech.png" alt="Bavitech")
+                div
+                    .license-vendor-name Bavitech Technology Joint Stock Company
+                    .license-vendor-row
+                        i.fa.fa-map-marker
+                        | 23 Pham Thai Buong, Tan Hung Ward, Ho Chi Minh City, Vietnam
+                    .license-vendor-row
+                        i.fa.fa-phone
+                        | Tel:
+                        span.value +84 28 5413 0704
+                    .license-vendor-row
+                        i.fa.fa-fax
+                        | Fax:
+                        span.value +84 28 5413 0705
+                    .license-vendor-row
+                        i.fa.fa-mobile
+                        | Hotline:
+                        span.value +84 90 3939 365
+                    .license-vendor-row
+                        i.fa.fa-envelope
+                        | Email:
+                        a(href='mailto:sales@bavitech.com') sales@bavitech.com
+
+        .license-actions.mb-3
+            a.btn.btn-primary(href='/license/activate')
+                i.fa.fa-refresh.mr-2
+                |  Reactivate / Change license key
+
+        if moduleCount > 0
+            #moduleListModal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+                .modal-dialog.modal-dialog-scrollable.modal-lg(role='document')
+                    .modal-content
+                        .modal-header
+                            h5.modal-title
+                                i.fa.fa-puzzle-piece
+                                | Licensed modules
+                                span.module-count-badge= moduleCount + ' module(s)'
+                            span.close-button(data-dismiss='modal') x
+                        .modal-body
+                            .module-grid
+                                each m in moduleCodesList
+                                    .module-item
+                                        .module-icon
+                                            i.fa.fa-check
+                                        div
+                                            .module-name= m.name
+                                            .module-code= m.code

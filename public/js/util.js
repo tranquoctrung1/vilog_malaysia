@@ -1,3 +1,109 @@
+// minutes (or '' when no data) -> "Nm" (< 60m) or "Nh" (>= 60m, rounded to nearest hour)
+function formatMinutesToHM(minutes) {
+    if (minutes === '' || minutes === null || minutes === undefined) return '';
+
+    if (minutes >= 60) {
+        return Math.round(minutes / 60) + 'h';
+    }
+
+    return minutes + 'm';
+}
+
+// Vilog sendTime/logTime allowed option sets, shared by the config form
+// (configVilog.js) and the read-only table view (configVilogTable.js) so both
+// pages bucket raw minute values into the exact same fixed set instead of
+// drifting apart. Kronhe/MAG8000 gets the wider logTime set (short intervals);
+// SU (and anything else) only ever shows 15m/30m/60m.
+const SEND_TIME_SETS = {
+    default: {
+        minutes: [15, 30, 60, 120, 180, 360, 720],
+        labels: ['15m', '30m', '1h', '2h', '3h', '6h', '12h'],
+    },
+    kronhe: {
+        minutes: [15, 30, 60, 120, 180, 360, 720],
+        labels: ['15m', '30m', '1h', '2h', '3h', '6h', '12h'],
+    },
+};
+// Same 1/2/3/5/6/15/30/60m set for every meter type — matches the reference
+// VilogLDC config tool (SerialCom/Form1.vb, LogTimeCandidatesForSensor()),
+// where Aichi Tokei (SU), Krohne, Siemens MAG8000 and the Bavitech Level
+// Sensor all share one logTime candidate list, ratio-filtered against sendTime.
+const LOG_TIME_SETS = {
+    default: {
+        minutes: [1, 2, 3, 5, 6, 15, 30, 60],
+        labels: ['1m', '2m', '3m', '5m', '6m', '15m', '30m', '60m'],
+    },
+    kronhe: {
+        minutes: [1, 2, 3, 5, 6, 15, 30, 60],
+        labels: ['1m', '2m', '3m', '5m', '6m', '15m', '30m', '60m'],
+    },
+};
+
+const SEND_TIME_MINUTES_MAP = {
+    '10m': 10, '15m': 15, '30m': 30, '1h': 60, '2h': 120,
+    '3h': 180, '6h': 360, '12h': 720, '24h': 1440,
+};
+const LOG_TIME_MINUTES_MAP = {
+    '1m': 1, '2m': 2, '3m': 3, '5m': 5, '6m': 6,
+    '15m': 15, '30m': 30, '60m': 60,
+};
+const MAX_SEND_LOG_RATIO = 14;
+
+// Mirror of the server rule (controller/api/configVilog.js): every type caps
+// sendMinutes/logMinutes at MAX_SEND_LOG_RATIO; Kronhe/MAG8000/Level also
+// write that ratio into AT+CLOCKLOG as a sample count, so it must be a whole
+// number >= 1 (e.g. 15m/2m = 7.5 or 15m/30m = 0.5 are refused).
+function isValidSendLogPair(type, sendMinutes, logMinutes) {
+    const ratio = sendMinutes / logMinutes;
+    if (ratio > MAX_SEND_LOG_RATIO) return false;
+    if (type === 'SU') return true;
+    return Number.isInteger(ratio) && ratio >= 1;
+}
+
+// TypeMeter is stored empty/null for legacy "Level" sites — normalize so every
+// page (configVilog, configVilogTable) shows "Level" instead of a blank field.
+function normalizeTypeMeter(raw) {
+    const trimmed = raw == null ? '' : raw.toString().trim();
+    const isEmpty =
+        trimmed === '' ||
+        trimmed.toLowerCase() === 'null' ||
+        trimmed.toLowerCase() === 'undefined' ||
+        trimmed === '-';
+    return isEmpty ? 'Level' : trimmed;
+}
+
+function isKronheType(type) {
+    return type === 'Kronhe' || type === 'MAG8000';
+}
+
+function getSendTimeSet(type) {
+    return isKronheType(type) ? SEND_TIME_SETS.kronhe : SEND_TIME_SETS.default;
+}
+
+function getLogTimeSet(type) {
+    return isKronheType(type) ? LOG_TIME_SETS.kronhe : LOG_TIME_SETS.default;
+}
+
+// picks the label of the option whose minute value is closest to `minutes`
+function bucketMinutesToOptionLabel(minutes, optionsMinutes, optionsLabels, defaultLabel) {
+    if (minutes === '' || minutes === null || minutes === undefined) {
+        return defaultLabel;
+    }
+
+    let closestIndex = 0;
+    let minDiff = Infinity;
+
+    for (let i = 0; i < optionsMinutes.length; i++) {
+        const diff = Math.abs(optionsMinutes[i] - minutes);
+        if (diff < minDiff) {
+            minDiff = diff;
+            closestIndex = i;
+        }
+    }
+
+    return optionsLabels[closestIndex];
+}
+
 function convertDateFromApi(date) {
     if (
         date != null &&

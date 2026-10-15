@@ -57,7 +57,10 @@ module.exports.GetDataDashBoardVilog = async function (req, res) {
                         channelIndexTotal = channels.find(
                             (el) => el.ChannelId === `${item.LoggerId}_108`,
                         );
-                    } else if (item.TypeMeter === 'Kronhe') {
+                    } else if (
+                        item.TypeMeter === 'Kronhe' ||
+                        item.TypeMeter === 'MAG8000'
+                    ) {
                         channelIndexTotal = channels.find(
                             (el) => el.ChannelId === `${item.LoggerId}_100`,
                         );

@@ -248,24 +248,36 @@ function DeleteChannelConfig(e) {
     ) {
         swal('Err', 'Not channel code', 'error');
     } else {
-        const obj = {
-            id: CreateDataNullForPost(modalIdChannelConfig.value),
-            ChannelId: CreateDataNullForPost(modalChannelId.value),
-        };
+        swal({
+            title: 'Are you sure?',
+            text: "All logged data of this channel will also be deleted. You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+        }).then((willDelete) => {
+            if (willDelete) {
+                const obj = {
+                    id: CreateDataNullForPost(modalIdChannelConfig.value),
+                    ChannelId: CreateDataNullForPost(modalChannelId.value),
+                };
 
-        let url = `${urlDeleteChannelConfig}`;
+                let url = `${urlDeleteChannelConfig}`;
 
-        axios
-            .post(url, obj)
-            .then((res) => {
-                if (res.data != 0) {
-                    swal('Success', 'Delete success', 'success');
-                    SetEmptyChannelConfigNotLoggerId();
-                    fetchAllChannel();
-                } else {
-                    swal('Err', 'Delete failed', 'error');
-                }
-            })
-            .catch((err) => console.log(err));
+                axios
+                    .post(url, obj)
+                    .then((res) => {
+                        if (res.data != 0) {
+                            swal('Success', 'Delete success', 'success');
+                            SetEmptyChannelConfigNotLoggerId();
+                            fetchAllChannel();
+                        } else {
+                            swal('Err', 'Delete failed', 'error');
+                        }
+                    })
+                    .catch((err) => console.log(err));
+            }
+        });
     }
 }

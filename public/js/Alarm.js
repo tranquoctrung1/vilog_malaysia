@@ -1,4 +1,4 @@
-const hostnameAlarm = `https://vilog.pws.com.my/api`;
+const hostnameAlarm = `${window.location.origin}/api`;
 
 let tableAlarm = document.getElementById('tableAlarm');
 let amountAlarm = document.getElementById('amountAlarm');

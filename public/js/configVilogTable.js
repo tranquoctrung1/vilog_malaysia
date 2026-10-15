@@ -1,5 +1,6 @@
 let urlGetSite = `${hostname}/GetSiteByUId/`;
 let urlGetLoggingTime = `${hostname}/GetLoggingTimeVilog`;
+let urlGetSendTime = `${hostname}/GetSendTimeVilog`;
 let urlGetAllChannel = `${hostname}/GetAllChannel`;
 
 let userName = document.getElementById('userName').innerHTML;
@@ -10,26 +11,6 @@ if (userName == null || userName == undefined || userName.trim() == '') {
 let fullUrlGetSite = `${urlGetSite}${userName}`;
 
 let tableData = [];
-
-// ======================
-// CONVERT FUNCTIONS
-// ======================
-function convertTimeDelayToString(timeDelay) {
-    if (timeDelay === undefined || timeDelay === null) return '15m';
-    if (timeDelay >= 720) return '12h';
-    if (timeDelay >= 360) return '6h';
-    if (timeDelay >= 180) return '3h';
-    if (timeDelay >= 120) return '2h';
-    if (timeDelay >= 60) return '1h';
-    if (timeDelay >= 30) return '30m';
-    return '15m';
-}
-
-function convertLogTimeToString(minutes) {
-    if (!minutes || minutes === 0) return '15m';
-    if (minutes === 360) return '6h';
-    return minutes + 'm';
-}
 
 function formatDateTime(date) {
     const d = new Date(date);
@@ -47,14 +28,24 @@ async function fetchAllSitesForTable() {
             const sites = res.data.filter((site) => site.SiteId && site.LoggerId);
 
             const promises = sites.map(async (site) => {
-                let logTimeMinutes = 15;
+                let logTimeMinutes = '';
                 try {
                     const logRes = await axios.get(`${urlGetLoggingTime}/${site.SiteId}`);
                     if (logRes.status === 200) {
-                        logTimeMinutes = logRes.data || 15;
+                        logTimeMinutes = logRes.data;
                     }
                 } catch (e) {
                     console.log('Error getting log time for', site.SiteId);
+                }
+
+                let sendTimeMinutes = '';
+                try {
+                    const sendRes = await axios.get(`${urlGetSendTime}/${site.SiteId}`);
+                    if (sendRes.status === 200) {
+                        sendTimeMinutes = sendRes.data;
+                    }
+                } catch (e) {
+                    console.log('Error getting send time for', site.SiteId);
                 }
 
                 let channels = [];
@@ -67,13 +58,16 @@ async function fetchAllSitesForTable() {
                     console.log('Error getting channels for', site.LoggerId);
                 }
 
+                const sendSet = getSendTimeSet(site.TypeMeter);
+                const logSet = getLogTimeSet(site.TypeMeter);
+
                 const base = {
                     siteId: site.SiteId || '',
                     location: site.Location || '',
                     typeMeter: site.TypeMeter || '',
                     loggerId: site.LoggerId || '',
-                    sendTime: convertTimeDelayToString(site.TimeDelay),
-                    logTime: convertLogTimeToString(logTimeMinutes),
+                    sendTime: bucketMinutesToOptionLabel(sendTimeMinutes, sendSet.minutes, sendSet.labels, ''),
+                    logTime: bucketMinutesToOptionLabel(logTimeMinutes, logSet.minutes, logSet.labels, ''),
                     latitude: site.Latitude || '',
                     longitude: site.Longitude || '',
                     status: site.Status || '',
@@ -214,16 +208,10 @@ function drawTable(data) {
 }
 
 function getTypeMeterBadge(data) {
-    const raw = data == null ? '' : data.toString().trim();
-    const isEmpty =
-        raw === '' ||
-        raw.toLowerCase() === 'null' ||
-        raw.toLowerCase() === 'undefined' ||
-        raw === '-';
-    const displayText = isEmpty ? 'Level' : data;
-    const badgeClass = isEmpty ? 'tag-secondary' :
-        data === 'SU' ? 'tag-info' :
-            data === 'Kronhe' ? 'tag-success' :
+    const displayText = normalizeTypeMeter(data);
+    const badgeClass = displayText === 'Level' ? 'tag-secondary' :
+        displayText === 'SU' ? 'tag-info' :
+            isKronheType(displayText) ? 'tag-success' :
                 'tag-secondary';
     return `<span class="alarm-tag ${badgeClass}">${displayText}</span>`;
 }

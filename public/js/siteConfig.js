@@ -237,7 +237,7 @@ btnDelete.addEventListener('click', function (e) {
     } else {
         swal({
             title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            text: "All channels and logged data of this site will also be deleted. You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

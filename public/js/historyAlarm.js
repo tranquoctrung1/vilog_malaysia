@@ -1,79 +1,130 @@
 let urlGetHistoryAlarm = `${hostname}/gethistoryalarmdata`;
-let alarmTableBody = document.getElementById('alarmTableBody');
 
 let userName = document.getElementById('userName').innerHTML;
 if (userName == null || userName == undefined || userName.trim() == '') {
     userName = 'admin';
 }
 
-function getDataHistoryAlarm(start, end) {
-    let url = `${urlGetHistoryAlarm}/${start}/${end}/${userName}`;
+// DataTables instance — initialized exactly once, then reused via
+// table.clear()/rows.add()/draw() on every subsequent data refresh so the
+// Excel/CSV/PDF export buttons (which read from the DataTables cache, not
+// the live DOM) never go stale after a "View" click.
+let alarmDataTable = null;
 
-    axios
-        .get(url)
-        .then((res) => {
-            renderDataTable(res.data);
+function getAlarmTag(content) {
+    let tagClass = 'tag-secondary';
+    const lower = content.toLowerCase();
 
-            drawTable();
-        })
-        .catch((err) => console.log(err.message));
+    if (lower.includes('disconnect') || lower.includes('delay'))
+        tagClass = 'tag-warning';
+    else tagClass = 'tag-danger';
+    return `<span class="alarm-tag ${tagClass}">${content.toUpperCase()}</span>`;
 }
 
-function renderDataTable(data) {
-    let content = ``;
+function normalizeAlarmContent(content) {
+    const lower = content.toLowerCase();
+
+    if (lower.includes('waring')) {
+        return content.replace('waring', 'warning');
+    } else if (lower.includes('comunication')) {
+        return content.replace('Comunication', 'Communication');
+    } else if (lower.includes('lower')) {
+        return content.replace('Lower', 'Low');
+    }
+
+    return content;
+}
+
+// Builds the row data DataTables needs (object-per-row keyed by column
+// index) instead of one giant concatenated HTML string. DT_RowAttr keeps
+// the `data-alarm-type` attribute on the rendered <tr>.
+function buildRowsData(data) {
+    const rows = [];
 
     for (const item of data) {
-        if (item.Content.toLowerCase().includes('waring')) {
-            item.Content = item.Content.replace('waring', 'warning');
-        } else if (item.Content.toLowerCase().includes('comunication')) {
-            item.Content = item.Content.replace(
-                'Comunication',
-                'Communication',
-            );
-        } else if (item.Content.toLowerCase().includes('lower')) {
-            item.Content = item.Content.replace('Lower', 'Low');
-        }
+        const content = normalizeAlarmContent(String(item.Content ?? ''));
 
-        content += `<tr data-alarm-type="${item.Content}">
-                            <td>${item.SiteId}</td>
-                            <td>${item.Location}</td>
-                            <td>${item.ChannelName}</td>
-                            <td>${convertDateToString(
-                                convertDateFromApi(item.TimeStampHasValue),
-                            )}</td>
-                            <td>${convertDateToString(
-                                convertDateFromApi(item.TimeStampAlarm),
-                            )}</td>
-                            <td>${item.Content}</td>
-                        </tr>`;
+        rows.push({
+            0: `${item.SiteId}`,
+            1: `${item.Location}`,
+            2: `${item.ChannelName}`,
+            3: `${convertDateToString(
+                convertDateFromApi(item.TimeStampHasValue),
+            )}`,
+            4: `${convertDateToString(
+                convertDateFromApi(item.TimeStampAlarm),
+            )}`,
+            5: getAlarmTag(content),
+            DT_RowAttr: { 'data-alarm-type': content },
+        });
     }
 
-    alarmTableBody.innerHTML = content;
+    return rows;
 }
 
-function drawTable() {
-    function getAlarmTag(content) {
-        let tagClass = 'tag-secondary';
-        const lower = content.toLowerCase();
+// Export libs are heavy (pdfmake + fonts ~2.1MB, jszip ~95KB), so they are
+// loaded on first export click instead of on page load. Promise is cached;
+// dropped on error so the next click retries.
+const exportScriptPromises = {};
 
-        if (lower.includes('disconnect') || lower.includes('delay'))
-            tagClass = 'tag-warning';
-        else tagClass = 'tag-danger';
-        return `<span class="alarm-tag ${tagClass}">${content.toUpperCase()}</span>`;
+function loadScript(src) {
+    if (!exportScriptPromises[src]) {
+        exportScriptPromises[src] = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = () => {
+                delete exportScriptPromises[src];
+                reject(new Error(`Failed to load ${src}`));
+            };
+            document.head.appendChild(script);
+        });
     }
+    return exportScriptPromises[src];
+}
 
-    // === Add Tag to Alarm Column ===
-    $('#alarmTable tbody tr').each(function () {
-        const $row = $(this);
-        const content = $row.find('td:eq(5)').text();
-        $row.find('td:eq(5)').html(getAlarmTag(content));
+function loadExportLibs(type) {
+    if (type === 'excelHtml5') {
+        if (window.JSZip) return Promise.resolve();
+        return loadScript('/vendor/jszip/jszip.min.js');
+    }
+    if (window.pdfMake && window.pdfMake.vfs) return Promise.resolve();
+    // vfs_fonts registers itself on window.pdfMake, so pdfmake must load first
+    return loadScript('/vendor/pdfmake/pdfmake.min.js').then(() =>
+        loadScript('/vendor/pdfmake/vfs_fonts.js'),
+    );
+}
+
+// Buttons drops excel/pdf buttons whose lib is missing at init, so force
+// `available` and load the lib inside the action before running the stock one.
+function lazyExportButton(type, options) {
+    return Object.assign({}, options, {
+        extend: type,
+        available: () => true,
+        action: function (e, dt, node, config, cb) {
+            loadExportLibs(type)
+                .then(() => {
+                    $.fn.dataTable.ext.buttons[type].action.call(
+                        this,
+                        e,
+                        dt,
+                        node,
+                        config,
+                        cb,
+                    );
+                })
+                .catch((err) => {
+                    console.error(err);
+                    cb();
+                });
+        },
     });
+}
 
+function getDataTableOptions() {
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
-    // === Initialize DataTable ===
-    $('#alarmTable').DataTable({
-        retrieve: true,
+    return {
         language: {
             search: 'Search:',
             lengthMenu: 'Show _MENU_ entries',
@@ -82,28 +133,28 @@ function drawTable() {
         },
         dom: isMobile ? 'frtip' : 'lBrtip',
         pageLength: 50,
+        // Only build <tr> nodes for the visible page; exports read the data cache.
+        deferRender: true,
         order: [[4, 'desc']],
         buttons: isMobile
             ? []
             : [
-                  {
-                      extend: 'excel',
+                  lazyExportButton('excelHtml5', {
                       text: '<i class="fas fa-file-excel me-1"></i> Excel',
                       className: 'btn btn-sm buttons-excel',
                       filename: 'list_alarm',
-                  },
+                  }),
                   {
                       extend: 'csv',
                       text: '<i class="fas fa-file-csv me-1"></i> CSV',
                       className: 'btn btn-sm buttons-csv',
                       filename: 'list_alarm',
                   },
-                  {
-                      extend: 'pdf',
+                  lazyExportButton('pdfHtml5', {
                       text: '<i class="fas fa-file-pdf me-1"></i> PDF',
                       className: 'btn btn-sm buttons-pdf',
                       filename: 'list_alarm',
-                  },
+                  }),
               ],
         responsive: isMobile
             ? {
@@ -126,7 +177,33 @@ function drawTable() {
                 },
             },
         ],
-    });
+        data: [],
+    };
+}
+
+// Initializes DataTables exactly once (guarded), then on every call simply
+// swaps the data through the DataTables API so its internal cache (used by
+// sorting/search/paging and the export buttons) never desyncs from the DOM.
+function drawTable(rowsData) {
+    if (!alarmDataTable) {
+        alarmDataTable = $('#alarmTable').DataTable(getDataTableOptions());
+    }
+
+    alarmDataTable.clear();
+    alarmDataTable.rows.add(rowsData);
+    alarmDataTable.draw();
+}
+
+function getDataHistoryAlarm(start, end) {
+    let url = `${urlGetHistoryAlarm}/${start}/${end}/${userName}`;
+
+    axios
+        .get(url)
+        .then((res) => {
+            const rowsData = buildRowsData(res.data);
+            drawTable(rowsData);
+        })
+        .catch((err) => console.log(err.message));
 }
 
 // === View Button Logic ===
@@ -154,13 +231,13 @@ $(document).ready(function () {
     )}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
     $('#endHour').val(end);
 
-    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000 * 30);
-    const start = `${oneDayAgo.getFullYear()}-${pad(
-        oneDayAgo.getMonth() + 1,
-    )}-${pad(oneDayAgo.getDate())}T${pad(oneDayAgo.getHours())}:${pad(
-        oneDayAgo.getMinutes(),
+    const sevenDaysAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000 * 7);
+    const start = `${sevenDaysAgo.getFullYear()}-${pad(
+        sevenDaysAgo.getMonth() + 1,
+    )}-${pad(sevenDaysAgo.getDate())}T${pad(sevenDaysAgo.getHours())}:${pad(
+        sevenDaysAgo.getMinutes(),
     )}`;
     $('#startHour').val(start);
 
-    getDataHistoryAlarm(oneDayAgo.getTime(), now.getTime());
+    getDataHistoryAlarm(sevenDaysAgo.getTime(), now.getTime());
 });

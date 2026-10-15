@@ -199,7 +199,9 @@ function renderCards(data) {
     const container = document.getElementById('levelCardsContainer');
     if (!container) return;
 
-    const levelSites = data.sites.filter((s) => s.SiteId === '001');
+    const levelSites = data.sites.filter(
+        (s) => normalizeTypeMeter(s.TypeMeter) === 'Level',
+    );
     if (levelSites.length === 0) {
         container.innerHTML = '<p class="text-muted">No Level sites found.</p>';
         return;
@@ -209,15 +211,16 @@ function renderCards(data) {
 
     for (const site of levelSites) {
         const id = site.SiteId;
+        const loggerId = (site.LoggerId || '').trim();
 
         const levelChannel = site.ListChannel.find(
-            (c) => c.ChannelId === `${site.LoggerId}_200`,
+            (c) => c.ChannelId === `${loggerId}_200`,
         );
         const batteryChannel = site.ListChannel.find(
-            (c) => c.ChannelId === `${site.LoggerId}_05`,
+            (c) => c.ChannelId === `${loggerId}_05`,
         );
         const signalChannel = site.ListChannel.find(
-            (c) => c.ChannelId === `${site.LoggerId}_07`,
+            (c) => c.ChannelId === `${loggerId}_07`,
         );
 
         const min = levelChannel?.BaseMin != null ? levelChannel.BaseMin : 0;
@@ -315,7 +318,10 @@ function applyRealtimeToDashboardLevel(loggerId, channelId, value, timeStamp, st
     channel.Status = status;
 
     if (channelId === `${loggerId}_200`) {
-        tankStates[id].target = value;
+        // channel-status-update sends no value; keep last target to avoid NaN
+        if (value != null && !isNaN(Number(value))) {
+            tankStates[id].target = Number(value);
+        }
     } else if (channelId === `${loggerId}_07`) {
         const el = document.getElementById(`tankSignalText_${id}`);
         if (el) {

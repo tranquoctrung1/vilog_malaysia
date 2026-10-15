@@ -133,8 +133,8 @@ function viewChart() {
             let start = new Date(startDate.value);
             let end = new Date(endDate.value);
 
-            start.setHours(start.getHours() + 7);
-            end.setHours(end.getHours() + 7);
+            start.setHours(start.getHours() + 8);
+            end.setHours(end.getHours() + 8);
 
             let totalMilisecondStart = start.getTime();
             let totalMilisecondEnd = end.getTime();
@@ -583,7 +583,7 @@ function drawChartMultiple(data) {
 }
 
 function createTableSingle(data, channelName, channelid, typeMeter) {
-    let header = `<tr><th>TimeStamp</th><th>${capitalizeWords(
+    let header = `<tr><th class="text-center">TimeStamp</th><th class="text-center">${capitalizeWords(
         channelName,
     )}</th></tr>`;
 
@@ -609,11 +609,18 @@ function createTableSingle(data, channelName, channelid, typeMeter) {
                     item[`${channelid}`] = ' 32 -Mains power failure ';
                 }
             }
+        } else if (typeMeter === 'MAG8000') {
+            let splitChannel = channelid.split('_');
+            if (splitChannel[splitChannel.length - 1] === '101') {
+                item[`${channelid}`] = decodeMag8000Alarm(
+                    item[`${channelid}`],
+                );
+            }
         }
 
-        body += `<tr><td>${convertDateToString(
+        body += `<tr><td class="text-center" data-order="${item.TimeStamp.getTime()}">${convertDateToString(
             item.TimeStamp,
-        )}</td><td>${ConvertDataIntoTable(item[`${channelid}`])}</td></tr>`;
+        )}</td><td class="text-center">${ConvertDataIntoTable(item[`${channelid}`])}</td></tr>`;
     }
 
     talbeChart.innerHTML = '';
@@ -630,6 +637,7 @@ function createTableSingle(data, channelName, channelid, typeMeter) {
     $('#dataTable2').DataTable({
         pageLength: 5,
         order: [[0, 'desc']],
+        columnDefs: [{ targets: 0, type: 'num' }],
         initComplete: function () {
             this.api()
                 .columns([0])
@@ -743,9 +751,9 @@ function createTableMultiple(data) {
 
         for (let pro in convertDataTable[0]) {
             if (pro == 'TimeStamp') {
-                header += `<th>TimeStamp</th>`;
+                header += `<th class="text-center">TimeStamp</th>`;
             } else {
-                header += `<th>${pro}</th>`;
+                header += `<th class="text-center">${pro}</th>`;
             }
         }
         header += `</tr>`;
@@ -756,11 +764,13 @@ function createTableMultiple(data) {
             body += `<tr>`;
             for (let pro in item) {
                 if (pro == 'TimeStamp') {
-                    body += `<td>${convertDateToString(
+                    body += `<td class="text-center" data-order="${new Date(
+                        item[pro],
+                    ).getTime()}">${convertDateToString(
                         new Date(item[pro]),
                     )}</td>`;
                 } else {
-                    body += `<td>${ConvertDataIntoTable(item[pro])}</td>`;
+                    body += `<td class="text-center">${ConvertDataIntoTable(item[pro])}</td>`;
                 }
             }
             body += `</tr>`;
@@ -777,6 +787,7 @@ function createTableMultiple(data) {
         $('#dataTable2').DataTable({
             pageLength: 5,
             order: [[0, 'desc']],
+            columnDefs: [{ targets: 0, type: 'num' }],
             initComplete: function () {
                 this.api()
                     .columns([])

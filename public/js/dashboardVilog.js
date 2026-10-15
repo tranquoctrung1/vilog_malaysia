@@ -81,7 +81,10 @@ function findValueChannel(data, siteid) {
             netChannel = find.ListChannel.find(
                 (c) => c.ChannelId === `${find.LoggerId}_108`,
             );
-        } else if (find.TypeMeter === 'Kronhe') {
+        } else if (
+            find.TypeMeter === 'Kronhe' ||
+            find.TypeMeter === 'MAG8000'
+        ) {
             batteryChannel = find.ListChannel.find(
                 (c) => c.ChannelId === `${find.LoggerId}_05`,
             );

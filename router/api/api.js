@@ -342,6 +342,7 @@ router.get(
 router.post('/login', LoginAPI.Login);
 
 router.get('/GetLoggingTimeVilog/:siteid', ConfigVilogApi.GetLoggingTimeVilog);
+router.get('/GetSendTimeVilog/:siteid', ConfigVilogApi.GetSendTimeVilog);
 
 router.post('/UpdateConfigVilog', ConfigVilogApi.UpdateConfigVilog);
 

@@ -9,6 +9,7 @@ var configVilogSchema = new mongoose.Schema({
     logTime: String,
     sendTime: String,
     isComplete: Boolean,
+    publishedAt: Date,
 });
 
 var ConfigVilog = mongoose.model(

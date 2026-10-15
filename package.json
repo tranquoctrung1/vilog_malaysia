@@ -20,7 +20,8 @@
             "middleware/**/*.js",
             "model/**/*.js",
             "mqtt/**/*.js",
-            "router/**/*.js"
+            "router/**/*.js",
+            "services/**/*.js"
         ],
         "assets": [
             "views/**/*",
@@ -45,6 +46,7 @@
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.20.3",
         "bootstrap": "^4.6.2",
+        "compression": "^1.8.2",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
         "dotenv": "^8.6.0",

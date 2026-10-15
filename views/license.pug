@@ -1,0 +1,96 @@
+doctype html
+html.h-100
+  head
+    // --- META TAGS ---
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    title #{title}
+
+    // --- FAVICONS ---
+    link(rel='apple-touch-icon' sizes='57x57' href='/favicon/apple-icon-57x57.png')
+    link(rel='apple-touch-icon' sizes='60x60' href='/favicon/apple-icon-60x60.png')
+    link(rel='apple-touch-icon' sizes='72x72' href='/favicon/apple-icon-72x72.png')
+    link(rel='apple-touch-icon' sizes='76x76' href='/favicon/apple-icon-76x76.png')
+    link(rel='apple-touch-icon' sizes='114x114' href='/favicon/apple-icon-114x114.png')
+    link(rel='apple-touch-icon' sizes='120x120' href='/favicon/apple-icon-120x120.png')
+    link(rel='apple-touch-icon' sizes='144x144' href='/favicon/apple-icon-144x144.png')
+    link(rel='apple-touch-icon' sizes='152x152' href='/favicon/apple-icon-152x152.png')
+    link(rel='apple-touch-icon' sizes='180x180' href='/favicon/apple-icon-180x180.png')
+    link(rel='icon' type='image/png' sizes='192x192' href='/favicon/android-icon-192x192.png')
+    link(rel='icon' type='image/png' sizes='32x32' href='/favicon/favicon-32x32.png')
+    link(rel='icon' type='image/png' sizes='96x96' href='/favicon/favicon-96x96.png')
+    link(rel='icon' type='image/png' sizes='16x16' href='/favicon/favicon-16x16.png')
+    link(rel='manifest' href='/favicon/manifest.json')
+    meta(name='msapplication-TileColor' content='#ffffff')
+    meta(name='msapplication-TileImage' content='/favicon/ms-icon-144x144.png')
+    meta(name='theme-color' content='#ffffff')
+
+    // --- STYLES ---
+    link(href='/assets/css/lib/font-awesome.min.css' rel='stylesheet')
+    link(href='/assets/css/lib/themify-icons.css' rel='stylesheet')
+    link(href='/assets/css/lib/bootstrap.min.css' rel='stylesheet')
+    link(href='/assets/css/lib/helper.css' rel='stylesheet')
+    link(href='/assets/css/style.css' rel='stylesheet')
+
+    // Dùng chung nền/khung với trang Login
+    link(rel="stylesheet" href="/css/login.css")
+    link(rel="stylesheet" href="/css/license.css")
+
+  body.h-100
+    .unix-login
+      .container
+        .row.justify-content-center
+          .col-lg-7.col-md-9
+            .login-content
+              .login-form.license-form
+
+                // 1. System title
+                h3.text-center.mb-2 #{title}
+
+                // 2. Logo
+                .box-image.text-center.mb-3
+                  img(src="/images/logo.png" alt="logo")
+
+                h4.text-center.mb-3 License Activation
+
+                p.text-center.license-hint
+                  | Software is not activated. Please send the
+                  b  Hardware ID
+                  |  below to the vendor to receive a
+                  b  License Key
+                  | , then enter it below and click
+                  b  Activate
+                  | .
+
+                // 3. Error message (if any)
+                if errorLicense
+                  .alert.alert-danger.text-center(role="alert") #{errorLicense}
+
+                // 4. Hardware ID - read-only, with copy button
+                .form-group.mb-3
+                  label.font-weight-bold(for='hardwareId') Hardware ID:
+                  .input-group
+                    input.form-control#hardwareId(type='text' readonly='readonly' value=hardwareId placeholder='Could not read hardware ID')
+                    .input-group-append
+                      button.btn.btn-outline-secondary#btnCopyHardwareId(type='button' title='Copy hardware ID')
+                        i.ti-clipboard
+                        |  Copy
+                  small.text-muted.d-block.mt-1#copyHardwareIdMsg Send this hardware ID to the vendor to receive your license key.
+
+                // 5. Activation form
+                form(action='/license/activate' method='post' name='license-form')
+                  .form-group.mb-3
+                    label.font-weight-bold(for='licenseKey') License Key:
+                    textarea.form-control#licenseKey(name='licenseKey' rows='3' placeholder='Paste your license key here')= licenseKey
+
+                  .row.mt-4
+                    .col-12
+                      button.btn.btn-custom.btn-block(type='submit') Activate
+
+                // 6. Vendor info
+                .license-vendor.text-center.mt-4
+                  div Licensed to #{companyName}
+                  small.text-muted Contact: (ViCloud contact details to be filled in)
+
+    script(src='/js/license.js')

@@ -202,7 +202,10 @@ function renderCard(data) {
 
                 </div>
             </div>`;
-        } else if (item.TypeMeter === 'Kronhe') {
+        } else if (
+            item.TypeMeter === 'Kronhe' ||
+            item.TypeMeter === 'MAG8000'
+        ) {
             content += `<div class="col-lg-4 col-md-6 mb-4 site-card" data-status="${status}" data-alarm="${alarm}">
                 <div class="card card-site-summary p-3 ${card}">
                     <div class="d-flex justify-content-between align-items-start">

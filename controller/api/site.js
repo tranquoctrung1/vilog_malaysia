@@ -2,6 +2,8 @@ const SiteModel = require('../../model/site');
 const UserModel = require('../../model/user');
 const ConsumerSiteModel = require('../../model/consumerSite');
 const StaffSiteModel = require('../../model/staffSite');
+const ChannelModel = require('../../model/Channel.js');
+const mongoose = require('mongoose');
 const { getPermittedSiteIds } = require('../../helper/sitePermission');
 
 module.exports.GetSiteForSWOC = async function (req, res) {
@@ -131,14 +133,59 @@ module.exports.UpdateSite = async function (req, res) {
     }
 };
 
+async function dropCollectionIfExists(name) {
+    try {
+        await mongoose.connection.db.dropCollection(name);
+    } catch (err) {
+        // NamespaceNotFound (26): collection never created, nothing to drop
+        if (err.code !== 26) console.log(err);
+    }
+}
+
 module.exports.DeleteSite = async function (req, res) {
-    const id = req.body.id;
+    try {
+        const id = req.body.id;
 
-    let result = await SiteModel.deleteOne({ _id: id });
+        if (!mongoose.isValidObjectId(id)) {
+            res.json(0);
+            return;
+        }
 
-    let result2 = await ConsumerSiteModel.deleteOne({ IdSite: id });
+        const site = await SiteModel.findById(id);
 
-    let result3 = await StaffSiteModel.deleteOne({ IdSite: id });
+        let result = await SiteModel.deleteOne({ _id: id });
 
-    res.json(result.deletedCount);
+        let result2 = await ConsumerSiteModel.deleteOne({ IdSite: id });
+
+        let result3 = await StaffSiteModel.deleteOne({ IdSite: id });
+
+        const loggerId = site && site.LoggerId ? String(site.LoggerId).trim() : '';
+
+        // Only cascade when no other site still uses the same logger
+        if (result.deletedCount > 0 && loggerId !== '') {
+            const otherSite = await SiteModel.exists({ LoggerId: loggerId });
+
+            if (!otherSite) {
+                const channels = await ChannelModel.find({ LoggerId: loggerId });
+
+                for (const channel of channels) {
+                    const channelId = channel.ChannelId
+                        ? String(channel.ChannelId).trim()
+                        : '';
+
+                    if (channelId !== '' && channelId !== 'null') {
+                        await dropCollectionIfExists('t_Data_Logger_' + channelId);
+                        await dropCollectionIfExists('t_Index_Logger_' + channelId);
+                    }
+                }
+
+                await ChannelModel.deleteMany({ LoggerId: loggerId });
+            }
+        }
+
+        res.json(result.deletedCount);
+    } catch (err) {
+        console.log(err);
+        res.json(0);
+    }
 };

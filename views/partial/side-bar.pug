@@ -14,6 +14,11 @@
           a(href='javascript: void(0)')
             i.ti-bell.position-relative
               span.position-absolute.start-100.translate-middle.badge.rounded-pill.bg-danger#amountAlarm
+        if isAdmin
+          li
+            a(href='/license/info')
+              i.ti-shield
+              |  License
         li
           a(href='/logout')
             i.ti-close

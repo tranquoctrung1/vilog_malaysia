@@ -12,6 +12,9 @@ var historyAlarm = new mongoose.Schema({
    Type: Number,
 });
 
+historyAlarm.index({ TimeStampAlarm: -1 });
+historyAlarm.index({ SiteId: 1, TimeStampAlarm: -1 });
+
 var HistoryAlarm = mongoose.model('HistoryAlarm', historyAlarm, 't_History_Alarm');
 
 module.exports  = HistoryAlarm;
