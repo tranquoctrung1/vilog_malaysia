@@ -4,6 +4,22 @@ Quy ước version: bắt đầu từ **V1.0**, mỗi lần thay đổi/release 
 
 Mục mới nhất nằm trên cùng. Từ V1.8 trở đi, mục changelog được sinh tự động bởi `npm run release` (xem `scripts/release.js`) — không sửa tay phần trên `<!-- release-marker -->
 
+## [V1.10] - 2026-10-15
+### Added
+- Co che kiem tra ban quyen (BLP license gate): trang kich hoat /license/activate, trang /license/info, heartbeat 15 phut, xac thuc token Ed25519; menu License chi hien voi admin.
+- configVilog: them logTime 1m/2m/3m/6m cho Kronhe/MAG8000, endpoint GetSendTimeVilog, truong publishedAt.
+- Giai ma canh bao MAG8000 (bit alarm) tren bang du lieu va ban do.
+
+### Changed
+- historyAlarm: them index, dung lean(), sua loi DataTable (khoi tao 1 lan, export dung du lieu moi).
+- Nen gzip response, cache /vendor 7 ngay.
+- Bang du lieu: can giua cot, sap xep theo thoi gian dung.
+
+### Fixed
+- DeleteSite xoa kem channel va collection du lieu cua logger (khi khong con site nao dung chung logger).
+- Bo qua site co toa do (Latitude/Longitude) khong hop le tren ban do.
+- Sua typo sendTime 24h (1656 -> 1440 phut).
+
 ## [V1.9] - 2026-07-22
 ### Added
 - Ho tro chay HTTPS song song HTTP (pfx cert), sua link client tro ve domain vilog.pws.com.my

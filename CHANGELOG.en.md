@@ -2,6 +2,22 @@
 
 <!-- release-marker -->
 
+## [V1.10] - 2026-10-15
+### Added
+- BLP license gate: /license/activate and /license/info pages, 15-minute heartbeat, Ed25519 token verification; License menu visible to admins only.
+- configVilog: logTime options 1m/2m/3m/6m for Kronhe/MAG8000, GetSendTimeVilog endpoint, publishedAt field.
+- MAG8000 alarm bit decoding in data tables and on the map.
+
+### Changed
+- historyAlarm: added indexes, lean() queries, fixed DataTable (single init, exports use fresh data).
+- gzip response compression, 7-day cache for /vendor.
+- Data tables: centered columns, correct time sorting.
+
+### Fixed
+- DeleteSite now also removes the logger channels and data collections (when no other site shares the logger).
+- Sites with invalid Latitude/Longitude are skipped on the map.
+- sendTime 24h typo (1656 -> 1440 minutes).
+
 ## [V1.9] - 2026-07-22
 ### Added
 - Added HTTPS support alongside HTTP (pfx cert), updated client links to production domain
